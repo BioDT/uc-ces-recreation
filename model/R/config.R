@@ -144,7 +144,6 @@ save_persona <- function(persona, csv_path, name, overwrite = FALSE) {
         # Reorder persona to align it with the `index` column, then add
         # the reordered list to the data.frame as a new column
         df[[name]] <- persona[df[["index"]]]
-
     } else {
         # If file does *not* exist, simply crete a dataframe with two columns,
         # 'index' and '<name>'

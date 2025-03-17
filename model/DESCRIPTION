@@ -23,23 +23,11 @@ Imports:
     readr,
     terra (>= 1.8.21)
 Suggests:
-    bslib,
     devtools,
-    here,
-    knitr,
-    leaflet,
-    leaflet.extras,
     lintr,
-    mapview,
-    rsconnect,
-    shiny,
-    shinymanager,
     styler,
     testthat,
-    usethis,
-    waiter,
-    webshot2
-Remotes: BioDT/uc-ces-recreation2@develop
+    usethis
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
