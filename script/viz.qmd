@@ -1,0 +1,12 @@
+---
+title: Visualise the script outputs
+format:
+  html:
+    embed-resources: true
+---
+
+```{r}
+library(terra)
+
+"testing.tif" |> rast() |> plot()
+```
