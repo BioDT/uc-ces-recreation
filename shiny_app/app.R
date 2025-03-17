@@ -2,22 +2,22 @@ library(shiny)
 library(leaflet)
 library(leaflet.extras)
 
-devtools::load_all("model")
+devtools::load_all("../model")
 
 # NOTE: this did not immediately work..
 #devtools::install_github("BioDT/uc-ces-recreation2", subdir = "model", ref = "develop")
 
-source("shiny_app/content.R")  # contains {content}_html
-source("shiny_app/theme.R")  # contains custom_theme, custom_titlePanel
+source("content.R")  # contains {content}_html
+source("theme.R")  # contains custom_theme, custom_titlePanel
 
 .credentials <- data.frame(
     user = Sys.getenv("APP_USERNAME"),
     password = Sys.getenv("APP_PASSWORD")
 )
 
-.raster_dir <- "shiny_app/data"
-.persona_dir <- "shiny_app/personas"
-.boundary_shp <- file.path("shiny_app", "data", "Scotland", "boundaries.shp")
+.raster_dir <- "data"
+.persona_dir <- "personas"
+.boundary_shp <- file.path("data", "Scotland", "boundaries.shp")
 .config <- load_config()
 .layer_info <- setNames(.config[["Description"]], .config[["Name"]])
 .layer_names <- names(.layer_info)

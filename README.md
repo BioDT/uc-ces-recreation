@@ -3,7 +3,6 @@
 - Introduction to BioDT, appropriate links to UKCEH and BioDT
 - Recreational Potential is one half of the 'Cultural Ecosystem Services prototype Digital Twin' (CES pDT) developed by UKCEH.
 
-
 ## Repository Overview
 
 ### `data/`
@@ -33,14 +32,22 @@ A live instance of the Recreational Potential app is hosted at _\[todo: link to 
 
 Further details can be found in [data/README.md](data/README.md).
 
-
 ## Getting Started
 
 1. Clone repository
-2. Download data
-3. Renv stuff
-4. Run
 
+```sh
+git clone https://github.com/BioDT/uc-ces-recreation2
+cd uc-ces-recreation2
+```
+
+2. Download data
+
+To do
+
+3. Make sure you have installed [`renv`](https://rstudio.github.io/renv/)
+
+4. See any of the `README.md` files in the subdirectories listed above
 
 ## Contributing
 
