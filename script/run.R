@@ -1,5 +1,9 @@
+# Rscript run.R --persona_file examples.csv --xmin=300000 --xmax=310000 --ymin 700000 --ymax 710000 --persona_name Hard_Recreationalist
+
 here::i_am("run.R")
 devtools::load_all("../model")
+
+raster_dir <- "data/"
 
 # Display full command
 cmd <- paste(base::commandArgs(), collapse = " ")
@@ -9,7 +13,7 @@ cat(cmd, "\n")
 args <- R.utils::commandArgs(
     trailingOnly = TRUE,
     asValues = TRUE,
-    defaults = list(persona_name = NULL, output = "."),
+    defaults = list(persona_name = NULL), # serves no purpose tbh
     adhoc = TRUE, # attempts to convert arg types
     unique = TRUE,
     excludeReserved = TRUE,
@@ -26,28 +30,23 @@ for (coord in c("xmin", "xmax", "ymin", "ymax")) {
         stop(paste0("Missing argument: please provide `--", coord, "=<value>`"))
     }
 }
-if (length(args) > 7) {
-    stop("Too many arguments provided.")
-}
+
+# TODO: additional argument checks would be wise
 
 persona <- load_persona(args$persona_file, name = args$persona_name)
 
-# Check that the bbox is valid
 bbox <- terra::ext(args$xmin, args$xmax, args$ymin, args$ymax)
-scotland <- terra::ext(-10000, 660000, 460000, 1220000)
 
+# Check that the bbox is valid
+scotland <- terra::ext(-10000, 660000, 460000, 1220000)
 if (!terra::relate(bbox, scotland, relation = "within")) {
     stop("Bounding box coordinates are not contained with the Scotland bbox")
 }
 
-# TODO: elsewhere, function to check bbox is valid and is not too big or too small
-
-# TODO: check that the output is valid (does not exist already?)
-
-
-raster_dir <- "data/"
-
 # Run the model
 layers <- compute_potential(persona, raster_dir, bbox = bbox)
 
-terra::writeRaster(layers, "testing.tif", overwrite = TRUE)
+# Write the output raster
+output_name <- paste(c("raster", args$persona_name, args$xmin, args$xmax, args$ymin, args$ymax), collapse = "_")
+output_path <- file.path(dirname(args$persona_file), paste0(output_name, ".tif"))
+terra::writeRaster(layers, output_path, overwrite = TRUE)

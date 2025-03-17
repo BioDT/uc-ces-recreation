@@ -8,5 +8,7 @@ format:
 ```{r}
 library(terra)
 
-"testing.tif" |> rast() |> plot()
+"output_Hard_Recreationalist_300000_310000_700000_710000.tif" |>
+  rast() |>
+  plot()
 ```
