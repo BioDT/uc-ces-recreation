@@ -7,7 +7,7 @@
 save_persona(persona, csv_path, name, overwrite = FALSE)
 }
 \arguments{
-\item{persona}{\code{integer} A vector of integers representing the persona}
+\item{persona}{\code{integer} A named vector of integers representing the persona}
 
 \item{csv_path}{\code{character} Path to write a csv file, which may already exist}
 
