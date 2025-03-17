@@ -1,11 +1,15 @@
-# TODO: understand why system.file causes errors during devtools::install
-default_config <- here::here("config.csv")
-# system.file("extdata", "config.csv", package = "model")  # nolint
+# NOTE: cannot use system.file in the top-level scope, or devtools::install
+# will throw an error due to "hard coded paths". This *needs* to be wrapped in
+# a function and only called within other functions!
+get_default_config <- function() system.file("config.csv", package = "model", mustWork = TRUE)
+
+# Deprecate
+# package_root_file <- rprojroot::find_package_root_file()
 
 #' @export
 load_config <- function(config_path = NULL) {
     if (is.null(config_path)) {
-        config_path <- default_config
+        config_path <- get_default_config()
     }
     column_spec <- readr::cols(
         Component = readr::col_character(),
