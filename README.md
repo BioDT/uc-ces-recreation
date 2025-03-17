@@ -55,11 +55,12 @@ If you are interested in contributing, please take a quick look at [CONTRIBUTING
 
 ## Contributors
 
-The code was primarily developed by Joe Marsh Rossney and Maddalena Tigli.
+The code has gone through 3 major iterations.
 
-See also previous versions:
 - version 1 (2023), primarily developed by Will Bolton (https://github.com/BioDT/uc-ces/tree/main/recreation_model)
-- version 2 (2024), primarily developed by Chris Andrews (https://github.com/BioDT/uc-ces-recreation2/tree/2024-model)
+- version 2 (2024), primarily developed by Chris Andrews and Maddalena Tigli (https://github.com/BioDT/uc-ces-recreation2/tree/2024-model)
+- version 3 (2025), primarily developed by Joe Marsh Rossney and Maddalena Tigli (this version)
+
 
 ## Acknowledgements
 
