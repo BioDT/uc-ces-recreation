@@ -1,12 +1,38 @@
-Package: Shiny_App
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Package: shiny_app
+Title: Recreational Potential Shiny App
+Version: 0.0.1
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    c(
+	person("Chris", "Andrews", role = c("aut")),
+	person("Maddalena", "Tigli", role = c("aut")),
+	person("Joe", "Marsh Rossney", email = "17361029+jmarshrossney@users.noreply.github.com", role = c("aut", "cre"))
+    )
+Description: This package provides a Shiny App for the BioDT Recreational Potential Model.
+    This is an alternative to the official BioDT Shiny App, which was developed
+    independently to meet the requirements of a spin-off project.
+License: MIT + file ../LICENSE
+Depends:
+    R (>= 4.4.2)
+Imports:
+    bslib,
+    class,
+    devtools,
+    KernSmooth,
+    leaflet,
+    leaflet.extras,
+    model,
+    mapview,
+    shiny,
+    shinymanager,
+    waiter,
+    webshot2
+Suggests:
+    lintr,
+    styler,
+    usethis
+Remotes:
+  local::../model
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-Imports
+
