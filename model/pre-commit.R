@@ -1,4 +1,4 @@
-# setwd("model")
+renv::status()
 
 testthat::test_dir("tests/testthat")
 

@@ -1,6 +1,4 @@
-setwd("model")
-
-testthat::test_dir("tests/testthat")
+renv::status()
 
 style <- styler::tidyverse_style(
     indent_by = 4L,
