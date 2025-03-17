@@ -1,2 +1,6 @@
 data/
 Raw_Data/
+
+*.Rmd
+*.html
+*.pdf
