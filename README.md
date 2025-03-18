@@ -15,13 +15,13 @@ Further details can be found in [data/README.md](data/README.md).
 
 This directory contains an implementation of the Recreational Potential model, bundled as an `R` package. Because all of the complicated, expensive manipulations are done ahead of time in the data pre-processing stage, there is remarkably little here!
 
-Further details can be found in [data/README.md](data/README.md).
+Further details can be found in [model/README.md](model/README.md).
 
 ### `notebooks/`
 
 This directory contains Quarto notebooks for testing, sanity checking and example usage are provided.
 
-Further details can be found in [data/README.md](data/README.md).
+Further details can be found in [notebooks/README.md](notebooks/README.md).
 
 ### `shiny_app/`
 
@@ -30,7 +30,14 @@ This was developed independently of the [official BioDT app](https://app.biodt.e
 
 A live instance of the Recreational Potential app is hosted at _\[todo: link to datalabs instance\]_.
 
-Further details can be found in [data/README.md](data/README.md).
+Further details can be found in [shiny_app/README.md](shiny_app/README.md).
+
+### `cli/`
+
+This directory contains an R script that allows you to run the Recreational Potential model from the command line, providing the required inputs as arguments.
+
+Further details can be found in [cli/README.md](cli/README.md).
+
 
 ## Getting Started
 
