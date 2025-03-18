@@ -8,7 +8,7 @@ format:
 ```{r}
 library(terra)
 
-"output_Hard_Recreationalist_300000_310000_700000_710000.tif" |>
+"example_personas_Hard_Recreationalist_300000_310000_700000_710000.tif" |>
   rast() |>
   plot()
 ```

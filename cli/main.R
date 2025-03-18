@@ -1,9 +1,6 @@
-# Rscript run.R --persona_file examples.csv --xmin=300000 --xmax=310000 --ymin 700000 --ymax 710000 --persona_name Hard_Recreationalist
+# Rscript main.R --persona_file example_personas.csv --xmin=300000 --xmax=310000 --ymin 700000 --ymax 710000 --persona_name Hard_Recreationalist
 
-here::i_am("run.R")
 devtools::load_all("../model")
-
-raster_dir <- "data/"
 
 # Display full command
 cmd <- paste(base::commandArgs(), collapse = " ")
@@ -44,9 +41,26 @@ if (!terra::relate(bbox, scotland, relation = "within")) {
 }
 
 # Run the model
-layers <- compute_potential(persona, raster_dir, bbox = bbox)
+layers <- compute_potential(persona, bbox = bbox)
 
 # Write the output raster
-output_name <- paste(c("raster", args$persona_name, args$xmin, args$xmax, args$ymin, args$ymax), collapse = "_")
+# TODO: consider format(round(args$xmin), scientific = FALSE)
+output_name <- paste(
+    c(
+        tools::file_path_sans_ext(basename(args$persona_file)),
+        args$persona_name,
+        format(round(args$xmin), scientific = FALSE),
+        format(round(args$xmax), scientific = FALSE),
+        format(round(args$ymin), scientific = FALSE),
+        format(round(args$ymax), scientific = FALSE)
+    ),
+    collapse = "_"
+)
 output_path <- file.path(dirname(args$persona_file), paste0(output_name, ".tif"))
+
+message(paste("Writing raster to path:", output_path))
+if (file.exists(output_path)) {
+    warning("The existing file will be overwritten!")
+}
+
 terra::writeRaster(layers, output_path, overwrite = TRUE)
