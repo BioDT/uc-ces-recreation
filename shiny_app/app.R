@@ -15,15 +15,13 @@ source("theme.R")  # contains custom_theme, custom_titlePanel
     password = Sys.getenv("APP_PASSWORD")
 )
 
-.raster_dir <- "data"
 .persona_dir <- "personas"
-.boundary_shp <- file.path("data", "Scotland", "boundaries.shp")
 .config <- load_config()
 .layer_info <- setNames(.config[["Description"]], .config[["Name"]])
 .layer_names <- names(.layer_info)
 .max_area <- 1e9  # about 1/4 of the Cairngorms area
 .min_area <- 1e4
-.data_extent <- terra::ext(terra::vect(.boundary_shp))
+.data_extent <- terra::ext(terra::vect(system.file("extdata", "Scotland", "boundaries.shp", package = "model")))
 
 .group_names <- list(
     SLSRA_LCM = "Land Cover",
@@ -692,7 +690,6 @@ server <- function(input, output, session) {
         msg <- capture.output(
             layers <- model::compute_potential(
                 persona,
-                raster_dir = .raster_dir,
                 bbox = bbox
             ),
             type = "message"
