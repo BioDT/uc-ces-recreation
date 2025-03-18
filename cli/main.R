@@ -1,4 +1,4 @@
-# Rscript main.R --persona_file example_personas.csv --xmin=300000 --xmax=310000 --ymin 700000 --ymax 710000 --persona_name Hard_Recreationalist
+# Rscript main.R --persona_file example/personas.csv --xmin=300000 --xmax=310000 --ymin 700000 --ymax 710000 --persona_name Hard_Recreationalist --pdf
 
 devtools::load_all("../model")
 
@@ -44,7 +44,7 @@ if (!terra::relate(bbox, scotland, relation = "within")) {
 layers <- compute_potential(persona, bbox = bbox)
 
 # Write the output raster
-# TODO: consider format(round(args$xmin), scientific = FALSE)
+output_dir <- dirname(args$persona_file)
 output_name <- paste(
     c(
         tools::file_path_sans_ext(basename(args$persona_file)),
@@ -56,7 +56,7 @@ output_name <- paste(
     ),
     collapse = "_"
 )
-output_path <- file.path(dirname(args$persona_file), paste0(output_name, ".tif"))
+output_path <- file.path(output_dir, paste0(output_name, ".tif"))
 
 message(paste("Writing raster to path:", output_path))
 if (file.exists(output_path)) {
@@ -66,7 +66,10 @@ if (file.exists(output_path)) {
 terra::writeRaster(layers, output_path, overwrite = TRUE)
 
 if (args$pdf) {
-    pdf(file = paste0(output_name, ".pdf"))
+    output_path <- file.path(output_dir, paste0(output_name, ".pdf"))
+    message(paste("Writing pdf to path:", output_path))
+
+    pdf(file = output_path)
     terra::plot(layers)
     dev.off()
 }
