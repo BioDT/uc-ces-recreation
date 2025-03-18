@@ -1,3 +1,6 @@
+#' @export
+get_raster_dir <- function() system.file("extdata", package = "model", mustWork = TRUE)
+
 .assert_valid_raster_dir <- function(raster_dir) {
     if (!dir.exists(raster_dir)) {
         stop(paste0("Error: the directory ", raster_dir, " does not exist"))

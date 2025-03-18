@@ -12,7 +12,11 @@ compute_component <- function(raster, persona) {
 #' Compute Recreational Potential
 #'
 #' @export
-compute_potential <- function(persona, raster_dir, bbox = NULL) {
+compute_potential <- function(persona, raster_dir = NULL, bbox = NULL) {
+    if (is.null(raster_dir)) {
+        raster_dir <- get_raster_dir()
+    }
+
     # Up-front check that raster_dir exists, is readable, contains required files
     .assert_valid_raster_dir(raster_dir)
 
