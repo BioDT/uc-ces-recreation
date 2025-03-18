@@ -10,7 +10,7 @@ cat(cmd, "\n")
 args <- R.utils::commandArgs(
     trailingOnly = TRUE,
     asValues = TRUE,
-    defaults = list(persona_name = NULL), # serves no purpose tbh
+    defaults = list(persona_name = NULL, pdf = FALSE), # serves no purpose tbh
     adhoc = TRUE, # attempts to convert arg types
     unique = TRUE,
     excludeReserved = TRUE,
@@ -64,3 +64,9 @@ if (file.exists(output_path)) {
 }
 
 terra::writeRaster(layers, output_path, overwrite = TRUE)
+
+if (args$pdf) {
+    pdf(file = paste0(output_name, ".pdf"))
+    terra::plot(layers)
+    dev.off()
+}
