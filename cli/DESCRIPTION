@@ -12,6 +12,7 @@ Depends:
 Imports:
     devtools,
     model,
+    R.utils,
     terra
 Suggests:
     lintr,
@@ -21,4 +22,3 @@ Remotes:
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-
