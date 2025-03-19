@@ -4,7 +4,7 @@
 ^notebooks$
 ^workbench$
 ^rsconnect$
-^data_production$
+^data$
 ^cli$
 ^run-app\.sh$
 ^.*\.Rproj$

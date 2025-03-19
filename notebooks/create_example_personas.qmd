@@ -7,7 +7,7 @@ format:
 
 ```{r}
 library(terra)
-devtools::load_all("../model")
+devtools::load_all("../")
 ```
 
 ```{r}

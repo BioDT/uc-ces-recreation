@@ -8,7 +8,7 @@ format:
 ```{r}
 library(terra)
 
-devtools::load_all("../model")
+devtools::load_all("../")
 
 config <- load_config()
 feature_mappings <- get_feature_mappings(config)

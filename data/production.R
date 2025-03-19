@@ -1,4 +1,4 @@
-devtools::load_all("../model")
+devtools::load_all("../")
 
 terra::terraOptions(
     memfrac = 0.7,

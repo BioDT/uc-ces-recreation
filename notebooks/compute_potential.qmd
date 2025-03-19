@@ -6,7 +6,7 @@ format:
 ---
 
 ```{r}
-devtools::load_all("../model")
+devtools::load_all("../")
 ```
 
 ```{r}
