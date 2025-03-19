@@ -7,3 +7,5 @@
 ^data_production$
 ^cli$
 ^run-app\.sh$
+^.*\.Rproj$
+^\.Rproj\.user$
