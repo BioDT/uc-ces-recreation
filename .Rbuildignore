@@ -1,5 +1,9 @@
 ^renv$
 ^renv\.lock$
-^.git/
-^notebooks/
-^workbench/
+^\.git$
+^notebooks$
+^workbench$
+^rsconnect$
+^data_production$
+^cli$
+^run-app\.sh$

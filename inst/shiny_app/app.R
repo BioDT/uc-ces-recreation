@@ -2,11 +2,6 @@ library(shiny)
 library(leaflet)
 library(leaflet.extras)
 
-devtools::load_all("../model")
-
-# NOTE: this did not immediately work..
-#devtools::install_github("BioDT/uc-ces-recreation2", subdir = "model", ref = "develop")
-
 source("content.R")  # contains {content}_html
 source("theme.R")  # contains custom_theme, custom_titlePanel
 
@@ -16,12 +11,12 @@ source("theme.R")  # contains custom_theme, custom_titlePanel
 )
 
 .persona_dir <- "personas"
-.config <- load_config()
+.config <- biodt.recreation::load_config()
 .layer_info <- setNames(.config[["Description"]], .config[["Name"]])
 .layer_names <- names(.layer_info)
 .max_area <- 1e9  # about 1/4 of the Cairngorms area
 .min_area <- 1e4
-.data_extent <- terra::ext(terra::vect(system.file("extdata", "Scotland", "boundaries.shp", package = "model")))
+.data_extent <- terra::ext(terra::vect(system.file("extdata", "Scotland", "boundaries.shp", package = "biodt.recreation")))
 
 .group_names <- list(
     SLSRA_LCM = "Land Cover",
@@ -432,7 +427,7 @@ server <- function(input, output, session) {
         req(reactiveUserSelect())
         req(input$loadPersonaSelect)
 
-        loaded_persona <- model::load_persona(
+        loaded_persona <- biodt.recreation::load_persona(
             file.path(.persona_dir, paste0(reactiveUserSelect(), ".csv")),
             input$loadPersonaSelect
         )
@@ -451,7 +446,7 @@ server <- function(input, output, session) {
     })
     observeEvent(input$fileUpload, {
         tryCatch({
-            . <- model::read_persona_csv(input$fileUpload$datapath)  # nolint
+            . <- biodt.recreation::read_persona_csv(input$fileUpload$datapath)  # nolint
         }, error = function(e) {
             update_user_info("Unable to read persona file.")
             return()
@@ -521,7 +516,7 @@ server <- function(input, output, session) {
         message <- paste0("Saving persona '", persona_name, "' under user '", user_name, "'")
 
         captured_messages <- capture.output(
-            model::save_persona(
+            biodt.recreation::save_persona(
                 persona = get_persona_from_sliders(),
                 csv_path = file.path(.persona_dir, paste0(user_name, ".csv")),
                 name = persona_name
@@ -688,7 +683,7 @@ server <- function(input, output, session) {
         )
 
         msg <- capture.output(
-            layers <- model::compute_potential(
+            layers <- biodt.recreation::compute_potential(
                 persona,
                 bbox = bbox
             ),

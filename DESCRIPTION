@@ -1,4 +1,4 @@
-Package: model
+Package: biodt.recreation
 Title: Compute the BioDT Recreational Potential Model
 Version: 0.0.1
 Authors@R: 
@@ -19,9 +19,20 @@ License: MIT + file ../LICENSE
 Depends:
     R (>= 4.4.2)
 Imports:
+    bslib,
+    class,
+    devtools,
     dplyr,
+    KernSmooth,
+    leaflet,
+    leaflet.extras,
+    mapview,
     readr,
-    terra (>= 1.8.21)
+    shiny,
+    shinymanager,
+    terra (>= 1.8.21),
+    waiter,
+    webshot2
 Suggests:
     devtools,
     lintr,

@@ -1,5 +1,5 @@
 #' @export
-get_raster_dir <- function() system.file("extdata", package = "model", mustWork = TRUE)
+get_raster_dir <- function() system.file("extdata", package = "biodt.recreation", mustWork = TRUE)
 
 .assert_valid_raster_dir <- function(raster_dir) {
     if (!dir.exists(raster_dir)) {

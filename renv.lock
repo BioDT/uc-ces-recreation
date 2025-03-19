@@ -1017,7 +1017,7 @@
     },
     "commonmark": {
       "Package": "commonmark",
-      "Version": "1.9.2",
+      "Version": "1.9.5",
       "Source": "Repository",
       "Type": "Package",
       "Title": "High Performance CommonMark and Github Markdown Rendering in R",
@@ -1031,7 +1031,7 @@
         "testthat",
         "xml2"
       ],
-      "RoxygenNote": "7.2.3",
+      "RoxygenNote": "7.3.2",
       "Language": "en-US",
       "Encoding": "UTF-8",
       "NeedsCompilation": "yes",
@@ -2110,44 +2110,6 @@
       "Maintainer": "Thomas Lin Pedersen <thomas.pedersen@posit.co>",
       "Repository": "CRAN"
     },
-    "here": {
-      "Package": "here",
-      "Version": "1.0.1",
-      "Source": "Repository",
-      "Title": "A Simpler Way to Find Your Files",
-      "Date": "2020-12-13",
-      "Authors@R": "c(person(given = \"Kirill\", family = \"M\\u00fcller\", role = c(\"aut\", \"cre\"), email = \"krlmlr+r@mailbox.org\", comment = c(ORCID = \"0000-0002-1416-3412\")), person(given = \"Jennifer\", family = \"Bryan\", role = \"ctb\", email = \"jenny@rstudio.com\", comment = c(ORCID = \"0000-0002-6983-2759\")))",
-      "Description": "Constructs paths to your project's files. Declare the relative path of a file within your project with 'i_am()'. Use the 'here()' function as a drop-in replacement for 'file.path()', it will always locate the files relative to your project root.",
-      "License": "MIT + file LICENSE",
-      "URL": "https://here.r-lib.org/, https://github.com/r-lib/here",
-      "BugReports": "https://github.com/r-lib/here/issues",
-      "Imports": [
-        "rprojroot (>= 2.0.2)"
-      ],
-      "Suggests": [
-        "conflicted",
-        "covr",
-        "fs",
-        "knitr",
-        "palmerpenguins",
-        "plyr",
-        "readr",
-        "rlang",
-        "rmarkdown",
-        "testthat",
-        "uuid",
-        "withr"
-      ],
-      "VignetteBuilder": "knitr",
-      "Encoding": "UTF-8",
-      "LazyData": "true",
-      "RoxygenNote": "7.1.1.9000",
-      "Config/testthat/edition": "3",
-      "NeedsCompilation": "no",
-      "Author": "Kirill Müller [aut, cre] (<https://orcid.org/0000-0002-1416-3412>), Jennifer Bryan [ctb] (<https://orcid.org/0000-0002-6983-2759>)",
-      "Maintainer": "Kirill Müller <krlmlr+r@mailbox.org>",
-      "Repository": "CRAN"
-    },
     "highr": {
       "Package": "highr",
       "Version": "0.11",
@@ -3102,11 +3064,11 @@
     },
     "mime": {
       "Package": "mime",
-      "Version": "0.12",
+      "Version": "0.13",
       "Source": "Repository",
       "Type": "Package",
       "Title": "Map Filenames to MIME Types",
-      "Authors@R": "c( person(\"Yihui\", \"Xie\", role = c(\"aut\", \"cre\"), email = \"xie@yihui.name\", comment = c(ORCID = \"0000-0003-0645-5666\")), person(\"Jeffrey\", \"Horner\", role = \"ctb\"), person(\"Beilei\", \"Bian\", role = \"ctb\") )",
+      "Authors@R": "c( person(\"Yihui\", \"Xie\", role = c(\"aut\", \"cre\"), email = \"xie@yihui.name\", comment = c(ORCID = \"0000-0003-0645-5666\", URL = \"https://yihui.org\")), person(\"Jeffrey\", \"Horner\", role = \"ctb\"), person(\"Beilei\", \"Bian\", role = \"ctb\") )",
       "Description": "Guesses the MIME type from a filename extension using the data derived from /etc/mime.types in UNIX-type systems.",
       "Imports": [
         "tools"
@@ -3114,12 +3076,12 @@
       "License": "GPL",
       "URL": "https://github.com/yihui/mime",
       "BugReports": "https://github.com/yihui/mime/issues",
-      "RoxygenNote": "7.1.1",
+      "RoxygenNote": "7.3.2",
       "Encoding": "UTF-8",
       "NeedsCompilation": "yes",
-      "Author": "Yihui Xie [aut, cre] (<https://orcid.org/0000-0003-0645-5666>), Jeffrey Horner [ctb], Beilei Bian [ctb]",
+      "Author": "Yihui Xie [aut, cre] (<https://orcid.org/0000-0003-0645-5666>, https://yihui.org), Jeffrey Horner [ctb], Beilei Bian [ctb]",
       "Maintainer": "Yihui Xie <xie@yihui.name>",
-      "Repository": "RSPM"
+      "Repository": "CRAN"
     },
     "miniUI": {
       "Package": "miniUI",
@@ -3142,38 +3104,6 @@
       "Maintainer": "Joe Cheng <joe@rstudio.com>",
       "Repository": "RSPM",
       "Encoding": "UTF-8"
-    },
-    "model": {
-      "Package": "model",
-      "Version": "0.0.1",
-      "Source": "Local",
-      "Title": "Compute the BioDT Recreational Potential Model",
-      "Authors@R": "c( person(\"Will\", \"Bolton\", role = c(\"aut\")), person(\"Chris\", \"Andrews\", role = c(\"aut\")), person(\"Simon\", \"Rolph\", role = c(\"aut\")), person(\"Maddalena\", \"Tigli\", role = c(\"aut\")), person(\"Joe\", \"Marsh Rossney\", email = \"17361029+jmarshrossney@users.noreply.github.com\", role = c(\"aut\", \"cre\")) )",
-      "Description": "This package provides the BioDT Recreational Potential Model, which was developed by scientists at the UK Centre for Ecology & Hydrology. The model takes a geographic area and a collection of numerical parameters that we call a recreational 'persona', and computes a scalar metric that represents what we call the 'recreational potential' for each point or pixel in the area considered.",
-      "License": "MIT + file ../LICENSE",
-      "Depends": [
-        "R (>= 4.4.2)"
-      ],
-      "Imports": [
-        "dplyr",
-        "here",
-        "readr",
-        "terra (>= 1.8.21)"
-      ],
-      "Suggests": [
-        "devtools",
-        "lintr",
-        "styler",
-        "testthat",
-        "usethis"
-      ],
-      "Encoding": "UTF-8",
-      "Roxygen": "list(markdown = TRUE)",
-      "RoxygenNote": "7.3.2",
-      "Author": "Will Bolton [aut], Chris Andrews [aut], Simon Rolph [aut], Maddalena Tigli [aut], Joe Marsh Rossney [aut, cre]",
-      "Maintainer": "Joe Marsh Rossney <17361029+jmarshrossney@users.noreply.github.com>",
-      "RemoteType": "local",
-      "RemoteUrl": "../model"
     },
     "munsell": {
       "Package": "munsell",
@@ -4162,7 +4092,7 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "1.1.2",
+      "Version": "1.1.3",
       "Source": "Repository",
       "Type": "Package",
       "Title": "Project Environments",
