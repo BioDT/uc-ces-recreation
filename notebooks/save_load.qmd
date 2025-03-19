@@ -23,22 +23,22 @@ loaded_persona_1 <- load_persona(test_file, name = "persona_1")
 loaded_persona_2 <- load_persona(test_file, name = "persona_2")
 
 # NOTE: cbind outputs a matrix (not a data.frame)
-#rbind(persona_1, loaded_persona_1)
+# rbind(persona_1, loaded_persona_1)
 cbind(persona_1, loaded_persona_1)
 ```
 
 ## Test cbind for aligning by name
 
 ```{r}
-cbind(persona_1, persona_1)[1:5,]
+cbind(persona_1, persona_1)[1:5, ]
 
 # They are not aligned!
 persona_1_shuffled <- persona_1[sample.int(87)]
-cbind(persona_1, persona_1_shuffled)[1:5,]
+cbind(persona_1, persona_1_shuffled)[1:5, ]
 
 # But we can manually realign using names(existing_structure)
 persona_1_realigned <- persona_1_shuffled[names(persona_1)]
-cbind(persona_1, persona_1_realigned)[1:5,]
+cbind(persona_1, persona_1_realigned)[1:5, ]
 ```
 
 ```{r}
@@ -47,15 +47,15 @@ mat <- cbind(persona_1, persona_2)
 
 # NOTE: need to use `rownames` for matrix instead of `names`!!
 persona_1_realigned_2 <- persona_1_shuffled[rownames(mat)]
-cbind(mat, persona_1_realigned_2)[1:5,]
+cbind(mat, persona_1_realigned_2)[1:5, ]
 ```
 
 Are matrix objects good enough?
 How do you index them?
 
 ```{r}
-mat["Water_Rivers_1",]
-mat["Water_Rivers_1","persona_1"]
+mat["Water_Rivers_1", ]
+mat["Water_Rivers_1", "persona_1"]
 ```
 
 ## Does it work for data.frame?
@@ -66,7 +66,7 @@ df <- as.data.frame(cbind(persona_1, persona_2))
 
 # NOTE: need to use `rownames` for matrix instead of `names`!!
 persona_1_realigned_2 <- persona_1_shuffled[rownames(mat)]
-cbind(mat, persona_1_realigned_2)[1:5,]
+cbind(mat, persona_1_realigned_2)[1:5, ]
 ```
 
 ## Testing a potential fix

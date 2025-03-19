@@ -14,7 +14,7 @@ devtools::load_all("../model")
 # contains NaN. When I'm responsible for data generation DO NOT
 # do this!
 na_to_zero <- function(raster) {
-  return(ifel(is.na(raster), 0, raster))
+    return(ifel(is.na(raster), 0, raster))
 }
 ```
 
@@ -27,8 +27,8 @@ crop_area <- vect("../Data/input/Raw_Shapefile/Bush/Bush.shp")
 output_dir <- "data/bush/original/"
 
 # Scotland
-#crop_area <- ext(-10000, 660000, 460000, 1220000)
-#output_dir <- "data/scotland/original/"
+# crop_area <- ext(-10000, 660000, 460000, 1220000)
+# output_dir <- "data/scotland/original/"
 
 data_dir <- "../Data/input/Processed_Data/"
 ```
@@ -43,57 +43,56 @@ file.path(data_dir, "Water.tif") |>
 
 ```{r}
 slsra <- file.path(data_dir, "SLSRA.tif") |>
-  rast() |>
-  crop(crop_area) |>
-  round()
+    rast() |>
+    crop(crop_area) |>
+    round()
 
 writeRaster(slsra, filename = file.path(output_dir, "SLSRA.tif"), overwrite = TRUE)
 
 rm(slsra)
 
 fips_n <- file.path(data_dir, "FIPS_N.tif") |>
-  rast() |>
-  crop(crop_area) |>
-  round()
+    rast() |>
+    crop(crop_area) |>
+    round()
 
 writeRaster(fips_n, filename = file.path(output_dir, "FIPS_N.tif"), overwrite = TRUE)
 
 rm(fips_n)
 
-#plot(fips_n)
+# plot(fips_n)
 
 fips_n_slope <- file.path(data_dir, "FIPS_N_Slope.tif") |>
-  rast() |>
-  crop(crop_area)
+    rast() |>
+    crop(crop_area)
 
 writeRaster(fips_n_slope, filename = file.path(output_dir, "FIPS_N_Slope.tif"), overwrite = TRUE)
 
 rm(fips_n_slope)
 
-#plot(fips_n_slope)
+# plot(fips_n_slope)
 
 fips_i <- file.path(data_dir, "FIPS_I.tif") |>
-  rast() |>
-  crop(crop_area) |>
-  round()
+    rast() |>
+    crop(crop_area) |>
+    round()
 
 writeRaster(fips_i, filename = file.path(output_dir, "FIPS_I.tif"), overwrite = TRUE)
 
 rm(fips_i)
 
-#plot(fips_i)
+# plot(fips_i)
 
 water <- file.path(data_dir, "Water.tif") |>
-  rast() |>
-  crop(crop_area) |>
-  round()
+    rast() |>
+    crop(crop_area) |>
+    round()
 
 writeRaster(water, filename = file.path(output_dir, "Water.tif"), overwrite = TRUE)
 
 plot(water)
 
 rm(water)
-
 ```
 
 ## Convert to one-hot representation
@@ -102,16 +101,16 @@ rm(water)
 config <- model::load_config()
 
 get_feature_mappings <- function(config) {
-  # Group by layer, results in {layer_name : layer_config}
-  config_by_layer <- split(config, as.factor(config[["Dataset"]]))
+    # Group by layer, results in {layer_name : layer_config}
+    config_by_layer <- split(config, as.factor(config[["Dataset"]]))
 
-  # Generate mapping {layer_name : {raster_value : feature_name}}
-  mappings <- lapply(
-    config_by_layer, function(layer_config) {
-      setNames(layer_config[["Name"]], layer_config[["Raster_Val"]])
-    }
-  )
-  return(mappings)
+    # Generate mapping {layer_name : {raster_value : feature_name}}
+    mappings <- lapply(
+        config_by_layer, function(layer_config) {
+            setNames(layer_config[["Name"]], layer_config[["Raster_Val"]])
+        }
+    )
+    return(mappings)
 }
 
 feature_mappings <- get_feature_mappings(config)
@@ -132,7 +131,6 @@ one_hot_layer <- function(layer, feature_mappings) {
 one_hot <- function(raster, feature_mappings) {
     return(sapp(raster, function(layer) one_hot_layer(layer, feature_mappings)))
 }
-
 ```
 
 ```{r}
@@ -140,49 +138,49 @@ data_dir <- "data/bush/original/"
 output_dir <- "data/bush/one_hot/"
 
 slsra <- file.path(data_dir, "SLSRA.tif") |>
-  rast() |>
-  one_hot(feature_mappings) |>
-  na_to_zero()
+    rast() |>
+    one_hot(feature_mappings) |>
+    na_to_zero()
 
-#print(names(slsra))
+# print(names(slsra))
 
 fips_n <- file.path(data_dir, "FIPS_N.tif") |>
-  rast() |>
-  one_hot(feature_mappings) |>
-  na_to_zero()
+    rast() |>
+    one_hot(feature_mappings) |>
+    na_to_zero()
 
 
 # First need to quantise the slope values before one-hot encoding
 # I do not know the origin of these intervals
 slope_rcl <- data.matrix(data.frame(
-        lower_bound = c(0, 1.72, 2.86, 5.71, 11.31, 16.7),
-        upper_bound = c(1.72, 2.86, 5.71, 11.31, 16.7, Inf),
-        mapped_to = c(1, 2, 3, 4, 5, 6)
+    lower_bound = c(0, 1.72, 2.86, 5.71, 11.31, 16.7),
+    upper_bound = c(1.72, 2.86, 5.71, 11.31, 16.7, Inf),
+    mapped_to = c(1, 2, 3, 4, 5, 6)
 ))
 
 fips_n_slope <- file.path(data_dir, "FIPS_N_Slope.tif") |>
-  rast() |>
-  classify(rcl = slope_rcl) |>
-  one_hot(feature_mappings) |>
-  na_to_zero()
+    rast() |>
+    classify(rcl = slope_rcl) |>
+    one_hot(feature_mappings) |>
+    na_to_zero()
 
-#plot(fips_n_slope)
+# plot(fips_n_slope)
 
 fips_n <- c(fips_n, fips_n_slope)
 
 fips_i <- file.path(data_dir, "FIPS_I.tif") |>
-  rast() |>
-  one_hot(feature_mappings) |>
-  distance() |>
-  model::map_distance_to_unit_interval(alpha=0.01, kappa=5) |>
-  na_to_zero()
+    rast() |>
+    one_hot(feature_mappings) |>
+    distance() |>
+    model::map_distance_to_unit_interval(alpha = 0.01, kappa = 5) |>
+    na_to_zero()
 
 water <- file.path(data_dir, "Water.tif") |>
-  rast() |>
-  one_hot(feature_mappings) |>
-  distance() |>
-  model::map_distance_to_unit_interval(alpha=0.01, kappa=5) |>
-  na_to_zero() 
+    rast() |>
+    one_hot(feature_mappings) |>
+    distance() |>
+    model::map_distance_to_unit_interval(alpha = 0.01, kappa = 5) |>
+    na_to_zero()
 
 
 # NOTE: Should compress using LZW compression
@@ -193,11 +191,10 @@ writeRaster(fips_i, filename = file.path(output_dir, "FIPS_I.tif"), overwrite = 
 writeRaster(water, filename = file.path(output_dir, "Water.tif"), overwrite = TRUE)
 
 
-#plot(water)
+# plot(water)
 
 x <- rast(file.path(output_dir, "FIPS_I.tif"))
 x
 
 plot(x)
-
 ```

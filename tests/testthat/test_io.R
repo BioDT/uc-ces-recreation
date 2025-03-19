@@ -1,7 +1,6 @@
 library(testthat)
 
 # NOTE: this seems like a weird standard for testing. Should I library(mypackage)?
-devtools::load_all("../../")
 
 test_that("fail gracefully for misconfigured persona file", {
     skip("Not yet written")
@@ -17,17 +16,17 @@ test_that("fail gracefully for misconfigured persona file", {
 test_that("saving and loading a single persona", {
     test_file <- tempfile(fileext = ".csv")
 
-    config <- load_config()
+    config <- biodt.recreation::load_config()
     persona <- setNames(
         sample(0:10, size = 87, replace = TRUE),
         config[["Name"]]
     )
 
-    save_persona(persona, test_file, "persona")
+    biodt.recreation::save_persona(persona, test_file, "persona")
 
     expect_true(file.exists(test_file))
 
-    loaded_persona <- load_persona(test_file)
+    loaded_persona <- biodt.recreation::load_persona(test_file)
 
     expect_equal(loaded_persona, persona)
 
@@ -37,7 +36,7 @@ test_that("saving and loading a single persona", {
 test_that("appending a person", {
     test_file <- tempfile(fileext = ".csv")
 
-    config <- load_config()
+    config <- biodt.recreation::load_config()
     persona1 <- setNames(
         sample(0:10, size = 87, replace = TRUE),
         config[["Name"]]
@@ -47,13 +46,13 @@ test_that("appending a person", {
         config[["Name"]]
     )
 
-    save_persona(persona1, test_file, "persona1")
-    save_persona(persona2, test_file, "persona2")
+    biodt.recreation::save_persona(persona1, test_file, "persona1")
+    biodt.recreation::save_persona(persona2, test_file, "persona2")
 
     expect_true(file.exists(test_file))
 
-    loaded_persona1 <- load_persona(test_file, name = "persona1")
-    loaded_persona2 <- load_persona(test_file, name = "persona2")
+    loaded_persona1 <- biodt.recreation::load_persona(test_file, name = "persona1")
+    loaded_persona2 <- biodt.recreation::load_persona(test_file, name = "persona2")
 
     expect_equal(loaded_persona1, persona1)
     expect_equal(loaded_persona2, persona2)

@@ -108,7 +108,7 @@ load_legacy_config <- function(config_path = NULL) {
         Name = readr::col_character(),
         Description = readr::col_character(),
         Raster_Val = readr::col_double(), # Note difference
-        .default = readr::col_integer()  # Note addition
+        .default = readr::col_integer() # Note addition
     )
     loaded_config <- readr::read_csv(config_path, col_types = column_spec)
 
@@ -120,7 +120,7 @@ load_legacy_config <- function(config_path = NULL) {
 hr_config <- load_legacy_config("../Data/input/Persona_Loaded/HR_ReducedMod.csv")
 sr_config <- load_legacy_config("../Data/input/Persona_Loaded/SR_ReducedMod.csv")
 
-#head(hr_config)
+# head(hr_config)
 
 # Sort alphabetically for sanity
 hr_config <- dplyr::arrange(hr_config, "Name")
@@ -129,9 +129,8 @@ sr_config <- dplyr::arrange(sr_config, "Name")
 hr_persona <- setNames(hr_config[["HR_ReducedMod"]], hr_config[["Name"]])
 sr_persona <- setNames(sr_config[["SR_ReducedMod"]], sr_config[["Name"]])
 
-#hr_persona
+# hr_persona
 
 model::save_persona(hr_persona, "examples.csv", "Hard_Recreationalist")
 model::save_persona(sr_persona, "examples.csv", "Soft_Recreationalist")
-
 ```
