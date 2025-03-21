@@ -15,7 +15,7 @@ Description: This package provides the BioDT Recreational Potential Model,
     that we call a recreational 'persona', and computes a scalar metric that
     represents what we call the 'recreational potential' for each point or
     pixel in the area considered.
-License: MIT + file ../LICENSE
+License: MIT + file LICENSE
 Depends:
     R (>= 4.4.2)
 Imports:
