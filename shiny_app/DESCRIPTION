@@ -14,13 +14,13 @@ License: MIT + file ../LICENSE
 Depends:
     R (>= 4.4.2)
 Imports:
+    biodt.recreation,
     bslib,
     class,
     devtools,
     KernSmooth,
     leaflet,
     leaflet.extras,
-    model,
     mapview,
     shiny,
     shinymanager,
