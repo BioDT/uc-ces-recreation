@@ -355,16 +355,16 @@ save_dialog <- modalDialog(
 )
 
 # Add password authorisation
-ui <- shinymanager::secure_app(ui)
+#ui <- shinymanager::secure_app(ui)
 
 server <- function(input, output, session) {
     # Check credentials
-    res_auth <- shinymanager::secure_server(
-        check_credentials = shinymanager::check_credentials(.credentials)
-    )
-    output$auth_output <- renderPrint({
-        reactiveValuesToList(res_auth)
-    })
+    #res_auth <- shinymanager::secure_server(
+    #    check_credentials = shinymanager::check_credentials(.credentials)
+    #)
+    #output$auth_output <- renderPrint({
+    #    reactiveValuesToList(res_auth)
+    #})
 
 
     get_persona_from_sliders <- function() {

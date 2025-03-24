@@ -17,11 +17,11 @@ Description: This package provides the BioDT Recreational Potential Model,
     pixel in the area considered.
 License: MIT + file ../LICENSE
 Depends:
-    R (>= 4.4.2)
+    R (>= 4.4.0)
 Imports:
     dplyr,
     readr,
-    terra (>= 1.8.21)
+    terra
 Suggests:
     devtools,
     lintr,
