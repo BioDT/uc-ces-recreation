@@ -104,7 +104,7 @@ compute_water <- function(persona, data_dir, bbox = NULL) {
 #' Given a `SpatRaster` with layers \eqn{v_i(x, y) \in \mathbb{R}}, the transformation
 #' implemented is given by
 #'
-#' \deqn{ \hat{v}_i(x, y) = \frac{v_i(x, y) - \min_{x,y}(v_i)}{\max_{x,y}(v_i) - \min_{x,y}(v_i)} }
+#' \deqn{ \hat{v}_i(x, y) = \frac{v_i(x, y) - \min_{x,y}(v_i)}{\max_{x,y}(v_i) - \min_{x,y}(v_i)} \in [0, 1]}
 #'
 #' I.e. every layer will be shifted and rescaled such that the layer minimum and maximum
 #' are 0 and 1 respectively.
