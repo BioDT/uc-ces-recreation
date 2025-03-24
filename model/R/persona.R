@@ -1,3 +1,10 @@
+# File:       persona.R
+# Package:    biodt.recreation
+# Repository: https://github.com/BioDT/uc-ces-recreation2
+# License:    MIT
+# Copyright:  2025 BioDT
+# Author(s):  Joe Marsh Rossney
+
 .assert_valid_persona <- function(persona) {
     expected_names <- load_config()[["Name"]]
     if (!identical(sort(names(persona)), sort(expected_names))) {
@@ -8,6 +15,20 @@
     }
 }
 
+#' Read Persona CSV
+#'
+#' Read a CSV file containing one or more personas.
+#'
+#' This function essentially calls `readr::read_csv` with `col_types` set to reflect the
+#' expected columns in a persona file. That is: one `character` column for the index,
+#' and _at least_ one integer column for the persona scores.
+#'
+#' @param csv_path Path to a CSV file containing the persona(s)
+#'
+#' @returns data.frame containing _at least_ two columns: the `index` column and the persona(s)
+#'
+#' @seealso [biodt.recreation::load_persona()] loads a single persona.
+#'
 #' @export
 read_persona_csv <- function(csv_path) {
     # Read csv as a dataframe of integers, throwing an error for non-integer elements
@@ -32,14 +53,18 @@ read_persona_csv <- function(csv_path) {
 
 #' Load Persona
 #'
+#' Load a single persona from a CSV file.
+#'
 #' Loads a single persona from a csv file containing one or more personas.
 #' If the file contains more than one persona (i.e. columns), a name specifying
 #' which personal (column) to load must also be provided.
 #'
-#' @param csv_path `character` Path to a csv file containing one or more personas
-#' @param name `character` Name of the persona, which should match a column name
+#' @param csv_path Path to a csv file containing one or more personas
+#' @param name Name of the persona, which should match a column name
 #'
-#' @return `integer` A named vector of integers representing the persona
+#' @returns A named vector of integers representing the persona
+#'
+#' @seealso [biodt.recreation::read_persona_csv()] reads the entire CSV file
 #'
 #' @export
 load_persona <- function(csv_path, name = NULL) {
@@ -61,7 +86,7 @@ load_persona <- function(csv_path, name = NULL) {
     }
 
     # Convert to named vector
-    persona <- setNames(scores, df[["index"]])
+    persona <- stats::setNames(scores, df[["index"]])
 
     .assert_valid_persona(persona)
 
@@ -70,13 +95,19 @@ load_persona <- function(csv_path, name = NULL) {
 
 #' Save Persona
 #'
+#' Save a persona by creating or appending to a CSV file.
+#'
 #' Saves a persona to a csv file. If the csv file already exists, the persona
 #' will be appended as a new column, unless the provided name matches an existing
 #' column, in which case it will overwrite the existing data.
 #'
-#' @param persona `integer` A named vector of integers representing the persona
-#' @param csv_path `character` Path to write a csv file, which may already exist
-#' @param name `character` Name of the persona
+#' @param persona A named vector of integers representing the persona
+#' @param csv_path Path to write a csv file, which may already exist
+#' @param name A name for the persona
+#' @param overwrite A boolean flag indicated whether it is permissible to overwrite
+#' an existing personas with the same name
+#'
+#' @returns NULL
 #'
 #' @export
 save_persona <- function(persona, csv_path, name, overwrite = FALSE) {

@@ -1,13 +1,17 @@
-#' @export
-get_raster_dir <- function() system.file("extdata", package = "model", mustWork = TRUE)
+# File:       data.R
+# Package:    biodt.recreation
+# Repository: https://github.com/BioDT/uc-ces-recreation2
+# License:    MIT
+# Copyright:  2025 BioDT
+# Author(s):  Joe Marsh Rossney
 
-.assert_valid_raster_dir <- function(raster_dir) {
-    if (!dir.exists(raster_dir)) {
-        stop(paste0("Error: the directory ", raster_dir, " does not exist"))
+.assert_valid_data_dir <- function(data_dir) {
+    if (!dir.exists(data_dir)) {
+        stop(paste0("Error: the directory ", data_dir, " does not exist"))
     }
 
-    if (!file.access(raster_dir, 4) == 0) {
-        stop(paste0("Error: the directory ", raster_dir, " is not readable"))
+    if (!file.access(data_dir, 4) == 0) {
+        stop(paste0("Error: the directory ", data_dir, " is not readable"))
     }
 
     required_files <- c(
@@ -16,30 +20,35 @@ get_raster_dir <- function() system.file("extdata", package = "model", mustWork 
         "FIPS_I.tif",
         "Water.tif"
     )
-    missing_files <- required_files[!required_files %in% list.files(raster_dir)]
+    missing_files <- required_files[!required_files %in% list.files(data_dir)]
 
     if (length(missing_files) > 0) {
-        stop(paste0("Error: the directory ", raster_dir, " is missing the following required files: ", paste(missing_files, collapse = ", "))) # nolint
+        stop(paste0("Error: the directory ", data_dir, " is missing the following required files: ", paste(missing_files, collapse = ", "))) # nolint
     }
 
     # TODO: check names of rasters
 }
 
+#' Get Default Data Directory
+#'
+#' Get the path to the default data directory containing the input rasters.
+#'
+#' @export
+get_default_data_dir <- function() system.file("extdata", package = "biodt.recreation", mustWork = TRUE)
 
-#' Load a cropped raster
+#' Load Raster
 #'
-#' @description
-#' Load a cropped raster from a file
+#' Load a `SpatRaster` from a file, optionally cropping it to a given area.
 #'
-#' @details
-#' Details...
+#' This function is a convenience wrapped around [terra::rast] which also
+#' crops the raster to an area (if given) using [terra::crop], and finally
+#' masks it using [terra::mask] if `area` is a `SpatVector`.
 #'
-#' @param raster_path `character` Path to a raster file to load
-#' @param crop_area A SpatExtent or another object with a SpatExtent
+#' @param raster_path Path to a file from which to load the raster.
+#' @param area A `SpatExtent` or another valid object (such as a `SpatVector`)
+#' with which to crop the raster.
 #'
-#' @examples
-#' load_raster("path/to/raster.tif", terra::vect("path/to/shapefile.shp"))
-#' load_raster("path/to.raster.tif", terra::ext(xmin, xmax, ymin, ymax))
+#' @returns The loaded and cropped `SpatRaster`.
 #'
 #' @export
 load_raster <- function(raster_path, area = NULL) {
@@ -61,6 +70,10 @@ load_raster <- function(raster_path, area = NULL) {
 
     return(raster)
 }
+
+
+
+# -------------------------------------------------------------
 
 #' @export
 categorical_to_one_hot <- function(layer, feature_mapping) {
@@ -115,23 +128,6 @@ sum_layers <- function(raster) {
     return(terra::app(raster, sum))
 }
 
-#' Rescale a SpatRaster to [0, 1]
-#'
-#' Uses an affine transformation
-#'
-#' @export
-rescale_to_unit_interval <- function(raster) {
-    min_value <- min(terra::values(raster), na.rm = TRUE)
-    max_value <- max(terra::values(raster), na.rm = TRUE)
-
-    if (max_value == min_value) {
-        message(paste("The data could not be rescaled to the interval [0, 1], because the smallest and largest value are the same number", max_value)) # nolint
-    }
-
-    result <- (raster - min_value) / (max_value - min_value)
-
-    return(result)
-}
 
 
 #' Map distances to the unit interval

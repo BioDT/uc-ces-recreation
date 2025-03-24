@@ -1,5 +1,7 @@
 renv::status()
 
+devtools::document()
+
 testthat::test_dir("tests/testthat")
 
 style <- styler::tidyverse_style(
