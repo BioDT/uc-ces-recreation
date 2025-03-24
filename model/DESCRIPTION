@@ -1,4 +1,4 @@
-Package: model
+Package: biodt.recreation
 Title: Compute the BioDT Recreational Potential Model
 Version: 0.0.1
 Authors@R: 
@@ -21,7 +21,7 @@ Depends:
 Imports:
     dplyr,
     readr,
-    terra (>= 1.8.21)
+    terra
 Suggests:
     devtools,
     lintr,
