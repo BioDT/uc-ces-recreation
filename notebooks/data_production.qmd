@@ -36,7 +36,7 @@ get_feature_mappings <- function(config) {
 
 ```{r}
 
-config <- model::load_config()
+config <- biodt.recreation::load_config()
 
 feature_mappings <- get_feature_mappings(config)
 print(length(feature_mappings))

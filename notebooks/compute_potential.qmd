@@ -11,9 +11,9 @@ devtools::load_all("../model")
 
 ```{r}
 data_dir <- "data/one_hot"
-persona <- model::load_persona("persona.csv")
+persona <- biodt.recreation::load_persona("persona.csv")
 
-layers <- model::compute_potential(persona, data_dir)
+layers <- biodt.recreation::compute_potential(persona, data_dir)
 
 terra::plot(layers)
 ```
