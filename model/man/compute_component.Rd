@@ -22,10 +22,18 @@ A single-layered \code{SpatRaster} which is the contribution to the Recreational
 Compute a single component of the Recreational Potential.
 }
 \details{
-This function computes one \emph{component}, i.e. one of (i) SLSRA, (ii) FIPS_N,
-(iii) FIPS_I and (iv) Water, of the Recreational Potential. This is simply
-a pixel-wise summation of all of the layers (most of which are either 1/present
-or 0/absent, weighted by the corresponding scores.
+This function computes one \emph{component}, \eqn{p_i}, of the Recreational Potential.
+This is is one of
+\itemize{
+\item SLSRA
+\item FIPS_N
+\item FIPS_I
+\item Water
+}
 
-\deqn{ C(x, y) = \sum_{i=1}^{n_\text{feat}} s_i z_i(x, y) }
+A component is simply a pixel-wise summation of all of the layers/items/features,
+\eqn{f_{i,j}}, (most of which are either 1/present or 0/absent),
+weighted by the corresponding persona scores, \eqn{s_{i,j}},
+
+\deqn{ p_i(x, y) = \sum_{j=1}^{n_i} s_{i,j} f_{i,j}(x, y) }
 }

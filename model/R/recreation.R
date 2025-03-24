@@ -16,12 +16,18 @@
 #'
 #' Compute a single component of the Recreational Potential.
 #'
-#' This function computes one _component_, i.e. one of (i) SLSRA, (ii) FIPS_N,
-#' (iii) FIPS_I and (iv) Water, of the Recreational Potential. This is simply
-#' a pixel-wise summation of all of the layers (most of which are either 1/present
-#' or 0/absent, weighted by the corresponding scores.
+#' This function computes one _component_, \eqn{p_i}, of the Recreational Potential.
+#' This is is one of
+#' * SLSRA
+#' * FIPS_N
+#' * FIPS_I
+#' * Water
 #'
-#' \deqn{ C(x, y) = \sum_{i=1}^{n_\text{feat}} s_i z_i(x, y) }
+#' A component is simply a pixel-wise summation of all of the layers/items/features,
+#' \eqn{f_{i,j}}, (most of which are either 1/present or 0/absent),
+#' weighted by the corresponding persona scores, \eqn{s_{i,j}},
+#'
+#' \deqn{ p_i(x, y) = \sum_{j=1}^{n_i} s_{i,j} f_{i,j}(x, y) }
 #'
 #' @param component The name of the component to compute (one of "SLSRA", "FIPS_N", "FIPS_I", "Water").
 #' @param persona A named vector containing the persona scores (for all components).
@@ -36,7 +42,7 @@ compute_component <- function(component, persona, data_dir, bbox = NULL) {
     .assert_valid_data_dir(data_dir)
 
     raster <- load_raster(
-        file.path(data_dir, paste0(component, "tif")),
+        file.path(data_dir, paste0(component, ".tif")),
         bbox
     )
     scores <- persona[names(raster)]
