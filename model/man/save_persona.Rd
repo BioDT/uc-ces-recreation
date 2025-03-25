@@ -7,14 +7,29 @@
 save_persona(persona, csv_path, name, overwrite = FALSE)
 }
 \arguments{
-\item{persona}{\code{integer} A named vector of integers representing the persona}
+\item{persona}{A named vector of integers representing the persona}
 
-\item{csv_path}{\code{character} Path to write a csv file, which may already exist}
+\item{csv_path}{Path to write a csv file, which may already exist}
 
-\item{name}{\code{character} Name of the persona}
+\item{name}{A name for the persona}
+
+\item{overwrite}{A boolean flag indicated whether it is permissible to overwrite
+an existing personas with the same name}
 }
 \description{
+Save a persona by creating or appending to a CSV file.
+}
+\details{
 Saves a persona to a csv file. If the csv file already exists, the persona
 will be appended as a new column, unless the provided name matches an existing
 column, in which case it will overwrite the existing data.
+}
+\examples{
+library(biodt.recreation)
+
+csv_path <- system.file("extdata", "example_personas.csv", package = "biodt.recreation")
+loaded_persona <- load_persona(csv_path, name = "Hard_Recreationalist")
+
+temp_file <- tempfile(fileext = ".csv")
+save_persona(loaded_persona, temp_file, "Hard_Recreationalist_Copy")
 }

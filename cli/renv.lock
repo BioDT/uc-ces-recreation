@@ -109,6 +109,37 @@
       "Repository": "RSPM",
       "Encoding": "UTF-8"
     },
+    "biodt.recreation": {
+      "Package": "biodt.recreation",
+      "Version": "0.0.1",
+      "Source": "Local",
+      "Title": "Compute the BioDT Recreational Potential Model",
+      "Authors@R": "c( person(\"Will\", \"Bolton\", role = c(\"aut\")), person(\"Chris\", \"Andrews\", role = c(\"aut\")), person(\"Simon\", \"Rolph\", role = c(\"aut\")), person(\"Maddalena\", \"Tigli\", role = c(\"aut\")), person(\"Joe\", \"Marsh Rossney\", email = \"17361029+jmarshrossney@users.noreply.github.com\", role = c(\"aut\", \"cre\")) )",
+      "Description": "This package provides the BioDT Recreational Potential Model, which was developed by scientists at the UK Centre for Ecology & Hydrology. The model takes a geographic area and a collection of numerical parameters that we call a recreational 'persona', and computes a scalar metric that represents what we call the 'recreational potential' for each point or pixel in the area considered.",
+      "License": "MIT + file ../LICENSE",
+      "Depends": [
+        "R (>= 4.4.2)"
+      ],
+      "Imports": [
+        "dplyr",
+        "readr",
+        "terra"
+      ],
+      "Suggests": [
+        "devtools",
+        "lintr",
+        "styler",
+        "testthat",
+        "usethis"
+      ],
+      "Encoding": "UTF-8",
+      "Roxygen": "list(markdown = TRUE)",
+      "RoxygenNote": "7.3.2",
+      "Author": "Will Bolton [aut], Chris Andrews [aut], Simon Rolph [aut], Maddalena Tigli [aut], Joe Marsh Rossney [aut, cre]",
+      "Maintainer": "Joe Marsh Rossney <17361029+jmarshrossney@users.noreply.github.com>",
+      "RemoteType": "local",
+      "RemoteUrl": "../model"
+    },
     "bit": {
       "Package": "bit",
       "Version": "4.6.0",
@@ -1800,37 +1831,6 @@
       "Repository": "RSPM",
       "Encoding": "UTF-8"
     },
-    "model": {
-      "Package": "model",
-      "Version": "0.0.1",
-      "Source": "Local",
-      "Title": "Compute the BioDT Recreational Potential Model",
-      "Authors@R": "c( person(\"Will\", \"Bolton\", role = c(\"aut\")), person(\"Chris\", \"Andrews\", role = c(\"aut\")), person(\"Simon\", \"Rolph\", role = c(\"aut\")), person(\"Maddalena\", \"Tigli\", role = c(\"aut\")), person(\"Joe\", \"Marsh Rossney\", email = \"17361029+jmarshrossney@users.noreply.github.com\", role = c(\"aut\", \"cre\")) )",
-      "Description": "This package provides the BioDT Recreational Potential Model, which was developed by scientists at the UK Centre for Ecology & Hydrology. The model takes a geographic area and a collection of numerical parameters that we call a recreational 'persona', and computes a scalar metric that represents what we call the 'recreational potential' for each point or pixel in the area considered.",
-      "License": "MIT + file ../LICENSE",
-      "Depends": [
-        "R (>= 4.4.2)"
-      ],
-      "Imports": [
-        "dplyr",
-        "readr",
-        "terra (>= 1.8.21)"
-      ],
-      "Suggests": [
-        "devtools",
-        "lintr",
-        "styler",
-        "testthat",
-        "usethis"
-      ],
-      "Encoding": "UTF-8",
-      "Roxygen": "list(markdown = TRUE)",
-      "RoxygenNote": "7.3.2",
-      "Author": "Will Bolton [aut], Chris Andrews [aut], Simon Rolph [aut], Maddalena Tigli [aut], Joe Marsh Rossney [aut, cre]",
-      "Maintainer": "Joe Marsh Rossney <17361029+jmarshrossney@users.noreply.github.com>",
-      "RemoteType": "local",
-      "RemoteUrl": "../model"
-    },
     "openssl": {
       "Package": "openssl",
       "Version": "2.3.2",
@@ -2596,7 +2596,7 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "1.1.3",
+      "Version": "1.1.4",
       "Source": "Repository",
       "Type": "Package",
       "Title": "Project Environments",

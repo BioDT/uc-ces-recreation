@@ -1,4 +1,4 @@
-Package: model
+Package: biodt.recreation
 Title: Compute the BioDT Recreational Potential Model
 Version: 0.0.1
 Authors@R: 
@@ -15,13 +15,12 @@ Description: This package provides the BioDT Recreational Potential Model,
     that we call a recreational 'persona', and computes a scalar metric that
     represents what we call the 'recreational potential' for each point or
     pixel in the area considered.
-License: MIT + file ../LICENSE
+License: MIT + file LICENSE
 Depends:
-    R (>= 4.4.2)
+    R (>= 4.4)
 Imports:
-    dplyr,
     readr,
-    terra (>= 1.8.21)
+    terra
 Suggests:
     devtools,
     lintr,

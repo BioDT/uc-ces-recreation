@@ -1,4 +1,4 @@
-# Rscript main.R --persona_file example/personas.csv --xmin=300000 --xmax=310000 --ymin 700000 --ymax 710000 --persona_name Hard_Recreationalist --pdf
+# Rscript main.R --persona_file example/personas.csv --xmin=300000 --xmax=310000 --ymin 700000 --ymax 710000 --persona_name Hard_Recreationalist --pdf  # nolint
 
 devtools::load_all("../model")
 
@@ -30,7 +30,7 @@ for (coord in c("xmin", "xmax", "ymin", "ymax")) {
 
 # TODO: additional argument checks would be wise
 
-persona <- load_persona(args$persona_file, name = args$persona_name)
+persona <- biodt.recreation::load_persona(args$persona_file, name = args$persona_name)
 
 bbox <- terra::ext(args$xmin, args$xmax, args$ymin, args$ymax)
 
@@ -41,7 +41,7 @@ if (!terra::relate(bbox, scotland, relation = "within")) {
 }
 
 # Run the model
-layers <- compute_potential(persona, bbox = bbox)
+layers <- biodt.recreation::compute_potential(persona, bbox = bbox)
 
 # Write the output raster
 output_dir <- dirname(args$persona_file)

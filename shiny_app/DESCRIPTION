@@ -10,17 +10,17 @@ Authors@R:
 Description: This package provides a Shiny App for the BioDT Recreational Potential Model.
     This is an alternative to the official BioDT Shiny App, which was developed
     independently to meet the requirements of a spin-off project.
-License: MIT + file ../LICENSE
+License: MIT + file LICENSE
 Depends:
-    R (>= 4.4.2)
+    R (>= 4.4)
 Imports:
+    biodt.recreation,
     bslib,
     class,
     devtools,
     KernSmooth,
     leaflet,
     leaflet.extras,
-    model,
     mapview,
     shiny,
     shinymanager,

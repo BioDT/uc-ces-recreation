@@ -515,6 +515,37 @@
       "Maintainer": "Victor Perrier <victor.perrier@dreamrs.fr>",
       "Repository": "CRAN"
     },
+    "biodt.recreation": {
+      "Package": "biodt.recreation",
+      "Version": "0.0.1",
+      "Source": "Local",
+      "Title": "Compute the BioDT Recreational Potential Model",
+      "Authors@R": "c( person(\"Will\", \"Bolton\", role = c(\"aut\")), person(\"Chris\", \"Andrews\", role = c(\"aut\")), person(\"Simon\", \"Rolph\", role = c(\"aut\")), person(\"Maddalena\", \"Tigli\", role = c(\"aut\")), person(\"Joe\", \"Marsh Rossney\", email = \"17361029+jmarshrossney@users.noreply.github.com\", role = c(\"aut\", \"cre\")) )",
+      "Description": "This package provides the BioDT Recreational Potential Model, which was developed by scientists at the UK Centre for Ecology & Hydrology. The model takes a geographic area and a collection of numerical parameters that we call a recreational 'persona', and computes a scalar metric that represents what we call the 'recreational potential' for each point or pixel in the area considered.",
+      "License": "MIT + file ../LICENSE",
+      "Depends": [
+        "R (>= 4.4.2)"
+      ],
+      "Imports": [
+        "dplyr",
+        "readr",
+        "terra"
+      ],
+      "Suggests": [
+        "devtools",
+        "lintr",
+        "styler",
+        "testthat",
+        "usethis"
+      ],
+      "Encoding": "UTF-8",
+      "Roxygen": "list(markdown = TRUE)",
+      "RoxygenNote": "7.3.2",
+      "Author": "Will Bolton [aut], Chris Andrews [aut], Simon Rolph [aut], Maddalena Tigli [aut], Joe Marsh Rossney [aut, cre]",
+      "Maintainer": "Joe Marsh Rossney <17361029+jmarshrossney@users.noreply.github.com>",
+      "RemoteType": "local",
+      "RemoteUrl": "../model"
+    },
     "bit": {
       "Package": "bit",
       "Version": "4.6.0",
@@ -2110,44 +2141,6 @@
       "Maintainer": "Thomas Lin Pedersen <thomas.pedersen@posit.co>",
       "Repository": "CRAN"
     },
-    "here": {
-      "Package": "here",
-      "Version": "1.0.1",
-      "Source": "Repository",
-      "Title": "A Simpler Way to Find Your Files",
-      "Date": "2020-12-13",
-      "Authors@R": "c(person(given = \"Kirill\", family = \"M\\u00fcller\", role = c(\"aut\", \"cre\"), email = \"krlmlr+r@mailbox.org\", comment = c(ORCID = \"0000-0002-1416-3412\")), person(given = \"Jennifer\", family = \"Bryan\", role = \"ctb\", email = \"jenny@rstudio.com\", comment = c(ORCID = \"0000-0002-6983-2759\")))",
-      "Description": "Constructs paths to your project's files. Declare the relative path of a file within your project with 'i_am()'. Use the 'here()' function as a drop-in replacement for 'file.path()', it will always locate the files relative to your project root.",
-      "License": "MIT + file LICENSE",
-      "URL": "https://here.r-lib.org/, https://github.com/r-lib/here",
-      "BugReports": "https://github.com/r-lib/here/issues",
-      "Imports": [
-        "rprojroot (>= 2.0.2)"
-      ],
-      "Suggests": [
-        "conflicted",
-        "covr",
-        "fs",
-        "knitr",
-        "palmerpenguins",
-        "plyr",
-        "readr",
-        "rlang",
-        "rmarkdown",
-        "testthat",
-        "uuid",
-        "withr"
-      ],
-      "VignetteBuilder": "knitr",
-      "Encoding": "UTF-8",
-      "LazyData": "true",
-      "RoxygenNote": "7.1.1.9000",
-      "Config/testthat/edition": "3",
-      "NeedsCompilation": "no",
-      "Author": "Kirill Müller [aut, cre] (<https://orcid.org/0000-0002-1416-3412>), Jennifer Bryan [ctb] (<https://orcid.org/0000-0002-6983-2759>)",
-      "Maintainer": "Kirill Müller <krlmlr+r@mailbox.org>",
-      "Repository": "CRAN"
-    },
     "highr": {
       "Package": "highr",
       "Version": "0.11",
@@ -3143,38 +3136,6 @@
       "Repository": "RSPM",
       "Encoding": "UTF-8"
     },
-    "model": {
-      "Package": "model",
-      "Version": "0.0.1",
-      "Source": "Local",
-      "Title": "Compute the BioDT Recreational Potential Model",
-      "Authors@R": "c( person(\"Will\", \"Bolton\", role = c(\"aut\")), person(\"Chris\", \"Andrews\", role = c(\"aut\")), person(\"Simon\", \"Rolph\", role = c(\"aut\")), person(\"Maddalena\", \"Tigli\", role = c(\"aut\")), person(\"Joe\", \"Marsh Rossney\", email = \"17361029+jmarshrossney@users.noreply.github.com\", role = c(\"aut\", \"cre\")) )",
-      "Description": "This package provides the BioDT Recreational Potential Model, which was developed by scientists at the UK Centre for Ecology & Hydrology. The model takes a geographic area and a collection of numerical parameters that we call a recreational 'persona', and computes a scalar metric that represents what we call the 'recreational potential' for each point or pixel in the area considered.",
-      "License": "MIT + file ../LICENSE",
-      "Depends": [
-        "R (>= 4.4.2)"
-      ],
-      "Imports": [
-        "dplyr",
-        "here",
-        "readr",
-        "terra (>= 1.8.21)"
-      ],
-      "Suggests": [
-        "devtools",
-        "lintr",
-        "styler",
-        "testthat",
-        "usethis"
-      ],
-      "Encoding": "UTF-8",
-      "Roxygen": "list(markdown = TRUE)",
-      "RoxygenNote": "7.3.2",
-      "Author": "Will Bolton [aut], Chris Andrews [aut], Simon Rolph [aut], Maddalena Tigli [aut], Joe Marsh Rossney [aut, cre]",
-      "Maintainer": "Joe Marsh Rossney <17361029+jmarshrossney@users.noreply.github.com>",
-      "RemoteType": "local",
-      "RemoteUrl": "../model"
-    },
     "munsell": {
       "Package": "munsell",
       "Version": "0.5.1",
@@ -4162,7 +4123,7 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "1.1.2",
+      "Version": "1.1.4",
       "Source": "Repository",
       "Type": "Package",
       "Title": "Project Environments",

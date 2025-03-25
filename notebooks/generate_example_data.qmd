@@ -99,7 +99,7 @@ rm(water)
 ## Convert to one-hot representation
 
 ```{r}
-config <- model::load_config()
+config <- biodt.recreation::load_config()
 
 get_feature_mappings <- function(config) {
   # Group by layer, results in {layer_name : layer_config}
@@ -174,14 +174,14 @@ fips_i <- file.path(data_dir, "FIPS_I.tif") |>
   rast() |>
   one_hot(feature_mappings) |>
   distance() |>
-  model::map_distance_to_unit_interval(alpha=0.01, kappa=5) |>
+  biodt.recreation::map_distance_to_unit_interval(alpha=0.01, kappa=5) |>
   na_to_zero()
 
 water <- file.path(data_dir, "Water.tif") |>
   rast() |>
   one_hot(feature_mappings) |>
   distance() |>
-  model::map_distance_to_unit_interval(alpha=0.01, kappa=5) |>
+  biodt.recreation::map_distance_to_unit_interval(alpha=0.01, kappa=5) |>
   na_to_zero() 
 
 

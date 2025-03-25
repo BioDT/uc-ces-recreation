@@ -57,7 +57,7 @@ expected_names <- load_config()[["Name"]]
 identical(sort(names(persona)), sort(expected_names))
 
 file.remove("test_persona.csv")
-model::save_persona(persona, "test_persona.csv", "random")
+biodt.recreation::save_persona(persona, "test_persona.csv", "random")
 ```
 
 ## Test saving and loading a new persona file
@@ -70,9 +70,9 @@ persona <- setNames(
 persona
 
 
-model::save_persona(persona, "test_persona.csv", "random")
+biodt.recreation::save_persona(persona, "test_persona.csv", "random")
 
-loaded_persona <- model::load_persona("test_persona.csv")
+loaded_persona <- biodt.recreation::load_persona("test_persona.csv")
 
 identical(persona, loaded_persona)
 ```
@@ -131,7 +131,7 @@ sr_persona <- setNames(sr_config[["SR_ReducedMod"]], sr_config[["Name"]])
 
 #hr_persona
 
-model::save_persona(hr_persona, "examples.csv", "Hard_Recreationalist")
-model::save_persona(sr_persona, "examples.csv", "Soft_Recreationalist")
+biodt.recreation::save_persona(hr_persona, "examples.csv", "Hard_Recreationalist")
+biodt.recreation::save_persona(sr_persona, "examples.csv", "Soft_Recreationalist")
 
 ```
