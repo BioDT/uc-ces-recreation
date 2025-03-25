@@ -6,9 +6,9 @@ Authors@R:
 	person("Joe", "Marsh Rossney", email = "17361029+jmarshrossney@users.noreply.github.com", role = c("aut", "cre"))
     )
 Description: This package provides a command-line interface for the BioDT Recreational Potential Model.
-License: MIT + file ../LICENSE
+License: MIT + file LICENSE
 Depends:
-    R (>= 4.4.2)
+    R (>= 4.4)
 Imports:
     biodt.recreation,
     devtools,
