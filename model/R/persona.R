@@ -66,6 +66,8 @@ read_persona_csv <- function(csv_path) {
 #'
 #' @seealso [biodt.recreation::read_persona_csv()] reads the entire CSV file
 #'
+#' @example inst/examples/load_persona.R
+#'
 #' @export
 load_persona <- function(csv_path, name = NULL) {
     message(paste0("Loading persona '", name, "' from file '", csv_path, "'"))
@@ -108,6 +110,8 @@ load_persona <- function(csv_path, name = NULL) {
 #' an existing personas with the same name
 #'
 #' @returns NULL
+#'
+#' @example inst/examples/save_persona.R
 #'
 #' @export
 save_persona <- function(persona, csv_path, name, overwrite = FALSE) {

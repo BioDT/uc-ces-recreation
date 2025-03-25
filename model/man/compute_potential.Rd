@@ -31,6 +31,18 @@ using a data-dependent shift-and-rescale
 
 \deqn{ \hat{v}(x, y) = \frac{v(x, y) - \min_{x,y}(v)}{\max_{x,y}(v) - \min_{x,y}(v)} }
 }
+\examples{
+library(biodt.recreation)
+
+persona <- load_persona(
+    csv_path = system.file("extdata", "example_personas.csv", package = "biodt.recreation"),
+    name = "Hard_Recreationalist"
+)
+data_dir <- get_default_data_dir()
+bbox <- system.file("extdata", "Bush", "Bush.shp", package = "biodt.recreation")
+
+rec_pot <- compute_potential(persona, data_dir, bbox = bbox)
+}
 \seealso{
 \link{compute_component} used to compute each component.
 \link{rescale_to_unit_interval} performs the normalisation.

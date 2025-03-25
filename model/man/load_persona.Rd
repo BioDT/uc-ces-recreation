@@ -22,6 +22,13 @@ Loads a single persona from a csv file containing one or more personas.
 If the file contains more than one persona (i.e. columns), a name specifying
 which personal (column) to load must also be provided.
 }
+\examples{
+library(biodt.recreation)
+
+csv_path <- system.file("extdata", "example_personas.csv", package = "biodt.recreation")
+
+loaded_persona <- load_persona(csv_path, name = "Hard_Recreationalist")
+}
 \seealso{
 \code{\link[=read_persona_csv]{read_persona_csv()}} reads the entire CSV file
 }

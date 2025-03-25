@@ -24,3 +24,12 @@ Saves a persona to a csv file. If the csv file already exists, the persona
 will be appended as a new column, unless the provided name matches an existing
 column, in which case it will overwrite the existing data.
 }
+\examples{
+library(biodt.recreation)
+
+csv_path <- system.file("extdata", "example_personas.csv", package = "biodt.recreation")
+loaded_persona <- load_persona(csv_path, name = "Hard_Recreationalist")
+
+temp_file <- tempfile(fileext = ".csv")
+save_persona(loaded_persona, temp_file, "Hard_Recreationalist_Copy")
+}
