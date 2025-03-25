@@ -1,3 +1,5 @@
+setwd("model")
+
 renv::status()
 
 devtools::document()

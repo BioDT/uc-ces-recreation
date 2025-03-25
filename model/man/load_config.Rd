@@ -23,3 +23,6 @@ expected columns in a model configuration. That is: four \code{character} column
 for \code{Raster_Val}. See \code{inst/extdata/config.csv} for an example of a valid configuration
 file.
 }
+\examples{
+default_config <- biodt.recreation::load_config()
+}

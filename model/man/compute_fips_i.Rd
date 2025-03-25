@@ -6,6 +6,13 @@
 \usage{
 compute_fips_i(persona, data_dir, bbox = NULL)
 }
+\arguments{
+\item{persona}{A named vector containing the persona scores (for all components).}
+
+\item{data_dir}{Path to the directory containing the rasters.}
+
+\item{bbox}{An optional bounding box for cropping.}
+}
 \description{
 Compute the FIPS_I ("Infrastructure Features Impacting Potential Services") component
 of the Recreational Potential. This is a convenience wrapper around

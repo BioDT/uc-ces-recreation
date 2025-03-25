@@ -25,6 +25,8 @@ get_default_config <- function() system.file("extdata", "config.csv", package = 
 #'
 #' @returns A `data.frame` containing the configuration.
 #'
+#' @example inst/examples/load_config.R
+#'
 #' @export
 load_config <- function(config_path = NULL) {
     if (is.null(config_path)) {

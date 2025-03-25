@@ -58,6 +58,10 @@ compute_component <- function(component, persona, data_dir, bbox = NULL) {
 #' of the Recreational Potential. This is a convenience wrapper around
 #' [biodt.recreation::compute_component] with the argument `component = "SLSRA"`.
 #'
+#' @param persona A named vector containing the persona scores (for all components).
+#' @param data_dir Path to the directory containing the rasters.
+#' @param bbox An optional bounding box for cropping.
+#'
 #' @export
 compute_slsra <- function(persona, data_dir, bbox = NULL) {
     compute_component("SLSRA", persona, data_dir, bbox = bbox)
@@ -68,6 +72,10 @@ compute_slsra <- function(persona, data_dir, bbox = NULL) {
 #' Compute the FIPS_N ("Natural Features Impacting Potential Services") component
 #' of the Recreational Potential. This is a convenience wrapper around
 #' [biodt.recreation::compute_component] with the argument `component = "FIPS_N"`.
+#'
+#' @param persona A named vector containing the persona scores (for all components).
+#' @param data_dir Path to the directory containing the rasters.
+#' @param bbox An optional bounding box for cropping.
 #'
 #' @export
 compute_fips_n <- function(persona, data_dir, bbox = NULL) {
@@ -80,6 +88,10 @@ compute_fips_n <- function(persona, data_dir, bbox = NULL) {
 #' of the Recreational Potential. This is a convenience wrapper around
 #' [biodt.recreation::compute_component] with the argument `component = "FIPS_I"`.
 #'
+#' @param persona A named vector containing the persona scores (for all components).
+#' @param data_dir Path to the directory containing the rasters.
+#' @param bbox An optional bounding box for cropping.
+#'
 #' @export
 compute_fips_i <- function(persona, data_dir, bbox = NULL) {
     compute_component("FIPS_I", persona, data_dir, bbox = bbox)
@@ -90,6 +102,10 @@ compute_fips_i <- function(persona, data_dir, bbox = NULL) {
 #' Compute the Water component of the Recreational Potential. This is a convenience
 #' wrapper around [biodt.recreation::compute_component] with the argument
 #' `component = "Water"`.
+#'
+#' @param persona A named vector containing the persona scores (for all components).
+#' @param data_dir Path to the directory containing the rasters.
+#' @param bbox An optional bounding box for cropping.
 #'
 #' @export
 compute_water <- function(persona, data_dir, bbox = NULL) {

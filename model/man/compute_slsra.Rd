@@ -6,6 +6,13 @@
 \usage{
 compute_slsra(persona, data_dir, bbox = NULL)
 }
+\arguments{
+\item{persona}{A named vector containing the persona scores (for all components).}
+
+\item{data_dir}{Path to the directory containing the rasters.}
+
+\item{bbox}{An optional bounding box for cropping.}
+}
 \description{
 Compute the SLSRA ("Suitability of Land to Support Recreational Activity") component
 of the Recreational Potential. This is a convenience wrapper around
