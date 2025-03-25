@@ -7,11 +7,6 @@ devtools::load_all("../model")
 source("content.R") # contains {content}_html
 source("theme.R") # contains custom_theme, custom_titlePanel
 
-.credentials <- data.frame(
-    user = Sys.getenv("APP_USERNAME"),
-    password = Sys.getenv("APP_PASSWORD")
-)
-
 .persona_dir <- "personas"
 .data_dir <- biodt.recreation::get_default_data_dir()
 .config <- biodt.recreation::load_config()
@@ -351,18 +346,7 @@ save_dialog <- modalDialog(
     footer = modalButton("Cancel")
 )
 
-# Add password authorisation
-ui <- shinymanager::secure_app(ui)
-
 server <- function(input, output, session) {
-    # Check credentials
-    res_auth <- shinymanager::secure_server(
-        check_credentials = shinymanager::check_credentials(.credentials)
-    )
-    output$auth_output <- renderPrint({
-        reactiveValuesToList(res_auth)
-    })
-
 
     get_persona_from_sliders <- function() {
         persona <- sapply(
