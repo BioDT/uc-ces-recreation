@@ -4,8 +4,8 @@ library(leaflet.extras)
 
 devtools::load_all("../model")
 
-source("content.R")  # contains {content}_html
-source("theme.R")  # contains custom_theme, custom_titlePanel
+source("content.R") # contains {content}_html
+source("theme.R") # contains custom_theme, custom_titlePanel
 
 .credentials <- data.frame(
     user = Sys.getenv("APP_USERNAME"),
@@ -17,7 +17,7 @@ source("theme.R")  # contains custom_theme, custom_titlePanel
 .config <- biodt.recreation::load_config()
 .layer_info <- stats::setNames(.config[["Description"]], .config[["Name"]])
 .layer_names <- names(.layer_info)
-.max_area <- 1e9  # about 1/4 of the Cairngorms area
+.max_area <- 1e9 # about 1/4 of the Cairngorms area
 .min_area <- 1e4
 .data_extent <- terra::ext(terra::vect(system.file("extdata", "Scotland", "boundaries.shp", package = "biodt.recreation")))
 
@@ -53,9 +53,9 @@ list_personas_in_file <- function(file_name) {
 }
 
 remove_non_alphanumeric <- function(string) {
-    string <- gsub(" ", "_", string)  # Spaces to underscore
-    string <- gsub("[^a-zA-Z0-9_]+", "", string)  # remove non alpha-numeric
-    string <- gsub("^_+|_+$", "", string)  # remove leading or trailing underscores
+    string <- gsub(" ", "_", string) # Spaces to underscore
+    string <- gsub("[^a-zA-Z0-9_]+", "", string) # remove non alpha-numeric
+    string <- gsub("^_+|_+$", "", string) # remove leading or trailing underscores
     return(string)
 }
 
@@ -136,9 +136,9 @@ check_valid_bbox <- function(bbox) {
 
     entirely_within <- (
         terra::xmin(bbox) > terra::xmin(.data_extent) &&
-        terra::xmax(bbox) < terra::xmax(.data_extent) &&
-        terra::ymin(bbox) > terra::ymin(.data_extent) &&
-        terra::ymax(bbox) < terra::ymax(.data_extent)
+            terra::xmax(bbox) < terra::xmax(.data_extent) &&
+            terra::ymin(bbox) > terra::ymin(.data_extent) &&
+            terra::ymax(bbox) < terra::ymax(.data_extent)
     )
     if (entirely_within) {
         message(paste("Selected an area of", sprintf("%.1e", area), "m^2"))
@@ -147,9 +147,9 @@ check_valid_bbox <- function(bbox) {
 
     entirely_outside <- (
         terra::xmin(bbox) > terra::xmax(.data_extent) ||
-        terra::xmax(bbox) < terra::xmin(.data_extent) ||
-        terra::ymin(bbox) > terra::ymax(.data_extent) ||
-        terra::ymax(bbox) < terra::ymin(.data_extent)
+            terra::xmax(bbox) < terra::xmin(.data_extent) ||
+            terra::ymin(bbox) > terra::ymax(.data_extent) ||
+            terra::ymax(bbox) < terra::ymin(.data_extent)
     )
 
     if (entirely_outside) {
@@ -159,7 +159,6 @@ check_valid_bbox <- function(bbox) {
 
     message("Warning: Part of the area you have selected exceeds the boundaries where we have data.")
     return(TRUE)
-
 }
 
 check_valid_persona <- function(persona) {
@@ -316,12 +315,12 @@ load_dialog <- modalDialog(
         selected = NULL
     ),
     actionButton("confirmLoad", "Load"),
-    #hr(),
-    #fileInput(
-    #    "fileUpload",
-    #    "Upload a persona file",
-    #    accept = c(".csv")
-    #),
+    # hr(),
+    # fileInput(
+    # "fileUpload",
+    # "Upload a persona file",
+    # accept = c(".csv")
+    # ),
     footer = tagList(
         modalButton("Cancel"),
     )
@@ -443,24 +442,27 @@ server <- function(input, output, session) {
             )
         })
 
-        update_user_info(paste0("Loaded persona '", input$loadPersonaSelect, "' from user '", input$loadUserSelect, "'"))  # nolint
+        update_user_info(paste0("Loaded persona '", input$loadPersonaSelect, "' from user '", input$loadUserSelect, "'")) # nolint
 
         removeModal()
     })
     observeEvent(input$fileUpload, {
-        tryCatch({
-            . <- biodt.recreation::read_persona_csv(input$fileUpload$datapath)  # nolint
-        }, error = function(e) {
-            update_user_info("Unable to read persona file.")
-            return()
-        })
+        tryCatch(
+            {
+                . <- biodt.recreation::read_persona_csv(input$fileUpload$datapath) # nolint
+            },
+            error = function(e) {
+                update_user_info("Unable to read persona file.")
+                return()
+            }
+        )
 
         user_name <- remove_non_alphanumeric(tools::file_path_sans_ext(basename(input$fileUpload$name)))
         save_path <- file.path(.persona_dir, paste0(user_name, ".csv"))
         update_user_info(paste("Attempting to save uploaded persona file, user name:", user_name))
 
         if (file.exists(save_path)) {
-            append_user_info(paste("A persona file with this name already exists. Please rename the file and try again."))  # nolint
+            append_user_info(paste("A persona file with this name already exists. Please rename the file and try again.")) # nolint
             return()
         }
 
@@ -529,7 +531,6 @@ server <- function(input, output, session) {
         update_user_info(paste(c(message, captured_messages), collapse = "\n"))
 
         removeModal()
-
     })
     output$confirmDownload <- downloadHandler(
         filename = function() paste0(input$downloadUserSelect, ".csv"),
@@ -615,7 +616,6 @@ server <- function(input, output, session) {
     observeEvent(input$baseLayerSelect, {
         leafletProxy("map") |>
             hideGroup(c("Esri.WorldStreetMap", "Esri.WorldTopoMap", "Esri.WorldImagery", "Esri.WorldGrayCanvas")) |>
-
             showGroup(input$baseLayerSelect)
         update_map()
     })
@@ -665,7 +665,9 @@ server <- function(input, output, session) {
         )
         userInfoText(paste(msg, collapse = "\n"))
 
-        if (!valid_persona) return()
+        if (!valid_persona) {
+            return()
+        }
 
         bbox <- reactiveExtent()
 
@@ -674,7 +676,9 @@ server <- function(input, output, session) {
             type = "message"
         )
         update_user_info(msg)
-        if (!valid_bbox) return()
+        if (!valid_bbox) {
+            return()
+        }
 
         waiter::waiter_show(
             html = div(
@@ -701,7 +705,6 @@ server <- function(input, output, session) {
         waiter::waiter_hide()
 
         update_map()
-
     })
 
     # Update map using cached values when layer selection changes
@@ -723,18 +726,18 @@ server <- function(input, output, session) {
     # Need to create a fresh map object.
     # See https://forum.posit.co/t/solved-error-when-using-mapshot-with-shiny-leaflet/6765/7
     #
-    #output$downloadMap <- downloadHandler(
-    #    filename = function() {
-    #        paste("map_", Sys.Date(), ".png", sep = "")
-    #    },
-    #    content = function(file) {
-    #        mapview::mapshot2(
-    #            leafletProxy("map"),
-    #            file = file,
-    #            cliprect = "viewport"
-    #        )
-    #    }
-    #)
+    # output$downloadMap <- downloadHandler(
+    # filename = function() {
+    # paste("map_", Sys.Date(), ".png", sep = "")
+    # },
+    # content = function(file) {
+    # mapview::mapshot2(
+    # leafletProxy("map"),
+    # file = file,
+    # cliprect = "viewport"
+    # )
+    # }
+    # )
 }
 
 shinyApp(ui = ui, server = server)
