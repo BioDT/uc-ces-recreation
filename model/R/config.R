@@ -57,6 +57,8 @@ load_config <- function(config_path = NULL) {
 #' @returns A named list containing named lists, with the structure
 #' \{layer_name : \{feature_name : raster_value\}\}
 #'
+#' @example inst/examples/get_feature_mappings.R
+#'
 #' @export
 get_feature_mappings <- function(config) {
     # Group by layer, results in {layer_name : layer_config}

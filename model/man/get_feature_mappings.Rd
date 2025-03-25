@@ -21,3 +21,8 @@ Given a loaded configuration, this function returns a mapping from
 features to the corresponding values in the raw raster file. These mappings
 are furthermore grouped into datasets.
 }
+\examples{
+library(biodt.recreation)
+config <- load_config()
+mappings <- get_feature_mappings(load_config)
+}
