@@ -1,3 +1,3 @@
 #!/bin/bash
 
-Rscript -e "shiny::runApp('app.R', launch.browser = TRUE)"
+Rscript -e "shiny::runApp('R/app.R', launch.browser = TRUE)"
