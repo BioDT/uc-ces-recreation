@@ -46,66 +46,34 @@ remove_non_alphanumeric <- function(string) {
     return(string)
 }
 
-.scotland_shp <- system.file("extdata", "Scotland", "boundaries.shp", package = "biodt.recreation")
-.data_extent <- terra::ext(terra::vect(.scotland_shp))
-
-#' Check Valid Bbox
-#'
-#' Check that a bounding box defines a valid area in which to compute the
-#' Recreational Potential. It must be in Scotland and have an acceptable area.
-#'
-#' @param bbox A `SpatExtent` object defining the bounding box.
-#' @param min_area The minimum allowed area.
-#' @param max_area The maximum allowed area.
-#' @returns `TRUE` if the bbox is valid, `FALSE` otherwise.
-#'
-#' @export
 check_valid_bbox <- function(bbox, min_area = 1e4, max_area = 1e9) {
     if (is.null(bbox)) {
         message("No area has been selected. Please select an area.")
         return(FALSE)
     }
-    area <- (terra::xmax(bbox) - terra::xmin(bbox)) * (terra::ymax(bbox) - terra::ymin(bbox))
-    if (area > max_area) {
-        message(paste(
-            "The area you have selected is too large to be computed at this time",
-            "(", sprintf("%.1e", area), ">", max_area, " m^2 ).",
-            "Please draw a smaller area."
-        ))
-        return(FALSE)
-    }
-    if (area < min_area) {
-        message(paste(
-            "The area you have selected is too small",
-            "(", round(area), "<", min_area, " m^2 ).",
-            "Please draw a larger area."
-        ))
-        return(FALSE)
-    }
-
-    entirely_within <- (
-        terra::xmin(bbox) > terra::xmin(.data_extent) &&
-            terra::xmax(bbox) < terra::xmax(.data_extent) &&
-            terra::ymin(bbox) > terra::ymin(.data_extent) &&
-            terra::ymax(bbox) < terra::ymax(.data_extent)
+    tryCatch(
+        {
+            biodt.recreation::assert_bbox_intersects_scotland(bbox)
+        },
+        error = function(e) {
+            message(conditionMessage(e))
+            return(FALSE)
+        },
+        warning = function(w) {
+            message(conditionMessage(w))
+        }
     )
-    if (entirely_within) {
-        message(paste("Selected an area of", sprintf("%.1e", area), "m^2"))
-        return(TRUE)
-    }
-
-    entirely_outside <- (
-        terra::xmin(bbox) > terra::xmax(.data_extent) ||
-            terra::xmax(bbox) < terra::xmin(.data_extent) ||
-            terra::ymin(bbox) > terra::ymax(.data_extent) ||
-            terra::ymax(bbox) < terra::ymin(.data_extent)
+    tryCatch(
+        {
+            biodt.recreation::assert_bbox_is_valid_size(bbox, min_area, max_area)
+        },
+        error = function(e) {
+            message(conditionMessage(e))
+            return(FALSE)
+        },
+        warning = function(w) {
+            message(conditionMessage(w))
+        }
     )
-
-    if (entirely_outside) {
-        message("Error: The area you have selected is entirely outside the region where we have data.")
-        return(FALSE)
-    }
-
-    message("Warning: Part of the area you have selected exceeds the boundaries where we have data.")
     return(TRUE)
 }
