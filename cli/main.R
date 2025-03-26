@@ -35,10 +35,8 @@ persona <- biodt.recreation::load_persona(args$persona_file, name = args$persona
 bbox <- terra::ext(args$xmin, args$xmax, args$ymin, args$ymax)
 
 # Check that the bbox is valid
-scotland <- terra::ext(-10000, 660000, 460000, 1220000)
-if (!terra::relate(bbox, scotland, relation = "within")) {
-    stop("Bounding box coordinates are not contained with the Scotland bbox")
-}
+biodt.recreation::assert_bbox_intersects_scotland(bbox)
+biodt.recreation::assert_bbox_is_valid_size(bbox)
 
 # Run the model
 layers <- biodt.recreation::compute_potential(persona, bbox = bbox)
