@@ -2,14 +2,13 @@ library(shiny)
 library(leaflet)
 library(leaflet.extras)
 
+source("utils.R")
+
 .persona_dir <- file.path(rprojroot::find_root(rprojroot::is_r_package), "personas")
 .data_dir <- biodt.recreation::get_default_data_dir()
 .config <- biodt.recreation::load_config()
 .layer_info <- stats::setNames(.config[["Description"]], .config[["Name"]])
 .layer_names <- names(.layer_info)
-.max_area <- 1e9 # about 1/4 of the Cairngorms area
-.min_area <- 1e4
-.data_extent <- terra::ext(terra::vect(system.file("extdata", "Scotland", "boundaries.shp", package = "biodt.recreation")))
 
 .base_layers <- list(
     "Street" = "Esri.WorldStreetMap",
@@ -18,24 +17,6 @@ library(leaflet.extras)
     "Greyscale" = "Esri.WorldGrayCanvas"
 )
 
-list_persona_files <- function() {
-    return(list.files(path = .persona_dir, pattern = "\\.csv$", full.names = FALSE))
-}
-
-list_users <- function() lapply(list_persona_files(), tools::file_path_sans_ext)
-
-list_personas_in_file <- function(file_name) {
-    personas <- names(read.csv(file.path(.persona_dir, file_name), nrows = 1))
-    return(personas[personas != "index"])
-}
-
-remove_non_alphanumeric <- function(string) {
-    string <- gsub(" ", "_", string) # Spaces to underscore
-    string <- gsub("[^a-zA-Z0-9_]+", "", string) # remove non alpha-numeric
-    string <- gsub("^_+|_+$", "", string) # remove leading or trailing underscores
-    return(string)
-}
-
 palette <- colorNumeric(
     palette = "Spectral",
     reverse = TRUE,
@@ -43,71 +24,13 @@ palette <- colorNumeric(
     na.color = "transparent"
 )
 
-check_valid_bbox <- function(bbox) {
-    if (is.null(bbox)) {
-        message("No area has been selected. Please select an area.")
-        return(FALSE)
-    }
-    area <- (terra::xmax(bbox) - terra::xmin(bbox)) * (terra::ymax(bbox) - terra::ymin(bbox))
-    if (area > .max_area) {
-        message(paste(
-            "The area you have selected is too large to be computed at this time",
-            "(", sprintf("%.1e", area), ">", .max_area, " m^2 ).",
-            "Please draw a smaller area."
-        ))
-        return(FALSE)
-    }
-    if (area < .min_area) {
-        message(paste(
-            "The area you have selected is too small",
-            "(", round(area), "<", .min_area, " m^2 ).",
-            "Please draw a larger area."
-        ))
-        return(FALSE)
-    }
-
-    entirely_within <- (
-        terra::xmin(bbox) > terra::xmin(.data_extent) &&
-            terra::xmax(bbox) < terra::xmax(.data_extent) &&
-            terra::ymin(bbox) > terra::ymin(.data_extent) &&
-            terra::ymax(bbox) < terra::ymax(.data_extent)
-    )
-    if (entirely_within) {
-        message(paste("Selected an area of", sprintf("%.1e", area), "m^2"))
-        return(TRUE)
-    }
-
-    entirely_outside <- (
-        terra::xmin(bbox) > terra::xmax(.data_extent) ||
-            terra::xmax(bbox) < terra::xmin(.data_extent) ||
-            terra::ymin(bbox) > terra::ymax(.data_extent) ||
-            terra::ymax(bbox) < terra::ymin(.data_extent)
-    )
-
-    if (entirely_outside) {
-        message("Error: The area you have selected is entirely outside the region where we have data.")
-        return(FALSE)
-    }
-
-    message("Warning: Part of the area you have selected exceeds the boundaries where we have data.")
-    return(TRUE)
-}
-
-check_valid_persona <- function(persona) {
-    if (all(sapply(persona, function(score) score == 0))) {
-        message("All the persona scores are zero. At least one score must be non-zero.")
-        message("Perhaps you have forgotten to load a persona?")
-        return(FALSE)
-    }
-    return(TRUE)
-}
 
 load_dialog <- modalDialog(
     title = "Load Persona",
     selectInput(
         "loadUserSelect",
         "Select user",
-        choices = list_users(),
+        choices = list_users(.persona_dir),
         selected = NULL
     ),
     selectInput(
@@ -132,7 +55,7 @@ save_dialog <- modalDialog(
     selectInput(
         "saveUserSelect",
         "Existing users: select your user name",
-        choices = c("", list_users()),
+        choices = c("", list_users(.persona_dir)),
         selected = ""
     ),
     textInput("saveUserName", "New users: enter a user name"),
@@ -146,7 +69,7 @@ save_dialog <- modalDialog(
     selectInput(
         "downloadUserSelect",
         "Download persona File",
-        choices = c("", list_users()),
+        choices = c("", list_users(.persona_dir)),
         selected = ""
     ),
     downloadButton("confirmDownload", "Download"),
@@ -198,7 +121,7 @@ server <- function(input, output, session) {
         updateSelectInput(
             session,
             "loadUserSelect",
-            choices = list_users(),
+            choices = list_users(.persona_dir),
             selected = reactiveUserSelect()
         )
         updateSelectInput(
@@ -264,7 +187,7 @@ server <- function(input, output, session) {
         updateSelectInput(
             session,
             "loadUserSelect",
-            choices = list_users(),
+            choices = list_users(.persona_dir),
             selected = reactiveUserSelect()
         )
         updateSelectInput(
@@ -280,13 +203,13 @@ server <- function(input, output, session) {
         updateSelectInput(
             session,
             "saveUserSelect",
-            choices = c("", list_users()),
+            choices = c("", list_users(.persona_dir)),
             selected = ""
         )
         updateSelectInput(
             session,
             "downloadUserSelect",
-            choices = c("", list_users()),
+            choices = c("", list_users(.persona_dir)),
             selected = ""
         )
         showModal(save_dialog)

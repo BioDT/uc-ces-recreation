@@ -4,8 +4,8 @@ library(leaflet.extras)
 
 source("content.R") # contains {content}_html
 source("theme.R") # contains custom_theme, custom_titlePanel
+source("utils.R")
 
-.persona_dir <- file.path(rprojroot::find_root(rprojroot::is_r_package), "personas")
 .config <- biodt.recreation::load_config()
 .layer_info <- stats::setNames(.config[["Description"]], .config[["Name"]])
 .layer_names <- names(.layer_info)
@@ -29,12 +29,6 @@ source("theme.R") # contains custom_theme, custom_titlePanel
     "Satellite" = "Esri.WorldImagery",
     "Greyscale" = "Esri.WorldGrayCanvas"
 )
-
-list_persona_files <- function() {
-    return(list.files(path = .persona_dir, pattern = "\\.csv$", full.names = FALSE))
-}
-
-list_users <- function() lapply(list_persona_files(), tools::file_path_sans_ext)
 
 create_sliders <- function(component) {
     layer_names_this_component <- .layer_names[startsWith(.layer_names, component)]
@@ -81,183 +75,134 @@ create_sliders <- function(component) {
     })
 }
 
-ui <- fluidPage(
-    theme = custom_theme,
-    waiter::use_waiter(),
-    # Add title, contact address and privacy notice in combined title panel + header
-    fluidRow(
-        custom_titlePanel("Recreational Potential Model for Scotland")
-    ),
-    sidebarLayout(
-        sidebarPanel(
-            width = 5,
-            tabsetPanel(
-                tabPanel("About", about_html),
-                tabPanel(
-                    "User Guide",
-                    tags$p(),
-                    tabsetPanel(
-                        tabPanel("Create a Persona", persona_html),
-                        tabPanel("Run the Model", model_html),
-                        tabPanel("Adjust the Visualisation", viz_html),
-                        tabPanel("FAQ", faq_html)
-                    )
-                ),
-                tabPanel(
-                    "Persona",
-                    tags$p(),
-                    actionButton("loadButton", "Load Persona"),
-                    actionButton("saveButton", "Save Persona"),
-                    tags$p(),
-                    tabsetPanel(
-                        tabPanel("Landscape", create_sliders("SLSRA")),
-                        tabPanel("Natural Features", create_sliders("FIPS_N")),
-                        tabPanel("Infrastructure", create_sliders("FIPS_I")),
-                        tabPanel("Water", create_sliders("Water"))
-                    )
-                ),
-                tabPanel(
-                    "Map Control",
-                    tags$p(),
-                    tags$h3("Data layers"),
-                    radioButtons(
-                        "layerSelect",
-                        "Select which component to display on the map",
-                        choices = list(
-                            "Landscape" = 1,
-                            "Natural Features" = 2,
-                            "Infrastructure" = 3,
-                            "Water" = 4,
-                            "Recreational Potential" = 5
+ui <- function() {
+    fluidPage(
+        theme = custom_theme,
+        waiter::use_waiter(),
+        # Add title, contact address and privacy notice in combined title panel + header
+        fluidRow(
+            custom_titlePanel("Recreational Potential Model for Scotland")
+        ),
+        sidebarLayout(
+            sidebarPanel(
+                width = 5,
+                tabsetPanel(
+                    tabPanel("About", about_html),
+                    tabPanel(
+                        "User Guide",
+                        tags$p(),
+                        tabsetPanel(
+                            tabPanel("Create a Persona", persona_html),
+                            tabPanel("Run the Model", model_html),
+                            tabPanel("Adjust the Visualisation", viz_html),
+                            tabPanel("FAQ", faq_html)
+                        )
+                    ),
+                    tabPanel(
+                        "Persona",
+                        tags$p(),
+                        actionButton("loadButton", "Load Persona"),
+                        actionButton("saveButton", "Save Persona"),
+                        tags$p(),
+                        tabsetPanel(
+                            tabPanel("Landscape", create_sliders("SLSRA")),
+                            tabPanel("Natural Features", create_sliders("FIPS_N")),
+                            tabPanel("Infrastructure", create_sliders("FIPS_I")),
+                            tabPanel("Water", create_sliders("Water"))
+                        )
+                    ),
+                    tabPanel(
+                        "Map Control",
+                        tags$p(),
+                        tags$h3("Data layers"),
+                        radioButtons(
+                            "layerSelect",
+                            "Select which component to display on the map",
+                            choices = list(
+                                "Landscape" = 1,
+                                "Natural Features" = 2,
+                                "Infrastructure" = 3,
+                                "Water" = 4,
+                                "Recreational Potential" = 5
+                            ),
+                            selected = 5,
+                            inline = TRUE
                         ),
-                        selected = 5,
-                        inline = TRUE
-                    ),
-                    tags$p(),
-                    sliderInput(
-                        "minDisplay",
-                        "Display values above (values below this will be transparent)",
-                        width = 300,
-                        min = 0,
-                        max = 0.9,
-                        value = 0,
-                        step = 0.1,
-                        ticks = FALSE
-                    ),
-                    sliderInput(
-                        "opacity",
-                        "Opacity",
-                        width = 300,
-                        min = 0,
-                        max = 1,
-                        value = 1,
-                        step = 0.2,
-                        ticks = FALSE
-                    ),
-                    tags$hr(),
-                    tags$h3("Base map"),
-                    radioButtons(
-                        "baseLayerSelect",
-                        "Select a base map",
-                        choices = .base_layers,
-                        selected = .base_layers[[1]],
-                        inline = TRUE
+                        tags$p(),
+                        sliderInput(
+                            "minDisplay",
+                            "Display values above (values below this will be transparent)",
+                            width = 300,
+                            min = 0,
+                            max = 0.9,
+                            value = 0,
+                            step = 0.1,
+                            ticks = FALSE
+                        ),
+                        sliderInput(
+                            "opacity",
+                            "Opacity",
+                            width = 300,
+                            min = 0,
+                            max = 1,
+                            value = 1,
+                            step = 0.2,
+                            ticks = FALSE
+                        ),
+                        tags$hr(),
+                        tags$h3("Base map"),
+                        radioButtons(
+                            "baseLayerSelect",
+                            "Select a base map",
+                            choices = .base_layers,
+                            selected = .base_layers[[1]],
+                            inline = TRUE
+                        )
                     )
                 )
-            )
-        ),
-        mainPanel(
-            width = 7,
-            tags$head(
-                tags$style(HTML("
+            ),
+            mainPanel(
+                width = 7,
+                tags$head(
+                    tags$style(HTML("
                     html, body {height: 100%;}
                     #map {height: 80vh !important;}
                     .leaflet-draw-toolbar a {background-color: #e67e00 !important;}
                     .leaflet-draw-toolbar a:hover {background-color: #EAEFEC !important;}
                      #update-button {background-color: #e67e00; border: 5px; border-radius: 5px;}
                 ")),
-            ),
-            tags$div(
-                class = "map-container",
-                style = "position: relative;",
-                leafletOutput("map"),
-                absolutePanel(
-                    id = "update-button",
-                    class = "fab",
-                    top = 5,
-                    right = 5,
-                    bottom = "auto",
-                    actionButton("updateButton", "Update Map")
-                )
-            ),
-            verbatimTextOutput("userInfo")
-        )
-    ),
-    tags$hr(),
-    fluidRow(
-        column(
-            width = 6,
-            style = "text-align: left;",
-            "Information about how we process your data can be found in our ",
-            tags$a(href = "https://www.ceh.ac.uk/privacy-notice", "privacy notice.", target = "_blank"),
-            tags$br(),
-            "Contact: Dr Jan Dick (jand@ceh.ac.uk)."
+                ),
+                tags$div(
+                    class = "map-container",
+                    style = "position: relative;",
+                    leafletOutput("map"),
+                    absolutePanel(
+                        id = "update-button",
+                        class = "fab",
+                        top = 5,
+                        right = 5,
+                        bottom = "auto",
+                        actionButton("updateButton", "Update Map")
+                    )
+                ),
+                verbatimTextOutput("userInfo")
+            )
         ),
-        column(
-            width = 6,
-            style = "text-align: right;",
-            "© UK Centre for Ecology & Hydrology and BioDT, 2025."
+        tags$hr(),
+        fluidRow(
+            column(
+                width = 6,
+                style = "text-align: left;",
+                "Information about how we process your data can be found in our ",
+                tags$a(href = "https://www.ceh.ac.uk/privacy-notice", "privacy notice.", target = "_blank"),
+                tags$br(),
+                "Contact: Dr Jan Dick (jand@ceh.ac.uk)."
+            ),
+            column(
+                width = 6,
+                style = "text-align: right;",
+                "© UK Centre for Ecology & Hydrology and BioDT, 2025."
+            )
         )
     )
-)
-
-load_dialog <- modalDialog(
-    title = "Load Persona",
-    selectInput(
-        "loadUserSelect",
-        "Select user",
-        choices = list_users(),
-        selected = NULL
-    ),
-    selectInput(
-        "loadPersonaSelect",
-        "Select persona",
-        choices = NULL,
-        selected = NULL
-    ),
-    actionButton("confirmLoad", "Load"),
-    # hr(),
-    # fileInput(
-    # "fileUpload",
-    # "Upload a persona file",
-    # accept = c(".csv")
-    # ),
-    footer = tagList(
-        modalButton("Cancel"),
-    )
-)
-save_dialog <- modalDialog(
-    title = "Save Persona",
-    selectInput(
-        "saveUserSelect",
-        "Existing users: select your user name",
-        choices = c("", list_users()),
-        selected = ""
-    ),
-    textInput("saveUserName", "New users: enter a user name"),
-    textInput(
-        "savePersonaName",
-        "Enter a unique name for the persona",
-        value = NULL
-    ),
-    actionButton("confirmSave", "Save"),
-    hr(),
-    selectInput(
-        "downloadUserSelect",
-        "Download persona File",
-        choices = c("", list_users()),
-        selected = ""
-    ),
-    downloadButton("confirmDownload", "Download"),
-    footer = modalButton("Cancel")
-)
+}

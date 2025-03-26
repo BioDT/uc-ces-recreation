@@ -1,5 +1,5 @@
-Package: shiny_app
-Title: Recreational Potential Shiny App
+Package: biodt.recreation.app
+Title: BioDT Recreational Potential Shiny App
 Version: 0.0.1
 Authors@R: 
     c(
