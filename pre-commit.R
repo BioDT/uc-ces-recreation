@@ -11,8 +11,8 @@ styler::style_dir(transformers = style)
 lintr::lint_dir()
 
 setwd(file.path(git_root, "shiny_app"))
-styler::style_dir(transformers = style, exclude_files = list("content.R", "theme.R"))
-lintr::lint_dir(exclusions = list("renv", "content.R", "theme.R"))
+styler::style_dir(transformers = style, exclude_files = list("R/content.R"))
+lintr::lint_dir(exclusions = list("renv", "R/content.R"))
 
 setwd(file.path(git_root, "model"))
 devtools::document()

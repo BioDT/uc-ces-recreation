@@ -3,7 +3,7 @@ library(leaflet)
 library(leaflet.extras)
 
 source("content.R") # contains {content}_html
-source("theme.R") # contains custom_theme, custom_titlePanel
+source("theme.R") # contains custom_theme, custom_title_panel
 source("utils.R")
 
 .config <- biodt.recreation::load_config()
@@ -81,7 +81,7 @@ ui <- function() {
         waiter::use_waiter(),
         # Add title, contact address and privacy notice in combined title panel + header
         fluidRow(
-            custom_titlePanel("Recreational Potential Model for Scotland")
+            custom_title_panel("Recreational Potential Model for Scotland")
         ),
         sidebarLayout(
             sidebarPanel(

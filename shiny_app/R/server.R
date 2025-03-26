@@ -40,12 +40,12 @@ load_dialog <- modalDialog(
         selected = NULL
     ),
     actionButton("confirmLoad", "Load"),
-    # hr(),
-    # fileInput(
-    # "fileUpload",
-    # "Upload a persona file",
-    # accept = c(".csv")
-    # ),
+    hr(),
+    fileInput(
+        "fileUpload",
+        "Upload a persona file",
+        accept = c(".csv")
+    ),
     footer = tagList(
         modalButton("Cancel"),
     )
@@ -77,7 +77,6 @@ save_dialog <- modalDialog(
 )
 
 server <- function(input, output, session) {
-
     get_persona_from_sliders <- function() {
         persona <- sapply(
             .layer_names,
@@ -128,7 +127,7 @@ server <- function(input, output, session) {
             session,
             "loadPersonaSelect",
             choices = list_personas_in_file(
-                 file.path(.persona_dir, paste0(reactiveUserSelect(), ".csv"))
+                file.path(.persona_dir, paste0(reactiveUserSelect(), ".csv"))
             )
         )
         showModal(load_dialog)
@@ -139,7 +138,7 @@ server <- function(input, output, session) {
             session,
             "loadPersonaSelect",
             choices = list_personas_in_file(
-                 file.path(.persona_dir, paste0(reactiveUserSelect(), ".csv"))
+                file.path(.persona_dir, paste0(reactiveUserSelect(), ".csv"))
             )
         )
     })
@@ -198,7 +197,7 @@ server <- function(input, output, session) {
             session,
             "loadPersonaSelect",
             choices = list_personas_in_file(
-                 file.path(.persona_dir, paste0(reactiveUserSelect(), ".csv"))
+                file.path(.persona_dir, paste0(reactiveUserSelect(), ".csv"))
             )
         )
     })
@@ -441,21 +440,4 @@ server <- function(input, output, session) {
     observeEvent(input$minDisplay, {
         update_map()
     })
-
-    # NOTE: this did not work. Using leafletProxy is the issue.
-    # Need to create a fresh map object.
-    # See https://forum.posit.co/t/solved-error-when-using-mapshot-with-shiny-leaflet/6765/7
-    #
-    # output$downloadMap <- downloadHandler(
-    # filename = function() {
-    # paste("map_", Sys.Date(), ".png", sep = "")
-    # },
-    # content = function(file) {
-    # mapview::mapshot2(
-    # leafletProxy("map"),
-    # file = file,
-    # cliprect = "viewport"
-    # )
-    # }
-    # )
 }

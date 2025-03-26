@@ -1,6 +1,7 @@
 linters: linters_with_defaults(
   line_length_linter(120L),
   indentation_linter(indent = 4L),
+  object_name_linter = NULL,
   return_linter = NULL
   )
 exclusions: list(

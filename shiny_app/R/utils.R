@@ -46,7 +46,8 @@ remove_non_alphanumeric <- function(string) {
     return(string)
 }
 
-.data_extent <- terra::ext(terra::vect(system.file("extdata", "Scotland", "boundaries.shp", package = "biodt.recreation")))
+.scotland_shp <- system.file("extdata", "Scotland", "boundaries.shp", package = "biodt.recreation")
+.data_extent <- terra::ext(terra::vect(.scotland_shp))
 
 #' Check Valid Bbox
 #'

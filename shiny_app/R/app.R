@@ -12,7 +12,6 @@ source("server.R")
 #' @export
 run_app <- function() {
     shiny::shinyApp(ui = ui(), server = server)
-    # shiny::runApp(app)
 }
 
 run_app()

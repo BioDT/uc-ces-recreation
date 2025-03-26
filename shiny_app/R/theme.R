@@ -24,37 +24,47 @@ custom_theme <- bslib::bs_theme(
         .btn.shiny-download-link {color: black; border-color: darkgrey;}
     ")
 
-custom_titlePanel <- function(title, windowTitle = title) {
-    div(
-        tags$a(
+custom_title_panel <- function(title, window_title = title) {
+    shiny::div(
+        shiny::a(
             href = "https://www.ceh.ac.uk",
             target = "_blank",
             style = "text-decoration: none;", # or image gets underlined
-            tags$img(
-                src = "https://www.ceh.ac.uk/sites/default/files/images/theme/ukceh_logo_long_720x170_rgb.png",
+            shiny::img(
+                src = "https://www.ceh.ac.uk/sites/default/files/images/theme/ukceh_logo_long_720x170_rgb.png", # nolint
                 style = "height: 50px;vertical-align:middle;"
             )
         ),
-        tags$div(
-            style = "display: inline-block; width: 1px; height: 50px; background-color: black; margin: 0 10px; vertical-align: middle;"
+        shiny::div(
+            style = "
+                display: inline-block;
+                width: 1px;
+                height: 50px;
+                background-color: black;
+                margin: 0 10px;
+                vertical-align: middle;
+            "
         ),
-        tags$a(
+        shiny::a(
             href = "https://biodt.eu",
             target = "_blank",
             style = "text-decoration: none;",
-            tags$img(
+            shiny::img(
                 src = "https://biodt.eu/themes/biodt/logo.png",
                 style = "height: 60px;vertical-align:middle;"
             )
         ),
-        h2(
+        shiny::h2(
             title,
             style = "vertical-align:middle; display:inline;padding-left:40px;"
         ),
-        tagList(
-            tags$head(
-                tags$title(paste0(windowTitle, " | UK Centre for Ecology & Hydrology")),
-                tags$link(rel = "shortcut icon", href = "https://brandroom.ceh.ac.uk/themes/custom/ceh/favicon.ico")
+        shiny::tagList(
+            shiny::tags$head(
+                shiny::tags$title(paste0(window_title, " | UK Centre for Ecology & Hydrology")),
+                shiny::tags$link(
+                    rel = "shortcut icon",
+                    href = "https://brandroom.ceh.ac.uk/themes/custom/ceh/favicon.ico"
+                )
             )
         ),
         style = "padding: 30px;"
