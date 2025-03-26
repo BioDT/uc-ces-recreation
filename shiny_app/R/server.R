@@ -127,7 +127,9 @@ server <- function(input, output, session) {
         updateSelectInput(
             session,
             "loadPersonaSelect",
-            choices = list_personas_in_file(paste0(reactiveUserSelect(), ".csv"))
+            choices = list_personas_in_file(
+                 file.path(.persona_dir, paste0(reactiveUserSelect(), ".csv"))
+            )
         )
         showModal(load_dialog)
     })
@@ -136,7 +138,9 @@ server <- function(input, output, session) {
         updateSelectInput(
             session,
             "loadPersonaSelect",
-            choices = list_personas_in_file(paste0(reactiveUserSelect(), ".csv"))
+            choices = list_personas_in_file(
+                 file.path(.persona_dir, paste0(reactiveUserSelect(), ".csv"))
+            )
         )
     })
     observeEvent(input$confirmLoad, {
@@ -193,7 +197,9 @@ server <- function(input, output, session) {
         updateSelectInput(
             session,
             "loadPersonaSelect",
-            choices = list_personas_in_file(paste0(reactiveUserSelect(), ".csv"))
+            choices = list_personas_in_file(
+                 file.path(.persona_dir, paste0(reactiveUserSelect(), ".csv"))
+            )
         )
     })
 
