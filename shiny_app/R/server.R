@@ -2,37 +2,13 @@ library(shiny)
 library(leaflet)
 library(leaflet.extras)
 
-devtools::load_all("../model")
+source("utils.R")
 
-source("content.R") # contains {content}_html
-source("theme.R") # contains custom_theme, custom_titlePanel
-
-.credentials <- data.frame(
-    user = Sys.getenv("APP_USERNAME"),
-    password = Sys.getenv("APP_PASSWORD")
-)
-
-.persona_dir <- "personas"
+.persona_dir <- file.path(rprojroot::find_root(rprojroot::is_r_package), "personas")
 .data_dir <- biodt.recreation::get_default_data_dir()
 .config <- biodt.recreation::load_config()
 .layer_info <- stats::setNames(.config[["Description"]], .config[["Name"]])
 .layer_names <- names(.layer_info)
-.max_area <- 1e9 # about 1/4 of the Cairngorms area
-.min_area <- 1e4
-.data_extent <- terra::ext(terra::vect(system.file("extdata", "Scotland", "boundaries.shp", package = "biodt.recreation")))
-
-.group_names <- list(
-    SLSRA_LCM = "Land Cover",
-    SLSRA_Designations = "Official Designations",
-    FIPS_N_Landform = "Land Formations",
-    FIPS_N_Slope = "Slopes",
-    FIPS_N_Soil = "Soil Type",
-    FIPS_I_RoadsTracks = "Roads and Tracks",
-    FIPS_I_NationalCycleNetwork = "National Cycle Network",
-    FIPS_I_LocalPathNetwork = "Local Path Network",
-    Water_Lakes = "Lakes",
-    Water_Rivers = "Rivers"
-)
 
 .base_layers <- list(
     "Street" = "Esri.WorldStreetMap",
@@ -41,69 +17,6 @@ source("theme.R") # contains custom_theme, custom_titlePanel
     "Greyscale" = "Esri.WorldGrayCanvas"
 )
 
-list_persona_files <- function() {
-    return(list.files(path = .persona_dir, pattern = "\\.csv$", full.names = FALSE))
-}
-
-list_users <- function() lapply(list_persona_files(), tools::file_path_sans_ext)
-
-list_personas_in_file <- function(file_name) {
-    personas <- names(read.csv(file.path(.persona_dir, file_name), nrows = 1))
-    return(personas[personas != "index"])
-}
-
-remove_non_alphanumeric <- function(string) {
-    string <- gsub(" ", "_", string) # Spaces to underscore
-    string <- gsub("[^a-zA-Z0-9_]+", "", string) # remove non alpha-numeric
-    string <- gsub("^_+|_+$", "", string) # remove leading or trailing underscores
-    return(string)
-}
-
-create_sliders <- function(component) {
-    layer_names_this_component <- .layer_names[startsWith(.layer_names, component)]
-    groups_this_component <- .group_names[startsWith(names(.group_names), component)]
-
-    sliders <- lapply(layer_names_this_component, function(layer_name) {
-        sliderInput(
-            layer_name,
-            label = .layer_info[[layer_name]],
-            min = 0,
-            max = 10,
-            value = 0,
-            round = TRUE,
-            ticks = FALSE
-        )
-    })
-
-    lapply(names(groups_this_component), function(group) {
-        # NOTE: very hacky method to group all designations, which actually stem
-        # from different layers. It may actually be preferable to hard-code the groups
-        # into a new column of config.csv
-        if (group == "SLSRA_Designations") {
-            sliders_this_group <- sliders[!startsWith(layer_names_this_component, "SLSRA_LCM")]
-        } else {
-            sliders_this_group <- sliders[startsWith(layer_names_this_component, group)]
-        }
-
-        n <- length(sliders_this_group)
-        sliders_left <- sliders_this_group[seq(1, n, by = 2)]
-        sliders_right <- if (n > 1) {
-            sliders_this_group[seq(2, n, by = 2)]
-        } else {
-            list()
-        }
-
-        div(
-            style = "border: 1px solid #ddd; padding: 10px; border-radius: 5px; margin-top: 5px; margin-bottom: 5px;",
-            h4(.group_names[group]),
-            fluidRow(
-                column(width = 6, sliders_left),
-                column(width = 6, sliders_right)
-            )
-        )
-    })
-}
-
 palette <- colorNumeric(
     palette = "Spectral",
     reverse = TRUE,
@@ -111,201 +24,13 @@ palette <- colorNumeric(
     na.color = "transparent"
 )
 
-check_valid_bbox <- function(bbox) {
-    if (is.null(bbox)) {
-        message("No area has been selected. Please select an area.")
-        return(FALSE)
-    }
-    area <- (terra::xmax(bbox) - terra::xmin(bbox)) * (terra::ymax(bbox) - terra::ymin(bbox))
-    if (area > .max_area) {
-        message(paste(
-            "The area you have selected is too large to be computed at this time",
-            "(", sprintf("%.1e", area), ">", .max_area, " m^2 ).",
-            "Please draw a smaller area."
-        ))
-        return(FALSE)
-    }
-    if (area < .min_area) {
-        message(paste(
-            "The area you have selected is too small",
-            "(", round(area), "<", .min_area, " m^2 ).",
-            "Please draw a larger area."
-        ))
-        return(FALSE)
-    }
-
-    entirely_within <- (
-        terra::xmin(bbox) > terra::xmin(.data_extent) &&
-            terra::xmax(bbox) < terra::xmax(.data_extent) &&
-            terra::ymin(bbox) > terra::ymin(.data_extent) &&
-            terra::ymax(bbox) < terra::ymax(.data_extent)
-    )
-    if (entirely_within) {
-        message(paste("Selected an area of", sprintf("%.1e", area), "m^2"))
-        return(TRUE)
-    }
-
-    entirely_outside <- (
-        terra::xmin(bbox) > terra::xmax(.data_extent) ||
-            terra::xmax(bbox) < terra::xmin(.data_extent) ||
-            terra::ymin(bbox) > terra::ymax(.data_extent) ||
-            terra::ymax(bbox) < terra::ymin(.data_extent)
-    )
-
-    if (entirely_outside) {
-        message("Error: The area you have selected is entirely outside the region where we have data.")
-        return(FALSE)
-    }
-
-    message("Warning: Part of the area you have selected exceeds the boundaries where we have data.")
-    return(TRUE)
-}
-
-check_valid_persona <- function(persona) {
-    if (all(sapply(persona, function(score) score == 0))) {
-        message("All the persona scores are zero. At least one score must be non-zero.")
-        message("Perhaps you have forgotten to load a persona?")
-        return(FALSE)
-    }
-    return(TRUE)
-}
-
-ui <- fluidPage(
-    theme = custom_theme,
-    waiter::use_waiter(),
-    # Add title, contact address and privacy notice in combined title panel + header
-    fluidRow(
-        custom_titlePanel("Recreational Potential Model for Scotland")
-    ),
-    sidebarLayout(
-        sidebarPanel(
-            width = 5,
-            tabsetPanel(
-                tabPanel("About", about_html),
-                tabPanel(
-                    "User Guide",
-                    tags$p(),
-                    tabsetPanel(
-                        tabPanel("Create a Persona", persona_html),
-                        tabPanel("Run the Model", model_html),
-                        tabPanel("Adjust the Visualisation", viz_html),
-                        tabPanel("FAQ", faq_html)
-                    )
-                ),
-                tabPanel(
-                    "Persona",
-                    tags$p(),
-                    actionButton("loadButton", "Load Persona"),
-                    actionButton("saveButton", "Save Persona"),
-                    tags$p(),
-                    tabsetPanel(
-                        tabPanel("Landscape", create_sliders("SLSRA")),
-                        tabPanel("Natural Features", create_sliders("FIPS_N")),
-                        tabPanel("Infrastructure", create_sliders("FIPS_I")),
-                        tabPanel("Water", create_sliders("Water"))
-                    )
-                ),
-                tabPanel(
-                    "Map Control",
-                    tags$p(),
-                    tags$h3("Data layers"),
-                    radioButtons(
-                        "layerSelect",
-                        "Select which component to display on the map",
-                        choices = list(
-                            "Landscape" = 1,
-                            "Natural Features" = 2,
-                            "Infrastructure" = 3,
-                            "Water" = 4,
-                            "Recreational Potential" = 5
-                        ),
-                        selected = 5,
-                        inline = TRUE
-                    ),
-                    tags$p(),
-                    sliderInput(
-                        "minDisplay",
-                        "Display values above (values below this will be transparent)",
-                        width = 300,
-                        min = 0,
-                        max = 0.9,
-                        value = 0,
-                        step = 0.1,
-                        ticks = FALSE
-                    ),
-                    sliderInput(
-                        "opacity",
-                        "Opacity",
-                        width = 300,
-                        min = 0,
-                        max = 1,
-                        value = 1,
-                        step = 0.2,
-                        ticks = FALSE
-                    ),
-                    tags$hr(),
-                    tags$h3("Base map"),
-                    radioButtons(
-                        "baseLayerSelect",
-                        "Select a base map",
-                        choices = .base_layers,
-                        selected = .base_layers[[1]],
-                        inline = TRUE
-                    )
-                )
-            )
-        ),
-        mainPanel(
-            width = 7,
-            tags$head(
-                tags$style(HTML("
-                    html, body {height: 100%;}
-                    #map {height: 80vh !important;}
-                    .leaflet-draw-toolbar a {background-color: #e67e00 !important;}
-                    .leaflet-draw-toolbar a:hover {background-color: #EAEFEC !important;}
-                     #update-button {background-color: #e67e00; border: 5px; border-radius: 5px;}
-                ")),
-            ),
-            tags$div(
-                class = "map-container",
-                style = "position: relative;",
-                leafletOutput("map"),
-                absolutePanel(
-                    id = "update-button",
-                    class = "fab",
-                    top = 5,
-                    right = 5,
-                    bottom = "auto",
-                    actionButton("updateButton", "Update Map")
-                )
-            ),
-            verbatimTextOutput("userInfo")
-        )
-    ),
-    tags$hr(),
-    fluidRow(
-        column(
-            width = 6,
-            style = "text-align: left;",
-            "Information about how we process your data can be found in our ",
-            tags$a(href = "https://www.ceh.ac.uk/privacy-notice", "privacy notice.", target = "_blank"),
-            tags$br(),
-            "Contact: Dr Jan Dick (jand@ceh.ac.uk)."
-        ),
-        column(
-            width = 6,
-            style = "text-align: right;",
-            "© UK Centre for Ecology & Hydrology and BioDT, 2025."
-        )
-    )
-)
 
 load_dialog <- modalDialog(
     title = "Load Persona",
     selectInput(
         "loadUserSelect",
         "Select user",
-        choices = list_users(),
+        choices = list_users(.persona_dir),
         selected = NULL
     ),
     selectInput(
@@ -315,12 +40,12 @@ load_dialog <- modalDialog(
         selected = NULL
     ),
     actionButton("confirmLoad", "Load"),
-    # hr(),
-    # fileInput(
-    # "fileUpload",
-    # "Upload a persona file",
-    # accept = c(".csv")
-    # ),
+    hr(),
+    fileInput(
+        "fileUpload",
+        "Upload a persona file",
+        accept = c(".csv")
+    ),
     footer = tagList(
         modalButton("Cancel"),
     )
@@ -330,7 +55,7 @@ save_dialog <- modalDialog(
     selectInput(
         "saveUserSelect",
         "Existing users: select your user name",
-        choices = c("", list_users()),
+        choices = c("", list_users(.persona_dir)),
         selected = ""
     ),
     textInput("saveUserName", "New users: enter a user name"),
@@ -344,26 +69,14 @@ save_dialog <- modalDialog(
     selectInput(
         "downloadUserSelect",
         "Download persona File",
-        choices = c("", list_users()),
+        choices = c("", list_users(.persona_dir)),
         selected = ""
     ),
     downloadButton("confirmDownload", "Download"),
     footer = modalButton("Cancel")
 )
 
-# Add password authorisation
-ui <- shinymanager::secure_app(ui)
-
 server <- function(input, output, session) {
-    # Check credentials
-    res_auth <- shinymanager::secure_server(
-        check_credentials = shinymanager::check_credentials(.credentials)
-    )
-    output$auth_output <- renderPrint({
-        reactiveValuesToList(res_auth)
-    })
-
-
     get_persona_from_sliders <- function() {
         persona <- sapply(
             .layer_names,
@@ -407,13 +120,15 @@ server <- function(input, output, session) {
         updateSelectInput(
             session,
             "loadUserSelect",
-            choices = list_users(),
+            choices = list_users(.persona_dir),
             selected = reactiveUserSelect()
         )
         updateSelectInput(
             session,
             "loadPersonaSelect",
-            choices = list_personas_in_file(paste0(reactiveUserSelect(), ".csv"))
+            choices = list_personas_in_file(
+                file.path(.persona_dir, paste0(reactiveUserSelect(), ".csv"))
+            )
         )
         showModal(load_dialog)
     })
@@ -422,7 +137,9 @@ server <- function(input, output, session) {
         updateSelectInput(
             session,
             "loadPersonaSelect",
-            choices = list_personas_in_file(paste0(reactiveUserSelect(), ".csv"))
+            choices = list_personas_in_file(
+                file.path(.persona_dir, paste0(reactiveUserSelect(), ".csv"))
+            )
         )
     })
     observeEvent(input$confirmLoad, {
@@ -473,13 +190,15 @@ server <- function(input, output, session) {
         updateSelectInput(
             session,
             "loadUserSelect",
-            choices = list_users(),
+            choices = list_users(.persona_dir),
             selected = reactiveUserSelect()
         )
         updateSelectInput(
             session,
             "loadPersonaSelect",
-            choices = list_personas_in_file(paste0(reactiveUserSelect(), ".csv"))
+            choices = list_personas_in_file(
+                file.path(.persona_dir, paste0(reactiveUserSelect(), ".csv"))
+            )
         )
     })
 
@@ -489,13 +208,13 @@ server <- function(input, output, session) {
         updateSelectInput(
             session,
             "saveUserSelect",
-            choices = c("", list_users()),
+            choices = c("", list_users(.persona_dir)),
             selected = ""
         )
         updateSelectInput(
             session,
             "downloadUserSelect",
-            choices = c("", list_users()),
+            choices = c("", list_users(.persona_dir)),
             selected = ""
         )
         showModal(save_dialog)
@@ -721,23 +440,4 @@ server <- function(input, output, session) {
     observeEvent(input$minDisplay, {
         update_map()
     })
-
-    # NOTE: this did not work. Using leafletProxy is the issue.
-    # Need to create a fresh map object.
-    # See https://forum.posit.co/t/solved-error-when-using-mapshot-with-shiny-leaflet/6765/7
-    #
-    # output$downloadMap <- downloadHandler(
-    # filename = function() {
-    # paste("map_", Sys.Date(), ".png", sep = "")
-    # },
-    # content = function(file) {
-    # mapview::mapshot2(
-    # leafletProxy("map"),
-    # file = file,
-    # cliprect = "viewport"
-    # )
-    # }
-    # )
 }
-
-shinyApp(ui = ui, server = server)

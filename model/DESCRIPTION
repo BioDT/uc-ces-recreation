@@ -1,5 +1,5 @@
 Package: biodt.recreation
-Title: Compute the BioDT Recreational Potential Model
+Title: BioDT Recreational Potential Model
 Version: 0.0.1
 Authors@R: 
     c(

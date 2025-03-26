@@ -11,7 +11,7 @@ renv::install()
 followed by
 
 ```R
-shiny::runApp(".")
+shiny::runApp("R/app.R")
 ```
 
 If you prefer to run things from the shell, you can also run `./run-app.sh` (bash shell required).
