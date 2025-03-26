@@ -61,14 +61,15 @@ get_default_data_dir <- function() system.file("extdata", package = "biodt.recre
 #'
 #' @export
 assert_bbox_intersects_scotland <- function(bbox, warn_if_not_within = FALSE) {
-    if (!terra::relate(bbox, .scotland_boundaries, "intersects")) {
+    scotland_boundaries <- get_scotland_boundaries()
+    if (!terra::relate(bbox, scotland_boundaries, "intersects")) {
         stop(paste(
             "The area specified does not contain any of Scotland's land surface.",
             "Please specify a different bounding box"
         ))
     }
     if (warn_if_not_within) {
-        if (!terra::relate(bbox, .scotland_boundaries, "within")) {
+        if (!terra::relate(bbox, scotland_boundaries, "within")) {
             warning("Part of the bounding box is outside Scotland's land surface.")
         }
     }
