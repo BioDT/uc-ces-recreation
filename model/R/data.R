@@ -5,9 +5,11 @@
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
 
-.scotland_boundaries <- terra::vect(
-    system.file("extdata", "Scotland", "boundaries.shp", package = "biodt.recreation", mustWork = TRUE)
-)
+get_scotland_boundaries <- function() {
+    terra::vect(
+        system.file("extdata", "Scotland", "boundaries.shp", package = "biodt.recreation", mustWork = TRUE)
+    )
+}
 
 .assert_valid_data_dir <- function(data_dir) {
     if (!dir.exists(data_dir)) {
