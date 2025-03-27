@@ -1,5 +1,10 @@
 ^renv$
 ^renv\.lock$
-^.git/
-^notebooks/
-^workbench/
+^.git/$
+^data/$
+^notebooks/$
+^.lintr$
+^run_app.sh$
+^pre-commit.R$
+^CONTRIBUTING.md$
+^LICENSE.md$
