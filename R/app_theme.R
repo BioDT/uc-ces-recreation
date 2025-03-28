@@ -29,18 +29,18 @@ app_theme <- function() {
 
 #' @import shiny
 #' @export
-app_title_panel <- function(title, window_title = title) {
+app_title_panel <- function(title_text, window_title = title_text) {
     div(
-        shiny::a(
+        a(
             href = "https://www.ceh.ac.uk",
             target = "_blank",
             style = "text-decoration: none;", # or image gets underlined
-            shiny::img(
+            img(
                 src = "https://www.ceh.ac.uk/sites/default/files/images/theme/ukceh_logo_long_720x170_rgb.png", # nolint
                 style = "height: 50px;vertical-align:middle;"
             )
         ),
-        shiny::div(
+        div(
             style = "
                 display: inline-block;
                 width: 1px;
@@ -50,23 +50,23 @@ app_title_panel <- function(title, window_title = title) {
                 vertical-align: middle;
             "
         ),
-        shiny::a(
+        a(
             href = "https://biodt.eu",
             target = "_blank",
             style = "text-decoration: none;",
-            shiny::img(
+            img(
                 src = "https://biodt.eu/themes/biodt/logo.png",
                 style = "height: 60px;vertical-align:middle;"
             )
         ),
-        shiny::h2(
-            title,
+        h2(
+            title_text,
             style = "vertical-align:middle; display:inline;padding-left:40px;"
         ),
-        shiny::tagList(
-            shiny::tags$head(
-                shiny::tags$title(paste0(window_title, " | UK Centre for Ecology & Hydrology")),
-                shiny::tags$link(
+        tagList(
+            tags$head(
+                tags$title(paste0(window_title, " | UK Centre for Ecology & Hydrology")),
+                tags$link(
                     rel = "shortcut icon",
                     href = "https://brandroom.ceh.ac.uk/themes/custom/ceh/favicon.ico"
                 )
