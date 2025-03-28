@@ -30,6 +30,8 @@ assert_valid_data_dir <- function(data_dir) {
     }
 }
 
+is_valid_data_dir <- function(data_dir) assert_to_bool(assert_valid_data_dir)(data_dir)
+
 #' Load Raster
 #'
 #' Load a `SpatRaster` from a file, optionally cropping it to a given area.

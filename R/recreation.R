@@ -39,9 +39,12 @@ assert_valid_component <- function(component) {
 #' @example inst/examples/compute_component.R
 #'
 #' @export
-compute_component <- function(component, persona, data_dir, bbox = NULL) {
-    assert_valid_component(component)
-    assert_valid_data_dir(data_dir)
+compute_component <- function(component, persona, data_dir, bbox = NULL, skip_checks = FALSE) {
+    if (!skip_checks) {
+        assert_valid_component(component)
+        assert_valid_data_dir(data_dir)
+        assert_valid_bbox(bbox)
+    }
 
     raster <- load_raster(
         file.path(data_dir, paste0(component, ".tif")),
@@ -56,18 +59,13 @@ compute_component <- function(component, persona, data_dir, bbox = NULL) {
 
 #' Compute SLSRA Component
 #'
-#' Compute the SLSRA ("Suitability of Land to Support Recreational Activity") component
-#' of the Recreational Potential. This is a convenience wrapper around
+#' Compute the SLSRA ("Suitability of Land to Support Recreational Activity") 
+#' component of the Recreational Potential. This is a convenience wrapper around
 #' [biodt.recreation::compute_component] with the argument `component = "SLSRA"`.
 #'
-#' @param persona A named vector containing the persona scores (for all components).
-#' @param data_dir Path to the directory containing the rasters.
-#' @param bbox An optional bounding box for cropping.
-#'
+#' @param ... Parameters passed straight to [biodt.recreation::compute_component]
 #' @export
-compute_slsra <- function(persona, data_dir, bbox = NULL) {
-    compute_component("SLSRA", persona, data_dir, bbox = bbox)
-}
+compute_slsra <- function(...) compute_component("SLSRA", ...)
 
 #' Compute FIPS_N Component
 #'
@@ -75,29 +73,19 @@ compute_slsra <- function(persona, data_dir, bbox = NULL) {
 #' of the Recreational Potential. This is a convenience wrapper around
 #' [biodt.recreation::compute_component] with the argument `component = "FIPS_N"`.
 #'
-#' @param persona A named vector containing the persona scores (for all components).
-#' @param data_dir Path to the directory containing the rasters.
-#' @param bbox An optional bounding box for cropping.
-#'
+#' @param ... Parameters passed straight to [biodt.recreation::compute_component]
 #' @export
-compute_fips_n <- function(persona, data_dir, bbox = NULL) {
-    compute_component("FIPS_N", persona, data_dir, bbox = bbox)
-}
+compute_fips_n <- function(...) compute_component("FIPS_N", ...)
 
 #' Compute FIPS_I Component
 #'
-#' Compute the FIPS_I ("Infrastructure Features Impacting Potential Services") component
-#' of the Recreational Potential. This is a convenience wrapper around
+#' Compute the FIPS_I ("Infrastructure Features Impacting Potential Services") 
+#' component of the Recreational Potential. This is a convenience wrapper around
 #' [biodt.recreation::compute_component] with the argument `component = "FIPS_I"`.
 #'
-#' @param persona A named vector containing the persona scores (for all components).
-#' @param data_dir Path to the directory containing the rasters.
-#' @param bbox An optional bounding box for cropping.
-#'
+#' @param ... Parameters passed straight to [biodt.recreation::compute_component]
 #' @export
-compute_fips_i <- function(persona, data_dir, bbox = NULL) {
-    compute_component("FIPS_I", persona, data_dir, bbox = bbox)
-}
+compute_fips_i <- function(...) commpute_component("FIPS_I", ...)
 
 #' Compute FIPS_I Component
 #'
@@ -105,14 +93,9 @@ compute_fips_i <- function(persona, data_dir, bbox = NULL) {
 #' wrapper around [biodt.recreation::compute_component] with the argument
 #' `component = "Water"`.
 #'
-#' @param persona A named vector containing the persona scores (for all components).
-#' @param data_dir Path to the directory containing the rasters.
-#' @param bbox An optional bounding box for cropping.
-#'
+#' @param ... Parameters passed straight to [biodt.recreation::compute_component]
 #' @export
-compute_water <- function(persona, data_dir, bbox = NULL) {
-    compute_component("Water", persona, data_dir, bbox = bbox)
-}
+compute_water <- function(...) compute_component("Water", ...)
 
 #' Rescale to Unit Interval
 #'
@@ -180,14 +163,17 @@ compute_potential <- function(persona, data_dir = NULL, bbox = NULL) {
     if (is.null(data_dir)) {
         data_dir <- get_default_data_dir()
     }
+    # Perform checks once here, and skip them in the individual components
+    assert_valid_data_dir(data_dir)
+    assert_valid_bbox(bbox)
 
-    slsra <- compute_slsra(persona, data_dir, bbox) |>
+    slsra <- compute_component("SLSRA", persona, data_dir, bbox, skip_check = TRUE) |>
         rescale_to_unit_interval()
-    fips_n <- compute_fips_n(persona, data_dir, bbox) |>
+    fips_n <- compute_component("FIPS_N", persona, data_dir, bbox, skip_checks = TRUE) |>
         rescale_to_unit_interval()
-    fips_i <- compute_fips_i(persona, data_dir, bbox) |>
+    fips_i <- compute_component("FIPS_I", persona, data_dir, bbox, skip_checks = TRUE) |>
         rescale_to_unit_interval()
-    water <- compute_water(persona, data_dir, bbox) |>
+    water <- compute_component("Water", persona, data_dir, bbox, skip_checks = TRUE) |>
         rescale_to_unit_interval()
 
     total <- sum(slsra, fips_n, fips_i, water, na.rm = TRUE) |>

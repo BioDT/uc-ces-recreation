@@ -379,7 +379,7 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
             # Store the SpatExtent as a reactive value
             reactiveExtent(extent_27700)
 
-            valid_bbox <- capture_messages(check_valid_bbox)(extent_27700)
+            valid_bbox <- capture_messages(is_valid_bbox)(extent_27700)
             update_user_info(valid_bbox$message)
         })
 
@@ -387,13 +387,13 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
         observeEvent(input$updateButton, {
             persona <- get_persona_from_sliders()
 
-            valid_persona <- capture_messages(check_valid_persona)(persona)
+            valid_persona <- capture_messages(is_valid_persona)(persona)
             userInfoText(paste(valid_persona$message, collapse = "\n"))
             if (!valid_persona$result) return()
 
             bbox <- reactiveExtent()
 
-            valid_bbox <- capture_messages(check_valid_bbox)(bbox)
+            valid_bbox <- capture_messages(is_valid_bbox)(bbox)
             update_user_info(paste(valid_bbox$message, collapse = "\n"))
             if (!valid_bbox$result) return()
 
@@ -406,14 +406,13 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
                 color = "rgba(50, 50, 50, 0.6)"
             )
 
-            calc <- capture_messages(compute_potential)(persona, data_dir, bbox = bbox)
+            output <- capture_messages(errors_as_messages(compute_potential))(persona, data_dir, bbox = bbox)
+            userInfoText(paste(output$message, collapse = "\n"))
+            if (inherits(output$result, "simpleError")) return()
             
-            userInfoText(paste(calc$message, collapse = "\n"))
-
-            # Update reactiveLayers with new raster
-            layers <- calc$result
-            reactiveLayers(layers)
-
+            # Update reactiveLayers with computed raster
+            reactiveLayers(output$result)
+            
             waiter::waiter_hide()
 
             update_map()

@@ -19,9 +19,10 @@ assert_valid_persona <- function(persona) {
             "Perhaps you have forgotten to load a persona?"
         ))
     }
+    return(TRUE)
 }
 
-check_valid_persona <- function(persona) assert_to_bool(assert_valid_persona)(persona)
+is_valid_persona <- function(persona) assert_to_bool(assert_valid_persona)(persona)
 
 
 #' List CSV Files

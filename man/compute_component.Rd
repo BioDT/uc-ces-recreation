@@ -4,7 +4,13 @@
 \alias{compute_component}
 \title{Compute Component}
 \usage{
-compute_component(component, persona, data_dir, bbox = NULL)
+compute_component(
+  component,
+  persona,
+  data_dir,
+  bbox = NULL,
+  skip_checks = FALSE
+)
 }
 \arguments{
 \item{component}{The name of the component to compute (one of "SLSRA", "FIPS_N", "FIPS_I", "Water").}

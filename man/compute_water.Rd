@@ -4,14 +4,10 @@
 \alias{compute_water}
 \title{Compute FIPS_I Component}
 \usage{
-compute_water(persona, data_dir, bbox = NULL)
+compute_water(...)
 }
 \arguments{
-\item{persona}{A named vector containing the persona scores (for all components).}
-
-\item{data_dir}{Path to the directory containing the rasters.}
-
-\item{bbox}{An optional bounding box for cropping.}
+\item{...}{Parameters passed straight to \link{compute_component}}
 }
 \description{
 Compute the Water component of the Recreational Potential. This is a convenience

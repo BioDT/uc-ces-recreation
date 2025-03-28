@@ -4,17 +4,13 @@
 \alias{compute_slsra}
 \title{Compute SLSRA Component}
 \usage{
-compute_slsra(persona, data_dir, bbox = NULL)
+compute_slsra(...)
 }
 \arguments{
-\item{persona}{A named vector containing the persona scores (for all components).}
-
-\item{data_dir}{Path to the directory containing the rasters.}
-
-\item{bbox}{An optional bounding box for cropping.}
+\item{...}{Parameters passed straight to \link{compute_component}}
 }
 \description{
-Compute the SLSRA ("Suitability of Land to Support Recreational Activity") component
-of the Recreational Potential. This is a convenience wrapper around
+Compute the SLSRA ("Suitability of Land to Support Recreational Activity")
+component of the Recreational Potential. This is a convenience wrapper around
 \link{compute_component} with the argument \code{component = "SLSRA"}.
 }

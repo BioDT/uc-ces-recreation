@@ -13,7 +13,7 @@ assert_to_bool(func)
 The wrapped function.
 }
 \description{
-Convert an function that throws errors under certain conditions to one
+Convert a function that throws errors under certain conditions to one
 that instead returns FALSE and prints the error message. If the function
 does not encounter an error, TRUE is returned.
 }

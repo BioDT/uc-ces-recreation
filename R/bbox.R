@@ -85,7 +85,7 @@ assert_valid_bbox <- function(bbox, min_area = 1e4, max_area = 1e9) {
     .assert_bbox_is_valid_size(bbox, min_area, max_area)
 }
 
-check_valid_bbox <- function(...) {
+is_valid_bbox <- function(...) {
     assert_to_bool(assert_valid_bbox)(...)
 }
 

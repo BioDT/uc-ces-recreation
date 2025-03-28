@@ -4,17 +4,13 @@
 \alias{compute_fips_i}
 \title{Compute FIPS_I Component}
 \usage{
-compute_fips_i(persona, data_dir, bbox = NULL)
+compute_fips_i(...)
 }
 \arguments{
-\item{persona}{A named vector containing the persona scores (for all components).}
-
-\item{data_dir}{Path to the directory containing the rasters.}
-
-\item{bbox}{An optional bounding box for cropping.}
+\item{...}{Parameters passed straight to \link{compute_component}}
 }
 \description{
-Compute the FIPS_I ("Infrastructure Features Impacting Potential Services") component
-of the Recreational Potential. This is a convenience wrapper around
+Compute the FIPS_I ("Infrastructure Features Impacting Potential Services")
+component of the Recreational Potential. This is a convenience wrapper around
 \link{compute_component} with the argument \code{component = "FIPS_I"}.
 }

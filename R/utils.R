@@ -5,20 +5,42 @@
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
 
-#' Assert to Bool
+#' Errors as Messages
 #'
-#' Convert an function that throws errors under certain conditions to one
-#' that instead returns FALSE and prints the error message. If the function
-#' does not encounter an error, TRUE is returned.
+#' Given a function that may throw an error, e.g. via `stop()`, produce
+#' a function that instead prints the error message without crashing.
+#' This is achieved by wrapping the function execution in a `tryCatch` 
+#' and capturing any errors or warnings as a message.
 #'
-#' This is achieved by wrapping the function execution in a `tryCatch` and
-#' capturing any errors or warnings.
+#' Note that in the case of an error being thrown, the function will 
+#' return the error. This can be checked by testing the return type, i.e.
+#' `inherits(return_value$result, "simpleError")`, which will evaluate to
+#' `TRUE` if an error was returned.
 #'
 #' @param func A function which can error out.
 #' @returns The wrapped function.
 #'
 #' @keywords internal
 #' @export
+errors_as_messages <- function(func) {
+    wrapped_func <- function(...) {
+        result <- tryCatch(
+            func(...),
+            error = function(e) {
+                message(conditionMessage(e))
+                return(e)
+            },
+            warning = function(w) {
+                message(conditionMessage(w))
+            }
+        )
+        return(result)
+    }
+    return(wrapped_func)
+}
+
+#' Assert to Bool
+#'
 assert_to_bool <- function(func) {
     wrapped_func <- function(...) {
         tryCatch(

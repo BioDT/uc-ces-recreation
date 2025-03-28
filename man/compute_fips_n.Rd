@@ -4,14 +4,10 @@
 \alias{compute_fips_n}
 \title{Compute FIPS_N Component}
 \usage{
-compute_fips_n(persona, data_dir, bbox = NULL)
+compute_fips_n(...)
 }
 \arguments{
-\item{persona}{A named vector containing the persona scores (for all components).}
-
-\item{data_dir}{Path to the directory containing the rasters.}
-
-\item{bbox}{An optional bounding box for cropping.}
+\item{...}{Parameters passed straight to \link{compute_component}}
 }
 \description{
 Compute the FIPS_N ("Natural Features Impacting Potential Services") component
