@@ -21,10 +21,8 @@ assert_valid_persona <- function(persona) {
     }
 }
 
-#' Is Valid Persona
-#'
-#' @export
-is_valid_persona <- function(persona) assert_to_bool(assert_valid_persona)(persona)
+check_valid_persona <- function(persona) assert_to_bool(assert_valid_persona)(persona)
+
 
 #' List CSV Files
 #'
@@ -38,7 +36,6 @@ is_valid_persona <- function(persona) assert_to_bool(assert_valid_persona)(perso
 list_csv_files <- function(dir) {
     return(list.files(path = dir, pattern = "\\.csv$", full.names = FALSE))
 }
-
 
 #' Read Persona CSV
 #'

@@ -1,3 +1,10 @@
+# File:       app_text.R
+# Package:    biodt.recreation
+# Repository: https://github.com/BioDT/uc-ces-recreation2
+# License:    MIT
+# Copyright:  2025 BioDT
+# Author(s):  Joe Marsh Rossney
+
 #' @import shiny
 about_html <- function() {
     div(
@@ -191,4 +198,17 @@ faq_html <- function() {
         h4("9.	How did you model the distribution of species for the Cairngorms?"),
         p("We fitted a Species Distribution Models (SDMs) using citizen scientise records of species occurrence obtained from GBIF as response variables and bioclimatic variables available on Google's Earth Engine Data Catalog as explanatory variables.")
     )
+}
+
+footer_html <- function() {
+    div(
+        "Information about how we process your data can be found in our ",
+        a(href = "https://www.ceh.ac.uk/privacy-notice", "privacy notice.", target = "_blank"),
+        br(),
+        "Contact: Dr Jan Dick (jand@ceh.ac.uk)."
+    )
+}
+
+copyright_html <- function() {
+    "© UK Centre for Ecology & Hydrology and BioDT, 2025."
 }

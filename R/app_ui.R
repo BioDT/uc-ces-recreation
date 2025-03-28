@@ -1,3 +1,10 @@
+# File:       app_ui.R
+# Package:    biodt.recreation
+# Repository: https://github.com/BioDT/uc-ces-recreation2
+# License:    MIT
+# Copyright:  2025 BioDT
+# Author(s):  Joe Marsh Rossney
+
 .base_layers <- list(
     "Street" = "Esri.WorldStreetMap",
     "Topographical" = "Esri.WorldTopoMap",
@@ -7,7 +14,7 @@
 
 #' @import shiny 
 create_sliders <- function(component) {
-    config <- biodt.recreation::load_config()
+    config <- load_config()
 
     layer_info <- stats::setNames(config[["Description"]], config[["Name"]])
     layer_names <- names(layer_info)
@@ -84,7 +91,7 @@ ui <- function() {
                     tabPanel("About", about_html()),
                     tabPanel(
                         "User Guide",
-                        tags$p(),
+                        p(),
                         tabsetPanel(
                             tabPanel("Create a Persona", persona_html()),
                             tabPanel("Run the Model", model_html()),
@@ -94,10 +101,10 @@ ui <- function() {
                     ),
                     tabPanel(
                         "Persona",
-                        tags$p(),
+                        p(),
                         actionButton("loadButton", "Load Persona"),
                         actionButton("saveButton", "Save Persona"),
-                        tags$p(),
+                        p(),
                         tabsetPanel(
                             tabPanel("Landscape", create_sliders("SLSRA")),
                             tabPanel("Natural Features", create_sliders("FIPS_N")),
@@ -107,8 +114,8 @@ ui <- function() {
                     ),
                     tabPanel(
                         "Map Control",
-                        tags$p(),
-                        tags$h3("Data layers"),
+                        p(),
+                        h3("Data layers"),
                         radioButtons(
                             "layerSelect",
                             "Select which component to display on the map",
@@ -122,7 +129,7 @@ ui <- function() {
                             selected = 5,
                             inline = TRUE
                         ),
-                        tags$p(),
+                        p(),
                         sliderInput(
                             "minDisplay",
                             "Display values above (values below this will be transparent)",
@@ -143,8 +150,8 @@ ui <- function() {
                             step = 0.2,
                             ticks = FALSE
                         ),
-                        tags$hr(),
-                        tags$h3("Base map"),
+                        hr(),
+                        h3("Base map"),
                         radioButtons(
                             "baseLayerSelect",
                             "Select a base map",
@@ -166,7 +173,7 @@ ui <- function() {
                      #update-button {background-color: #e67e00; border: 5px; border-radius: 5px;}
                 ")),
                 ),
-                tags$div(
+                div(
                     class = "map-container",
                     style = "position: relative;",
                     leaflet::leafletOutput("map"),
@@ -182,20 +189,17 @@ ui <- function() {
                 verbatimTextOutput("userInfo")
             )
         ),
-        tags$hr(),
+        hr(),
         fluidRow(
             column(
                 width = 6,
                 style = "text-align: left;",
-                "Information about how we process your data can be found in our ",
-                tags$a(href = "https://www.ceh.ac.uk/privacy-notice", "privacy notice.", target = "_blank"),
-                tags$br(),
-                "Contact: Dr Jan Dick (jand@ceh.ac.uk)."
+                footer_html()
             ),
             column(
                 width = 6,
                 style = "text-align: right;",
-                "© UK Centre for Ecology & Hydrology and BioDT, 2025."
+                copyright_html()
             )
         )
     )

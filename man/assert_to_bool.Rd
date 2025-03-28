@@ -21,3 +21,4 @@ does not encounter an error, TRUE is returned.
 This is achieved by wrapping the function execution in a \code{tryCatch} and
 capturing any errors or warnings.
 }
+\keyword{internal}

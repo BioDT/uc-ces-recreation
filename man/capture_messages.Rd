@@ -7,8 +7,15 @@
 capture_messages(func)
 }
 \arguments{
-\item{msg_func}{A function that includes messages}
+\item{func}{A function that includes messages.}
+}
+\value{
+The wrapped function.
 }
 \description{
-Capture Messages
+Modify a function so that, when executed, any messages that would
+usually be printed to stdout are instead captured and held in a
+variable. The wrapped function returns a pair \verb{(result, message)}
+that contains the original result and the captured messages.
 }
+\keyword{internal}

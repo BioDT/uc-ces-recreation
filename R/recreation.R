@@ -5,7 +5,7 @@
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
 
-.assert_valid_component <- function(component) {
+assert_valid_component <- function(component) {
     valid_components <- c("SLSRA", "FIPS_N", "FIPS_I", "Water")
     if (!component %in% valid_components) {
         stop(paste("Error:", component, "is not a valid component; should be one of", valid_components)) # nolint
@@ -40,8 +40,8 @@
 #'
 #' @export
 compute_component <- function(component, persona, data_dir, bbox = NULL) {
-    .assert_valid_component(component)
-    .assert_valid_data_dir(data_dir)
+    assert_valid_component(component)
+    assert_valid_data_dir(data_dir)
 
     raster <- load_raster(
         file.path(data_dir, paste0(component, ".tif")),

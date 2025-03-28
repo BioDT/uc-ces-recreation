@@ -1,7 +1,13 @@
-# This is modified version of the official UKCEH theme at
+# File:       app_theme.R
+# Package:    biodt.recreation
+# Repository: https://github.com/BioDT/uc-ces-recreation2
+# License:    MIT
+# Copyright:  2025 BioDT
+# Author(s):  Joe Marsh Rossney
+
+# NOTE: This is modified version of the official UKCEH theme at
 # https://github.com/NERC-CEH/UKCEH_shiny_theming/blob/main/theme_elements.R
 
-#' @export
 app_theme <- function() {
     bslib::bs_theme(
         bg = "#fff",
@@ -28,7 +34,6 @@ app_theme <- function() {
 }
 
 #' @import shiny
-#' @export
 app_title_panel <- function(title_text, window_title = title_text) {
     div(
         a(

@@ -1,6 +1,9 @@
-library(shiny)
-library(leaflet)
-library(leaflet.extras)
+# File:       app_server.R
+# Package:    biodt.recreation
+# Repository: https://github.com/BioDT/uc-ces-recreation2
+# License:    MIT
+# Copyright:  2025 BioDT
+# Author(s):  Joe Marsh Rossney
 
 .base_layers <- list(
     "Street" = "Esri.WorldStreetMap",
@@ -20,12 +23,6 @@ list_users <- function(persona_dir) {
     lapply(list_csv_files(persona_dir), tools::file_path_sans_ext)
 }
 
-remove_non_alphanumeric <- function(string) {
-    string <- gsub(" ", "_", string) # Spaces to underscore
-    string <- gsub("[^a-zA-Z0-9_]+", "", string) # remove non alpha-numeric
-    string <- gsub("^_+|_+$", "", string) # remove leading or trailing underscores
-    return(string)
-}
 
 #' @import leaflet
 #' @import leaflet.extras
@@ -190,7 +187,7 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
                 }
             )
 
-            user_name <- remove_non_alphanumeric(tools::file_path_sans_ext(basename(input$fileUpload$name)))
+            user_name <- make_safe_string(tools::file_path_sans_ext(basename(input$fileUpload$name)))
             save_path <- file.path(persona_dir, paste0(user_name, ".csv"))
             update_user_info(paste("Attempting to save uploaded persona file, user name:", user_name))
 
@@ -243,8 +240,8 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
             persona_name <- input$savePersonaName
 
             # Remove characters that may cause problems with i/o and dataframe filtering
-            user_name <- remove_non_alphanumeric(user_name)
-            persona_name <- remove_non_alphanumeric(persona_name)
+            user_name <- make_safe_string(user_name)
+            persona_name <- make_safe_string(persona_name)
 
             if (user_name == "examples") {
                 # TODO: display message inside modal, so it's visible
@@ -390,7 +387,7 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
         observeEvent(input$updateButton, {
             persona <- get_persona_from_sliders()
 
-            valid_persona <- capture_messages(is_valid_persona)(persona)
+            valid_persona <- capture_messages(check_valid_persona)(persona)
             userInfoText(paste(valid_persona$message, collapse = "\n"))
             if (!valid_persona$result) return()
 
