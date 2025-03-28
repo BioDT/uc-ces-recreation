@@ -1,11 +1,21 @@
 
 #' Assert to Bool
 #'
+#' Convert an function that throws errors under certain conditions to one
+#' that instead returns FALSE and prints the error message. If the function
+#' does not encounter an error, TRUE is returned.
+#'
+#' This is achieved by wrapping the function execution in a `tryCatch` and
+#' capturing any errors or warnings.
+#'
+#' @param func A function which can error out.
+#' @returns The wrapped function.
+#'
 #' @export
-assert_to_bool <- function(assert_func) {
-    msg_func <- function(...) {
+assert_to_bool <- function(func) {
+    wrapped_func <- function(...) {
         tryCatch(
-            assert_func(...),
+            func(...),
             error = function(e) {
                 message(conditionMessage(e))
                 return(FALSE)
@@ -16,5 +26,21 @@ assert_to_bool <- function(assert_func) {
         )
         return(TRUE)
     }
-    return(msg_func)
+    return(wrapped_func)
 }
+
+#' Capture Messages
+#'
+#' @param msg_func A function that includes messages
+capture_messages <- function(func) {
+    wrapped_func <- function(...) {
+        message <- utils::capture.output(
+            result <- func(...),
+            type = "message"
+        )
+        message <- paste(message, collapse = "\n")  # split messages over lines
+        return(list(result = result, message = message))
+    }
+    return(wrapped_func)
+}
+

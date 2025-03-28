@@ -27,9 +27,10 @@ app_theme <- function() {
         ")
 }
 
+#' @import shiny
 #' @export
 app_title_panel <- function(title, window_title = title) {
-    shiny::div(
+    div(
         shiny::a(
             href = "https://www.ceh.ac.uk",
             target = "_blank",

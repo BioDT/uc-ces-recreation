@@ -39,19 +39,6 @@ list_csv_files <- function(dir) {
     return(list.files(path = dir, pattern = "\\.csv$", full.names = FALSE))
 }
 
-#' List Personas in File
-#'
-#' Returns a list of personas in a given file.
-#'
-#' @param persona_file The path to a persona file.
-#' @returns A list of names.
-#'
-#' @keywords internal
-#' @export
-list_personas_in_file <- function(persona_file) {
-    personas <- names(read.csv(persona_file, nrows = 1))
-    return(personas[personas != "index"])
-}
 
 #' Read Persona CSV
 #'
@@ -88,6 +75,21 @@ read_persona_csv <- function(csv_path) {
     }
 
     return(df)
+}
+
+#' List Personas in File
+#'
+#' Returns a list of personas in a given file.
+#'
+#' @param persona_file The path to a persona file.
+#' @returns A list of names.
+#'
+#' @keywords internal
+#' @export
+list_personas_in_file <- function(persona_file) {
+    # TODO: replace with call to read_persona_csv
+    personas <- names(utils::read.csv(persona_file, nrows = 1))
+    return(personas[personas != "index"])
 }
 
 #' Load Persona

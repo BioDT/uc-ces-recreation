@@ -4,8 +4,20 @@
 \alias{assert_to_bool}
 \title{Assert to Bool}
 \usage{
-assert_to_bool(assert_func)
+assert_to_bool(func)
+}
+\arguments{
+\item{func}{A function which can error out.}
+}
+\value{
+The wrapped function.
 }
 \description{
-Assert to Bool
+Convert an function that throws errors under certain conditions to one
+that instead returns FALSE and prints the error message. If the function
+does not encounter an error, TRUE is returned.
+}
+\details{
+This is achieved by wrapping the function execution in a \code{tryCatch} and
+capturing any errors or warnings.
 }

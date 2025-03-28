@@ -75,6 +75,10 @@ assert_bbox_intersects_scotland <- function(bbox, warn_if_not_within = FALSE) {
     }
 }
 
+check_bbox_intersects_scotland <- function(...) {
+    assert_to_bool(assert_bbox_intersects_scotland)(...)
+}
+
 #' Assert Bbox is a Valid Size
 #'
 #' Raise an error if the given bounding box has an area smaller than
@@ -86,6 +90,9 @@ assert_bbox_intersects_scotland <- function(bbox, warn_if_not_within = FALSE) {
 #'
 #' @export
 assert_bbox_is_valid_size <- function(bbox, min_area = 1e4, max_area = 1e9) {
+    if (is.null(bbox)) {
+        stop("No area has been selected. Please select an area.")
+    }
     area <- (terra::xmax(bbox) - terra::xmin(bbox)) * (terra::ymax(bbox) - terra::ymin(bbox))
     if (area > max_area) {
         stop(paste(
@@ -102,6 +109,17 @@ assert_bbox_is_valid_size <- function(bbox, min_area = 1e4, max_area = 1e9) {
         ))
     }
     message(paste("Selected an area of", sprintf("%.1e", area), "m^2 ."))
+}
+
+check_bbox_is_valid_size <- function(...) {
+    assert_to_bool(assert_bbox_is_valid_size)(...)
+}
+
+
+check_valid_bbox <- function(bbox, min_area = 1e4, max_area = 1e9) {
+    intersects_scot <- check_bbox_intersects_scotland(bbox)
+    valid_size <- check_bbox_is_valid_size(bbox, min_area, max_area)
+    return(valid_size && intersects_scot)
 }
 
 #' Load Raster

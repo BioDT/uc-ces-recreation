@@ -16,42 +16,6 @@ palette <- colorNumeric(
     na.color = "transparent"
 )
 
-check_valid_persona <- function(persona) {
-    if (all(sapply(persona, function(score) score == 0))) {
-        message("All the persona scores are zero. At least one score must be non-zero.")
-        message("Perhaps you have forgotten to load a persona?")
-        return(FALSE)
-    }
-    return(TRUE)
-}
-
-#' List CSV Files
-#'
-#' Returns a list of the names of all CSV files in a directory.
-#'
-#' @param dir The directory in which to look.
-#' @returns A list of names
-#'
-#' @keywords internal
-#' @export
-list_csv_files <- function(dir) {
-    return(list.files(path = dir, pattern = "\\.csv$", full.names = FALSE))
-}
-
-#' List Personas in File
-#'
-#' Returns a list of personas in a given file.
-#'
-#' @param persona_file The path to a persona file.
-#' @returns A list of names.
-#'
-#' @keywords internal
-#' @export
-list_personas_in_file <- function(persona_file) {
-    personas <- names(read.csv(persona_file, nrows = 1))
-    return(personas[personas != "index"])
-}
-
 list_users <- function(persona_dir) {
     lapply(list_csv_files(persona_dir), tools::file_path_sans_ext)
 }
@@ -63,47 +27,18 @@ remove_non_alphanumeric <- function(string) {
     return(string)
 }
 
-check_valid_bbox <- function(bbox, min_area = 1e4, max_area = 1e9) {
-    if (is.null(bbox)) {
-        message("No area has been selected. Please select an area.")
-        return(FALSE)
-    }
-    tryCatch(
-        {
-            biodt.recreation::assert_bbox_intersects_scotland(bbox)
-        },
-        error = function(e) {
-            message(conditionMessage(e))
-            return(FALSE)
-        },
-        warning = function(w) {
-            message(conditionMessage(w))
-        }
-    )
-    tryCatch(
-        {
-            biodt.recreation::assert_bbox_is_valid_size(bbox, min_area, max_area)
-        },
-        error = function(e) {
-            message(conditionMessage(e))
-            return(FALSE)
-        },
-        warning = function(w) {
-            message(conditionMessage(w))
-        }
-    )
-    return(TRUE)
-}
-
+#' @import leaflet
+#' @import leaflet.extras
+#' @import shiny
 server <- function(persona_dir = NULL, data_dir = NULL) {
-    config <- biodt.recreation::load_config()
+    config <- load_config()
     layer_names <- config[["Name"]]
         
     if (is.null(data_dir)) {
-        data_dir <- biodt.recreation::get_default_data_dir()
+        data_dir <- get_default_data_dir()
     }
     if (is.null(persona_dir)) {
-       persona_dir <- file.path(rprojroot::find_root(rprojroot::is_r_package), "personas")
+       persona_dir <- system.file("extdata", package = "biodt.recreation")
     }
 
     load_dialog <- modalDialog(
@@ -168,7 +103,7 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
         }
 
         # Reactive variable to track the selected user
-        reactiveUserSelect <- reactiveVal("examples")
+        reactiveUserSelect <- reactiveVal("example_personas")
 
         # Reactive variable for caching computed raster
         reactiveLayers <- reactiveVal()
@@ -320,15 +255,14 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
 
             message <- paste0("Saving persona '", persona_name, "' under user '", user_name, "'")
 
-            captured_messages <- capture.output(
+            extra_messages <- capture_messages(
                 save_persona(
                     persona = get_persona_from_sliders(),
                     csv_path = file.path(persona_dir, paste0(user_name, ".csv")),
                     name = persona_name
-                ),
-                type = "message"
+                )
             )
-            update_user_info(paste(c(message, captured_messages), collapse = "\n"))
+            update_user_info(paste(c(message, extra_messages), collapse = "\n"))
 
             removeModal()
         })
@@ -448,37 +382,23 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
             # Store the SpatExtent as a reactive value
             reactiveExtent(extent_27700)
 
-            msg <- capture.output(
-                check_valid_bbox(extent_27700),
-                type = "message"
-            )
-            update_user_info(msg)
+            valid_bbox <- capture_messages(check_valid_bbox)(extent_27700)
+            update_user_info(valid_bbox$message)
         })
 
         # Recompute raster when update button is clicked
         observeEvent(input$updateButton, {
             persona <- get_persona_from_sliders()
 
-            msg <- capture.output(
-                valid_persona <- check_valid_persona(persona),
-                type = "message"
-            )
-            userInfoText(paste(msg, collapse = "\n"))
-
-            if (!valid_persona) {
-                return()
-            }
+            valid_persona <- capture_messages(is_valid_persona)(persona)
+            userInfoText(paste(valid_persona$message, collapse = "\n"))
+            if (!valid_persona$result) return()
 
             bbox <- reactiveExtent()
 
-            msg <- capture.output(
-                valid_bbox <- check_valid_bbox(bbox),
-                type = "message"
-            )
-            update_user_info(msg)
-            if (!valid_bbox) {
-                return()
-            }
+            valid_bbox <- capture_messages(check_valid_bbox)(bbox)
+            update_user_info(paste(valid_bbox$message, collapse = "\n"))
+            if (!valid_bbox$result) return()
 
             waiter::waiter_show(
                 html = div(
@@ -489,17 +409,12 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
                 color = "rgba(50, 50, 50, 0.6)"
             )
 
-            msg <- capture.output(
-                layers <- biodt.recreation::compute_potential(
-                    persona,
-                    data_dir,
-                    bbox = bbox
-                ),
-                type = "message"
-            )
-            userInfoText(paste(msg, collapse = "\n"))
+            calc <- capture_messages(compute_potential)(persona, data_dir, bbox = bbox)
+            
+            userInfoText(paste(calc$message, collapse = "\n"))
 
             # Update reactiveLayers with new raster
+            layers <- calc$result
             reactiveLayers(layers)
 
             waiter::waiter_hide()

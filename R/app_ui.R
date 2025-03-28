@@ -1,7 +1,3 @@
-library(shiny)
-library(leaflet)
-library(leaflet.extras)
-
 .base_layers <- list(
     "Street" = "Esri.WorldStreetMap",
     "Topographical" = "Esri.WorldTopoMap",
@@ -9,6 +5,7 @@ library(leaflet.extras)
     "Greyscale" = "Esri.WorldGrayCanvas"
 )
 
+#' @import shiny 
 create_sliders <- function(component) {
     config <- biodt.recreation::load_config()
 
@@ -71,30 +68,28 @@ create_sliders <- function(component) {
     })
 }
 
+#' @import shiny
 ui <- function() {
-
-    source(system.file("shiny_app", "text.R", package = "biodt.recreation", mustWork = TRUE))
-
     fluidPage(
-        theme = biodt.recreation::app_theme(),
+        theme = app_theme(),
         waiter::use_waiter(),
         # Add title, contact address and privacy notice in combined title panel + header
         fluidRow(
-            biodt.recreation::app_title_panel("Recreational Potential Model for Scotland")
+            app_title_panel("Recreational Potential Model for Scotland")
         ),
         sidebarLayout(
             sidebarPanel(
                 width = 5,
                 tabsetPanel(
-                    tabPanel("About", about_html),
+                    tabPanel("About", about_html()),
                     tabPanel(
                         "User Guide",
                         tags$p(),
                         tabsetPanel(
-                            tabPanel("Create a Persona", persona_html),
-                            tabPanel("Run the Model", model_html),
-                            tabPanel("Adjust the Visualisation", viz_html),
-                            tabPanel("FAQ", faq_html)
+                            tabPanel("Create a Persona", persona_html()),
+                            tabPanel("Run the Model", model_html()),
+                            tabPanel("Adjust the Visualisation", viz_html()),
+                            tabPanel("FAQ", faq_html())
                         )
                     ),
                     tabPanel(
@@ -174,7 +169,7 @@ ui <- function() {
                 tags$div(
                     class = "map-container",
                     style = "position: relative;",
-                    leafletOutput("map"),
+                    leaflet::leafletOutput("map"),
                     absolutePanel(
                         id = "update-button",
                         class = "fab",

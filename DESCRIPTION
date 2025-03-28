@@ -20,19 +20,19 @@ Depends:
     R (>= 4.4)
 Imports:
     readr,
-    terra
-Suggests:
+    terra,
     bslib,
     class,
-    devtools,
     KernSmooth,
     leaflet,
     leaflet.extras,
-    lintr,
-    mapview,
+    rprojroot,
     shiny,
-    styler,
     waiter
+Suggests:
+    devtools,
+    lintr,
+    styler
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
