@@ -22,11 +22,8 @@ Imports:
     readr,
     terra,
     bslib,
-    class,
-    KernSmooth,
     leaflet,
     leaflet.extras,
-    rprojroot,
     shiny,
     waiter
 Suggests:

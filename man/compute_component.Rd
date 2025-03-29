@@ -20,6 +20,8 @@ compute_component(
 \item{data_dir}{Path to the directory containing the rasters.}
 
 \item{bbox}{An optional bounding box for cropping.}
+
+\item{skip_checks}{Pass \code{TRUE} to skip checks of the validity of the inputs.}
 }
 \value{
 A single-layered \code{SpatRaster} which is the contribution to the Recreational Potential from this component.
@@ -50,8 +52,10 @@ persona <- load_persona(
     csv_path = system.file("extdata", "example_personas.csv", package = "biodt.recreation"),
     name = "Hard_Recreationalist"
 )
-data_dir <- get_default_data_dir()
-bbox <- system.file("extdata", "Bush", "Bush.shp", package = "biodt.recreation")
+data_dir <- system.file("extdata", package = "biodt.recreation")
+bbox <- terra::vect(
+    system.file("extdata", "Bush", "Bush.shp", package = "biodt.recreation")
+)
 
-fips_n <- compute_component("FIPS_N", persona, data_dir, bbox = bbox)
+compute_component("FIPS_N", persona, data_dir, bbox = bbox)
 }

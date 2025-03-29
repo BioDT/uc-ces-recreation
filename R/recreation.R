@@ -33,6 +33,7 @@ assert_valid_component <- function(component) {
 #' @param persona A named vector containing the persona scores (for all components).
 #' @param data_dir Path to the directory containing the rasters.
 #' @param bbox An optional bounding box for cropping.
+#' @param skip_checks Pass `TRUE` to skip checks of the validity of the inputs.
 #'
 #' @returns A single-layered `SpatRaster` which is the contribution to the Recreational Potential from this component.
 #'
@@ -85,7 +86,7 @@ compute_fips_n <- function(...) compute_component("FIPS_N", ...)
 #'
 #' @param ... Parameters passed straight to [biodt.recreation::compute_component]
 #' @export
-compute_fips_i <- function(...) commpute_component("FIPS_I", ...)
+compute_fips_i <- function(...) compute_component("FIPS_I", ...)
 
 #' Compute FIPS_I Component
 #'
@@ -167,7 +168,7 @@ compute_potential <- function(persona, data_dir = NULL, bbox = NULL) {
     assert_valid_data_dir(data_dir)
     assert_valid_bbox(bbox)
 
-    slsra <- compute_component("SLSRA", persona, data_dir, bbox, skip_check = TRUE) |>
+    slsra <- compute_component("SLSRA", persona, data_dir, bbox, skip_checks = TRUE) |>
         rescale_to_unit_interval()
     fips_n <- compute_component("FIPS_N", persona, data_dir, bbox, skip_checks = TRUE) |>
         rescale_to_unit_interval()
