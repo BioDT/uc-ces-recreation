@@ -22,7 +22,13 @@ assert_valid_persona <- function(persona) {
     return(TRUE)
 }
 
-is_valid_persona <- function(persona) assert_to_bool(assert_valid_persona)(persona)
+is_valid_persona <- function(persona) {
+    assert_to_bool(assert_valid_persona)(persona)
+}
+
+check_valid_persona <- function(persona) {
+    capture_messages(errors_as_messages(assert_valid_persona))(persona)
+}
 
 
 #' List CSV Files

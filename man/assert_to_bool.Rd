@@ -13,12 +13,13 @@ assert_to_bool(func)
 The wrapped function.
 }
 \description{
-Convert a function that throws errors under certain conditions to one
-that instead returns FALSE and prints the error message. If the function
-does not encounter an error, TRUE is returned.
+Given a function that asserts that some condition is met by throwing
+an error if it is not, e.g. via \code{stop()}, produce a function that
+instead returns \code{TRUE} or \code{FALSE} depending on whether the condition
+is met, and prints the error message without crashing.
 }
 \details{
-This is achieved by wrapping the function execution in a \code{tryCatch} and
-capturing any errors or warnings.
+This functionality is superseded by the more general
+\link{errors_as_messages}.
 }
 \keyword{internal}

@@ -89,3 +89,7 @@ is_valid_bbox <- function(...) {
     assert_to_bool(assert_valid_bbox)(...)
 }
 
+check_valid_bbox <- function(...) {
+    capture_messages(errors_as_messages(assert_valid_bbox))(...)
+}
+

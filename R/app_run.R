@@ -11,8 +11,11 @@
 #' @param data_dir Path to the directory containing the raster data.
 #' @param ... Additional arguments passed to [shiny::runApp].
 #'
+#' @importFrom shiny shinyApp runApp
 #' @export
 run_app <- function(persona_dir = NULL, data_dir = NULL, ...) {
-    app <- shiny::shinyApp(ui = ui(), server = server(persona_dir, data_dir))
-    shiny::runApp(app, ...)
+    ui <- make_ui()
+    server <- make_server(persona_dir, data_dir)
+    app <- shinyApp(ui = ui, server = server)
+    runApp(app, ...)
 }

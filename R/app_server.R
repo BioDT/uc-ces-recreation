@@ -5,13 +5,6 @@
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
 
-.base_layers <- list(
-    "Street" = "Esri.WorldStreetMap",
-    "Topographical" = "Esri.WorldTopoMap",
-    "Satellite" = "Esri.WorldImagery",
-    "Greyscale" = "Esri.WorldGrayCanvas"
-)
-
 palette <- colorNumeric(
     palette = "Spectral",
     reverse = TRUE,
@@ -23,22 +16,9 @@ list_users <- function(persona_dir) {
     lapply(list_csv_files(persona_dir), tools::file_path_sans_ext)
 }
 
-
-#' @import leaflet
-#' @import leaflet.extras
 #' @import shiny
-server <- function(persona_dir = NULL, data_dir = NULL) {
-    config <- load_config()
-    layer_names <- config[["Name"]]
-        
-    if (is.null(data_dir)) {
-        data_dir <- get_default_data_dir()
-    }
-    if (is.null(persona_dir)) {
-       persona_dir <- system.file("extdata", package = "biodt.recreation")
-    }
-
-    load_dialog <- modalDialog(
+make_load_dialog <- function(persona_dir) {
+    modalDialog(
         title = "Load Persona",
         selectInput(
             "loadUserSelect",
@@ -63,7 +43,11 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
             modalButton("Cancel"),
         )
     )
-    save_dialog <- modalDialog(
+}
+
+#' @import shiny
+make_save_dialog <- function(persona_dir) {
+    modalDialog(
         title = "Save Persona",
         selectInput(
             "saveUserSelect",
@@ -88,16 +72,23 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
         downloadButton("confirmDownload", "Download"),
         footer = modalButton("Cancel")
     )
+}
+
+#' @import leaflet
+#' @import leaflet.extras
+#' @import shiny
+make_server <- function(persona_dir = NULL, data_dir = NULL) {
+    config <- load_config()
+    layer_names <- config[["Name"]]
+        
+    if (is.null(data_dir)) {
+        data_dir <- get_default_data_dir()
+    }
+    if (is.null(persona_dir)) {
+       persona_dir <- system.file("extdata", package = "biodt.recreation")
+    }
 
     server <- function(input, output, session) {
-        get_persona_from_sliders <- function() {
-            persona <- sapply(
-                layer_names,
-                function(layer_name) input[[layer_name]],
-                USE.NAMES = TRUE
-            )
-            return(persona)
-        }
 
         # Reactive variable to track the selected user
         reactiveUserSelect <- reactiveVal("example_personas")
@@ -126,9 +117,21 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
             userInfoText(paste(c(userInfoText(), message), collapse = "\n"))
         }
 
+        get_persona_from_sliders <- function() {
+            persona <- sapply(
+                layer_names,
+                function(layer_name) input[[layer_name]],
+                USE.NAMES = TRUE
+            )
+            return(persona)
+        }
 
-        # ------------------------------------------------------ Loading
-
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+        #                  Loading                  #
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+        
+        load_dialog <- make_load_dialog(persona_dir)
+        
         observeEvent(input$loadButton, {
             updateSelectInput(
                 session,
@@ -215,7 +218,11 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
             )
         })
 
-        # ------------------------------------------------------ Saving
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+        #                  Saving                   #
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+        
+        save_dialog <- make_save_dialog(persona_dir)
 
         observeEvent(input$saveButton, {
             updateSelectInput(
@@ -272,11 +279,15 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
             }
         )
 
-        # --------------------------------------------------------------- Map
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+        #                    Map                    #
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
         # Initialize Leaflet map
         output$map <- renderLeaflet({
+            base_layers <- get_base_layers()
             addBaseLayers <- function(map) {
-                for (layer in .base_layers) {
+                for (layer in base_layers) {
                     map <- addProviderTiles(map, layer, group = layer)
                 }
                 return(map)
@@ -284,8 +295,8 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
             leaflet() |>
                 setView(lng = -4.2026, lat = 56.4907, zoom = 7) |>
                 addBaseLayers() |>
-                hideGroup(.base_layers) |>
-                showGroup(.base_layers[[1]]) |>
+                hideGroup(base_layers) |>
+                showGroup(base_layers[[1]]) |>
                 addLegend(
                     title = "Values",
                     position = "bottomright",
@@ -379,36 +390,35 @@ server <- function(persona_dir = NULL, data_dir = NULL) {
             # Store the SpatExtent as a reactive value
             reactiveExtent(extent_27700)
 
-            valid_bbox <- capture_messages(is_valid_bbox)(extent_27700)
-            update_user_info(valid_bbox$message)
+            valid_bbox_check <- check_valid_bbox(extent_27700)
+            update_user_info(valid_bbox_check$message)
         })
 
         # Recompute raster when update button is clicked
         observeEvent(input$updateButton, {
             persona <- get_persona_from_sliders()
-
-            valid_persona <- capture_messages(is_valid_persona)(persona)
-            userInfoText(paste(valid_persona$message, collapse = "\n"))
-            if (!valid_persona$result) return()
-
             bbox <- reactiveExtent()
 
-            valid_bbox <- capture_messages(is_valid_bbox)(bbox)
-            update_user_info(paste(valid_bbox$message, collapse = "\n"))
-            if (!valid_bbox$result) return()
+            valid_persona_check <- check_valid_persona(persona)
+            update_user_info(valid_persona_check$message)
+            if (is_error(valid_persona_check$result)) return()
+
+            valid_bbox_check <- check_valid_bbox(bbox)
+            update_user_info(valid_bbox_check$message)
+            if (is_error(valid_bbox_check$result)) return()
 
             waiter::waiter_show(
                 html = div(
                     style = "color: #F0F0F0;",
-                    tags$h3("Computing Recreational Potential..."),
+                    h3("Computing Recreational Potential..."),
                     waiter::spin_fading_circles()
                 ),
                 color = "rgba(50, 50, 50, 0.6)"
             )
 
             output <- capture_messages(errors_as_messages(compute_potential))(persona, data_dir, bbox = bbox)
-            userInfoText(paste(output$message, collapse = "\n"))
-            if (inherits(output$result, "simpleError")) return()
+            update_user_info(output$message)
+            if (is_error(output$result)) return()
             
             # Update reactiveLayers with computed raster
             reactiveLayers(output$result)

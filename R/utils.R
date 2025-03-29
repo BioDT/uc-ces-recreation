@@ -9,9 +9,10 @@
 #'
 #' Given a function that may throw an error, e.g. via `stop()`, produce
 #' a function that instead prints the error message without crashing.
+#'
 #' This is achieved by wrapping the function execution in a `tryCatch` 
 #' and capturing any errors or warnings as a message.
-#'
+#' 
 #' Note that in the case of an error being thrown, the function will 
 #' return the error. This can be checked by testing the return type, i.e.
 #' `inherits(return_value$result, "simpleError")`, which will evaluate to
@@ -41,6 +42,19 @@ errors_as_messages <- function(func) {
 
 #' Assert to Bool
 #'
+#' Given a function that asserts that some condition is met by throwing
+#' an error if it is not, e.g. via `stop()`, produce a function that
+#' instead returns `TRUE` or `FALSE` depending on whether the condition
+#' is met, and prints the error message without crashing.
+#' 
+#' This functionality is superseded by the more general
+#' [biodt.recreation::errors_as_messages].
+#'
+#' @param func A function which can error out.
+#' @returns The wrapped function.
+#'
+#' @keywords internal
+#' @export
 assert_to_bool <- function(func) {
     wrapped_func <- function(...) {
         tryCatch(
@@ -82,9 +96,20 @@ capture_messages <- function(func) {
     return(wrapped_func)
 }
 
+#' Is Error
+#'
+#' Test if a value is an instance of `simpleError`.
+#'
+#' @param value The value to test.
+#' @returns `TRUE` if the value is an error, `FALSE` otherwise.
+#'
+#' @keywords internal
+#' @export
+is_error <- function(value) inherits(value, "simpleError")
+
 #' Make Safe String
 #'
-#' Conver an arbitrary string into a 'safe' one that can be used in
+#' Convert an arbitrary string into a 'safe' one that can be used in
 #' file names and data.frame column names. This involves replacing
 #' spaces with underscores and removing any characters that are not
 #' alpha-numeric.

@@ -13,7 +13,7 @@ make_safe_string(string)
 The 'safe' string.
 }
 \description{
-Conver an arbitrary string into a 'safe' one that can be used in
+Convert an arbitrary string into a 'safe' one that can be used in
 file names and data.frame column names. This involves replacing
 spaces with underscores and removing any characters that are not
 alpha-numeric.

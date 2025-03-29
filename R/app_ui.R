@@ -5,15 +5,18 @@
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
 
-.base_layers <- list(
-    "Street" = "Esri.WorldStreetMap",
-    "Topographical" = "Esri.WorldTopoMap",
-    "Satellite" = "Esri.WorldImagery",
-    "Greyscale" = "Esri.WorldGrayCanvas"
-)
+# Wrap this in a function so that it can be accessed from app_server.R!
+get_base_layers <- function() {
+    list(
+        "Street" = "Esri.WorldStreetMap",
+        "Topographical" = "Esri.WorldTopoMap",
+        "Satellite" = "Esri.WorldImagery",
+        "Greyscale" = "Esri.WorldGrayCanvas"
+    )
+}
 
 #' @import shiny 
-create_sliders <- function(component) {
+make_sliders <- function(component) {
     config <- load_config()
 
     layer_info <- stats::setNames(config[["Description"]], config[["Name"]])
@@ -76,11 +79,10 @@ create_sliders <- function(component) {
 }
 
 #' @import shiny
-ui <- function() {
+make_ui <- function() {
     fluidPage(
         theme = app_theme(),
         waiter::use_waiter(),
-        # Add title, contact address and privacy notice in combined title panel + header
         fluidRow(
             app_title_panel("Recreational Potential Model for Scotland")
         ),
@@ -106,10 +108,10 @@ ui <- function() {
                         actionButton("saveButton", "Save Persona"),
                         p(),
                         tabsetPanel(
-                            tabPanel("Landscape", create_sliders("SLSRA")),
-                            tabPanel("Natural Features", create_sliders("FIPS_N")),
-                            tabPanel("Infrastructure", create_sliders("FIPS_I")),
-                            tabPanel("Water", create_sliders("Water"))
+                            tabPanel("Landscape", make_sliders("SLSRA")),
+                            tabPanel("Natural Features", make_sliders("FIPS_N")),
+                            tabPanel("Infrastructure", make_sliders("FIPS_I")),
+                            tabPanel("Water", make_sliders("Water"))
                         )
                     ),
                     tabPanel(
@@ -155,8 +157,8 @@ ui <- function() {
                         radioButtons(
                             "baseLayerSelect",
                             "Select a base map",
-                            choices = .base_layers,
-                            selected = .base_layers[[1]],
+                            choices = get_base_layers(),
+                            selected = get_base_layers()[[1]],
                             inline = TRUE
                         )
                     )
