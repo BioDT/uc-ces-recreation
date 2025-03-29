@@ -15,7 +15,7 @@ get_base_layers <- function() {
     )
 }
 
-#' @import shiny 
+#' @import shiny
 make_sliders <- function(component) {
     config <- load_config()
 

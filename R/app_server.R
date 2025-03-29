@@ -80,16 +80,15 @@ make_save_dialog <- function(persona_dir) {
 make_server <- function(persona_dir = NULL, data_dir = NULL) {
     config <- load_config()
     layer_names <- config[["Name"]]
-        
+
     if (is.null(data_dir)) {
         data_dir <- get_default_data_dir()
     }
     if (is.null(persona_dir)) {
-       persona_dir <- system.file("extdata", package = "biodt.recreation")
+        persona_dir <- system.file("extdata", package = "biodt.recreation")
     }
 
     server <- function(input, output, session) {
-
         # Reactive variable to track the selected user
         reactiveUserSelect <- reactiveVal("example_personas")
 
@@ -127,11 +126,11 @@ make_server <- function(persona_dir = NULL, data_dir = NULL) {
         }
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-        #                  Loading                  #
+        # Loading                  #
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-        
+
         load_dialog <- make_load_dialog(persona_dir)
-        
+
         observeEvent(input$loadButton, {
             updateSelectInput(
                 session,
@@ -219,9 +218,9 @@ make_server <- function(persona_dir = NULL, data_dir = NULL) {
         })
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-        #                  Saving                   #
+        # Saving                   #
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-        
+
         save_dialog <- make_save_dialog(persona_dir)
 
         observeEvent(input$saveButton, {
@@ -280,7 +279,7 @@ make_server <- function(persona_dir = NULL, data_dir = NULL) {
         )
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-        #                    Map                    #
+        # Map                    #
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
         # Initialize Leaflet map
@@ -401,11 +400,15 @@ make_server <- function(persona_dir = NULL, data_dir = NULL) {
 
             valid_persona_check <- check_valid_persona(persona)
             update_user_info(valid_persona_check$message)
-            if (is_error(valid_persona_check$result)) return()
+            if (is_error(valid_persona_check$result)) {
+                return()
+            }
 
             valid_bbox_check <- check_valid_bbox(bbox)
             update_user_info(valid_bbox_check$message)
-            if (is_error(valid_bbox_check$result)) return()
+            if (is_error(valid_bbox_check$result)) {
+                return()
+            }
 
             waiter::waiter_show(
                 html = div(
@@ -418,11 +421,13 @@ make_server <- function(persona_dir = NULL, data_dir = NULL) {
 
             output <- capture_messages(errors_as_messages(compute_potential))(persona, data_dir, bbox = bbox)
             update_user_info(output$message)
-            if (is_error(output$result)) return()
-            
+            if (is_error(output$result)) {
+                return()
+            }
+
             # Update reactiveLayers with computed raster
             reactiveLayers(output$result)
-            
+
             waiter::waiter_hide()
 
             update_map()

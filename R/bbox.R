@@ -5,7 +5,7 @@
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
 
-get_scotland_boundaries <- function() {
+get_scot_boundaries <- function() {
     terra::vect(
         system.file("extdata", "Scotland", "boundaries.shp", package = "biodt.recreation", mustWork = TRUE)
     )
@@ -30,16 +30,16 @@ get_scotland_boundaries <- function() {
 #'
 #' @keywords internal
 #' @export
-.assert_bbox_intersects_scotland <- function(bbox, warn_if_not_within = FALSE) {
-    scotland_boundaries <- get_scotland_boundaries()
-    if (!terra::relate(bbox, scotland_boundaries, "intersects")) {
+.assert_bbox_intersects_scot <- function(bbox, warn_if_not_within = FALSE) {
+    scotland <- get_scot_boundaries()
+    if (!terra::relate(bbox, scotland, "intersects")) {
         stop(paste(
             "The area specified does not contain any of Scotland's land surface.",
             "Please specify a different bounding box"
         ))
     }
     if (warn_if_not_within) {
-        if (!terra::relate(bbox, scotland_boundaries, "within")) {
+        if (!terra::relate(bbox, scotland, "within")) {
             warning("Part of the bounding box is outside Scotland's land surface.")
         }
     }
@@ -81,7 +81,7 @@ get_scotland_boundaries <- function() {
 
 #' Assert Valid Bbox
 assert_valid_bbox <- function(bbox, min_area = 1e4, max_area = 1e9) {
-    .assert_bbox_intersects_scotland(bbox)
+    .assert_bbox_intersects_scot(bbox)
     .assert_bbox_is_valid_size(bbox, min_area, max_area)
 }
 
@@ -92,4 +92,3 @@ is_valid_bbox <- function(...) {
 check_valid_bbox <- function(...) {
     capture_messages(errors_as_messages(assert_valid_bbox))(...)
 }
-

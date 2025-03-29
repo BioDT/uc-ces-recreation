@@ -10,10 +10,10 @@
 #' Given a function that may throw an error, e.g. via `stop()`, produce
 #' a function that instead prints the error message without crashing.
 #'
-#' This is achieved by wrapping the function execution in a `tryCatch` 
+#' This is achieved by wrapping the function execution in a `tryCatch`
 #' and capturing any errors or warnings as a message.
-#' 
-#' Note that in the case of an error being thrown, the function will 
+#'
+#' Note that in the case of an error being thrown, the function will
 #' return the error. This can be checked by testing the return type, i.e.
 #' `inherits(return_value$result, "simpleError")`, which will evaluate to
 #' `TRUE` if an error was returned.
@@ -46,7 +46,7 @@ errors_as_messages <- function(func) {
 #' an error if it is not, e.g. via `stop()`, produce a function that
 #' instead returns `TRUE` or `FALSE` depending on whether the condition
 #' is met, and prints the error message without crashing.
-#' 
+#'
 #' This functionality is superseded by the more general
 #' [biodt.recreation::errors_as_messages].
 #'
@@ -90,7 +90,7 @@ capture_messages <- function(func) {
             result <- func(...),
             type = "message"
         )
-        message <- paste(message, collapse = "\n")  # split messages over lines
+        message <- paste(message, collapse = "\n") # split messages over lines
         return(list(result = result, message = message))
     }
     return(wrapped_func)

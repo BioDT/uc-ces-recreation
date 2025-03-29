@@ -60,7 +60,7 @@ compute_component <- function(component, persona, data_dir, bbox = NULL, skip_ch
 
 #' Compute SLSRA Component
 #'
-#' Compute the SLSRA ("Suitability of Land to Support Recreational Activity") 
+#' Compute the SLSRA ("Suitability of Land to Support Recreational Activity")
 #' component of the Recreational Potential. This is a convenience wrapper around
 #' [biodt.recreation::compute_component] with the argument `component = "SLSRA"`.
 #'
@@ -80,7 +80,7 @@ compute_fips_n <- function(...) compute_component("FIPS_N", ...)
 
 #' Compute FIPS_I Component
 #'
-#' Compute the FIPS_I ("Infrastructure Features Impacting Potential Services") 
+#' Compute the FIPS_I ("Infrastructure Features Impacting Potential Services")
 #' component of the Recreational Potential. This is a convenience wrapper around
 #' [biodt.recreation::compute_component] with the argument `component = "FIPS_I"`.
 #'
