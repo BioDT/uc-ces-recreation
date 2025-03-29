@@ -3,12 +3,33 @@
 - Introduction to BioDT, appropriate links to UKCEH and BioDT
 - Recreational Potential is one half of the 'Cultural Ecosystem Services prototype Digital Twin' (CES pDT) developed by UKCEH.
 
-## Basic usage
+## Basic usage - github
 
 ```R
 devtools::install_github("BioDT/uc-ces-recreation2")
 
 biodt.recreation::run_app()
+```
+
+
+## Local
+
+If you prefer to run things from the shell, you can also run `./run_app.sh` (bash shell required).
+
+```R
+devtools::load_all("path/to/uc-ces-recreation2")
+```
+
+```R
+devtools::document()
+```
+
+```R
+devtools::check()
+```
+
+```sh
+Rscript pre-commit.R
 ```
 
 ## Repository Overview
