@@ -1,0 +1,239 @@
+# Stage 2 (One-hot encoded)
+
+```{r include=FALSE}
+library(dplyr)
+library(terra)
+
+devtools::load_all("../model")
+source("production.R")
+
+config <- load_config()
+feature_mappings <- get_feature_mappings(config)
+
+stage_1_files <- get_files("data/Stage_1")
+stage_2_files <- get_files("data/Stage_2")
+
+bush <- vect("data/Shapefiles/Bush/Bush.shp")
+cairngorms <- vect("data/Legacy/Legacy_Data/input/Raw_Shapefile/CairngormNP/CairngormNP.shp")
+stirlingshire <- vect("data/Legacy/Legacy_Data/input/Raw_Shapefile/Stirlingshire/Stirlingshire.shp")
+scotland <- vect("data/Scotland/boundaries.shp")
+```
+
+## Test one-hot encoding with Landform
+
+```{r}
+layer_name <- "FIPS_N_Landform"
+
+layer_in <- stage_1_files[[layer_name]] |> rast() |> crop(bush)
+plot(layer_in)
+
+feature_mapping <- feature_mappings[[layer_name]]
+#print(feature_mapping)
+```
+
+One-hot encode, and check that the features match up to each other.
+
+```{r}
+one_hot_pixel <- function(x) {
+    out <- matrix(0, nrow = length(x), ncol = length(feature_mapping))
+    for (i in seq_along(feature_mapping)) {
+        out[, i] <- ifelse(x == as.numeric(feature_mapping[i]), 1, 0)
+    }
+    return(out)
+}
+
+layer_out <- lapp(
+    layer_in,
+    fun = one_hot_pixel
+    # datatype = "INT1U",
+)
+names(layer_out) <- names(feature_mapping)
+
+plot(layer_out)
+
+config |> filter(Dataset == layer_name) |> select(Name, Description, Raster_Val)
+```
+
+Note that `FIPS_N_Landform_16` is denoted by value `17` in the plot above, and so on and so forth.
+It looks like 8, 9, 12, 14, 16 (values 9, 10, 13, 15, 17, excluding 2 which is lakes) are represented correctly.
+
+
+## Test one-hot encoding with Roads and Tracks
+
+```{r}
+layer_name <- "FIPS_I_RoadsTracks"
+
+layer_in <- stage_1_files[[layer_name]] |> rast() |> crop(bush)
+plot(layer_in)
+
+feature_mapping <- feature_mappings[[layer_name]]
+
+layer_out <- lapp(
+    layer_in,
+    fun = one_hot_pixel
+)
+names(layer_out) <- names(feature_mapping)
+
+plot(layer_out, col = c("grey", "red"))
+
+config |> filter(Dataset == layer_name) |> select(Name, Description, Raster_Val)
+```
+
+Now we see the issue with mapping absence of the feature to 0.
+
+```{r}
+
+stage_2_files[[layer_name]] |> rast() |> crop(bush) |> plot(col = c("grey", "red"))
+```
+
+## Finding the bug
+
+```{r}
+test <- rast(stage_2_files[["FIPS_I_RoadsTracks"]]) |> crop(bush)
+names(test)
+
+
+test2 <- rast("data/Stage_2/FIPS_I.tif")
+names(test2)
+```
+
+```{r}
+test <- rast(stage_2_files[["Water_Rivers"]])
+names(test)
+
+test2 <- rast("data/Stage_2/Water.tif")
+names(test2)
+
+```
+
+```{r}
+test <- rast(stage_2_files[["FIPS_I_RoadsTracks"]]) |> crop(bush)
+writeRaster(test, "test.tif", overwrite = TRUE)
+
+names(test) <- c("a", "b", "c", "d", "e")
+
+names(rast("test.tif"))
+
+test2 <- rast("test.tif")
+names(test2) <- c("a", "b", "c", "d", "e")
+writeRaster(test2, "test2.tif", overwrite = TRUE)
+names(rast("test2.tif"))
+
+sources(test2)
+
+data <- toMemory(test2)
+sources(data)
+```
+
+```{r}
+test <- rast(stage_1_files[["FIPS_I_RoadsTracks"]]) |> crop(bush)
+feature_mapping <- feature_mappings[["FIPS_I_RoadsTracks"]]
+smee <- lapp(
+    test,
+    fun = one_hot_pixel,
+    filename = "smee.tif",
+    overwrite = TRUE,
+    wopt = list(
+        names = names(feature_mapping),
+        datatype = "INT1U"
+    )
+)
+names(smee)
+names(rast("smee.tif"))
+```
+
+## Check the fixed outputs
+
+```{r}
+rast("data/Stage_2/FIPS_I.tif") |> crop(bush) |> plot(col = c("black", "red"))
+
+config |> filter(Component == "FIPS_I") |> 
+    select(Name, Description)
+
+```
+
+```r
+files <- get_files("data/Stage_2")
+
+layer <- rast(files[["FIPS_I_RoadsTracks"]])[["FIPS_I_RoadsTracks_4"]]
+layer |> crop(bush) |> plot()
+layer |> crop(bush) |> plet()
+
+config |> filter(Dataset == "FIPS_I_RoadsTracks") |> 
+    select(Name, Description)
+
+layer <- rast(files[["FIPS_I"]])[["FIPS_I_RoadsTracks_1"]]
+layer |> crop(bush) |> plot()
+layer |> crop(bush) |> plet()
+```
+
+Great so this did not work!
+
+Test:
+Remember that `FIPS_I_RoadsTracks_1` should be motorways!
+
+```r
+test <- rast(lapply(get_files("data/Stage_2/FIPS_I"), rast))
+test
+layer <- test[["FIPS_I_RoadsTracks_1"]]
+layer |> crop(bush) |> plot()
+layer |> crop(bush) |> plet()
+```
+
+Test 2: `c` is supposed to take multiple arguments, not a list of arguments, hence why this doesn't work and we should continue to use `rast`.
+
+```r
+test <- c(lapply(get_files("data/Stage_2/FIPS_I"), rast))
+test
+layer <- test[["FIPS_I_RoadsTracks_1"]]
+layer
+```
+
+Test 3: explicitly set names
+```r
+rasters <- lapply(get_files("data/Stage_2/FIPS_I"), rast)
+layer_names <- unlist(lapply(rasters, names))
+layer_names
+
+test <- rast(rasters)
+# NOTE: names argument in rast does not work for lists of rasters -.-
+names(test) <- layer_names
+
+layer <- test[["FIPS_I_RoadsTracks_4"]]
+
+layer
+
+layer |> crop(bush) |> plot()
+layer |> crop(bush) |> plet()
+
+config |> filter(Dataset == "FIPS_I_RoadsTracks") |> 
+    select(Name, Description)
+```
+
+
+## Check the designated areas
+
+```r
+layers <- c(
+    "SLSRA_CP",
+    "SLSRA_HNV",
+    "SLSRA_NNR",
+    "SLSRA_NP",
+    "SLSRA_NR",
+    "SLSRA_RP",
+    "SLSRA_RSPB",
+    "SLSRA_SAC",
+    "SLSRA_SPA",
+    "SLSRA_SSSI",
+    "SLSRA_SWT",
+    "SLSRA_WLA"
+)
+. <- lapply(layers, function(layer) {
+    plot(rast(stage_2_files[[layer]]), col = c("grey", "red"), main = layer)
+    lines(scotland, col = "black", lwd = 1)
+})
+
+config |> filter((Component == "SLSRA") & (Dataset != "SLSRA_LCM")) |> 
+    select(Name, Description)
+```
+

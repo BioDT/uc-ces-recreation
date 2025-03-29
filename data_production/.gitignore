@@ -1,0 +1,11 @@
+/data/
+/renv/
+/.quarto/
+/_output/
+/_freeze/
+
+*.html
+*.tar.gz
+*.tif
+
+/smee/

@@ -1,0 +1,139 @@
+---
+title: Testing focal for buffer calc
+format:
+  html:
+    embed-resources: true
+---
+
+```{r}
+library(terra)
+
+devtools::load_all("../model")
+
+config <- load_config()
+feature_mappings <- get_feature_mappings(config)
+
+benv <- vect("data/Shapefiles/BenVorlich/BenVorlich.shp")
+#aoi <- vect("data/Shapefiles/Clackmann/Clackmann.shp")
+cairngorms <- vect("data/Legacy/Legacy_Data/input/Raw_Shapefile/CairngormNP/CairngormNP.shp")
+bush <- vect("data/Shapefiles/Bush/Bush.shp")
+```
+
+```{r}
+raster <- rast("data/Stage_2/FIPS_I.tif") |> crop(bush)
+
+datatype(raster)
+
+circle <- focalMat(raster, d = 500, type = "circle", fillNA = TRUE)
+
+buf <- terra::focal(
+  raster,
+  w = circle,
+  fun = max,
+  na.rm = TRUE,
+  na.policy = "only",
+  silent = FALSE
+)
+
+plot(raster)
+plot(buf)
+
+plot(buf[["FIPS_I_RoadsTracks_1"]])
+```
+
+## Test with lakes
+
+```{r}
+raster <- rast("data/Stage_2/Water.tif") |> crop(bush)
+
+circle <- focalMat(raster, d = 500, type = "circle", fillNA = TRUE)
+
+buf <- terra::focal(
+  raster,
+  w = circle,
+  fun = max,
+  na.rm = TRUE,
+  na.policy = "only",
+  silent = FALSE
+)
+
+plot(raster)
+plot(buf)
+
+plot(buf[["Water_Lakes_4"]])
+```
+
+## What is going on?
+
+Weirdly, it works just the same with `min` (a 0-valued buffer), but `sum` gives basically the expected result.
+
+```{r}
+raster <- rast("data/Stage_2/FIPS_I.tif") |> crop(bush)
+raster <- raster[["FIPS_I_RoadsTracks_1"]]
+
+circle <- focalMat(raster, d = 500, type = "circle", fillNA = TRUE)
+
+raster |>
+  focal(w = circle, fun = min, na.rm = TRUE, na.policy = "only") |>
+  plot()
+
+raster |>
+  focal(w = circle, fun = sum, na.rm = TRUE, na.policy = "only") |>
+  plot()
+```
+
+## Weight matrix
+
+Ok, so it's something to do with the weight matrix having very small values
+
+```{r}
+raster <- rast("data/Stage_2/FIPS_I.tif") |> crop(bush)
+raster <- raster[["FIPS_I_RoadsTracks_1"]]
+
+circle <- focalMat(raster, d = 500, type = "circle", fillNA = TRUE)
+circle[!is.na(circle)] <- 1
+
+raster |>
+  focal(w = circle, fun = max, na.rm = TRUE, na.policy = "only") |>
+  plot()
+
+circle[!is.na(circle)] <- 0.1
+
+raster |>
+  focal(w = circle, fun = max, na.rm = TRUE, na.policy = "only") |>
+  plot()
+
+# This is what we actually want to do, for maximum clarity
+circle[!is.na(circle)] <- 0
+
+raster |>
+  focal(w = circle, fun = max, na.rm = TRUE, na.policy = "only") |>
+  plot()
+```
+
+
+## Using the weight matrix instead of distance
+
+
+```{r}
+raster <- rast("data/Stage_2/FIPS_I.tif") |> crop(bush)
+raster <- raster[["FIPS_I_RoadsTracks_1"]]
+
+circle <- focalMat(raster, d = 500, type = "circle", fillNA = TRUE)
+circle[!is.na(circle)] <- 0
+
+raster |>
+  focal(w = circle, fun = max, na.rm = TRUE, na.policy = "only") |>
+  distance(target = 0, exclude = NA, unit = "m", method = "haversine") |>
+  app(fun = function(x, kappa = 6, alpha = 0.01011) (kappa + 1) / (kappa + exp(alpha * x))) |>
+  plot()
+
+gauss <- focalMat(raster, 100 , type = "Gauss")
+
+raster |>
+  focal(w = gauss, fun = sum, na.rm = TRUE, na.policy = "all") |>
+  rescale_to_unit_interval() |>
+  plot()
+```
+
+

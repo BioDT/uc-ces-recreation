@@ -1,8 +1,8 @@
 ^renv$
 ^renv\.lock$
-^.git/$
-^data/$
-^notebooks/$
+^.git$
+^data_production$
+^notebooks$
 ^.lintr$
 ^run_app.sh$
 ^test_cli.sh$
