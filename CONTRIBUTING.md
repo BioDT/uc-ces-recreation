@@ -15,12 +15,27 @@ The exception to this is installing `renv` itself!
 
 Ensure `renv.lock` is kept up to date by calling `renv::update()` and `renv::lock()` regularly.
 
-In the code, please use `library(package)` sparingly, and opt instead for the more explicit `package::function` syntax for packages that are only used a handful of times.
 
-## Style and formatting
+## Development checklist
 
-- Run `Rscript pre-commit.R` and ensure that all tests pass and there are no styling/linting errors
+After making a change, please complete these steps before committing the changes:
 
+1. Write/update documentation
+
+2. Write/update tests and check they pass
+
+3. Regenerate the `NAMESPACE` file using `devtools::document()`
+
+4. Run some checks using `devtools::check()` (in particular look for any errors and warnings)
+
+5. Ensure the style and formatting is consistent
+
+6. Commit your changes
+
+
+## Pre-commit script
+
+To make this easier, there is a script `pre-commit.R` that can be run before committing changes.
 This can be done either from an R session (anywhere inside the repository)
 
 ```R
@@ -33,28 +48,23 @@ or from the command line (in the repo root)
 Rscript pre-commit.R
 ```
 
-## Changes to `model/`
+The script does the following:
 
-If you change any of the code in the `R/` directory (i.e. the package source), please complete these steps (in the `model/` directory) before committing any changes:
+1. Runs `devtools::document()` to regenerate the `NAMESPACE` file
+2. Runs the tests using `testthat`
+3. Checks for style/formatting errors using `styler` and `lintr`
 
-1. Write/update documentation
+What's missing from this is `devtools::check()` - that is up to you.
 
-2. Write/update tests
 
-3. Regenerate the `NAMESPACE` file
+## Using external functions
 
-```R
-devtools::document()
-```
+Please do not use `library(package)`.
 
-4. Run some checks (in particular look for any errors and warnings)
+Instead, opt for the more explicit `package::function` syntax for packages that are only used a handful of times.
 
-```R
-devtools::check()
-```
-
-5. Run the pre-commit script
-
+In cases where external functions are used many times, and the explicit syntax would cause readibility issues, you can flag this package for import on a per-function basis in the Roxygen2 section above the function, with the syntax `@import package`. 
+See examples of this in `R/app_server.R` and `R/app_ui.R`.
 
 ## Code of conduct
 
