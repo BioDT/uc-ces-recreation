@@ -44,6 +44,20 @@ load_config <- function(config_path = NULL) {
     return(loaded_config)
 }
 
+load_legacy_config <- function(config_path) {
+    column_spec <- readr::cols(
+        Component = readr::col_character(),
+        Dataset = readr::col_character(),
+        Name = readr::col_character(),
+        Description = readr::col_character(),
+        Raster_Val = readr::col_double(), # Note difference
+        .default = readr::col_integer()  # Note addition
+    )
+    loaded_config <- readr::read_csv(config_path, col_types = column_spec)
+
+    return(loaded_config)
+}
+
 #' Get Feature Mappings
 #'
 #' Load mappings from features to raster values from a loaded configuration.

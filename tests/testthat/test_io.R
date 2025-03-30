@@ -2,6 +2,8 @@ library(testthat)
 
 test_that("fail gracefully for misconfigured persona file", {
     skip("Not yet written")
+    
+    config <- biodt.recreation::load_config()
 
     test_file <- tempfile(fileext = ".csv")
 

@@ -2,7 +2,7 @@
 ^renv\.lock$
 ^.git$
 ^data_production$
-^notebooks$
+^legacy$
 ^.lintr$
 ^run_app.sh$
 ^test_cli.sh$
