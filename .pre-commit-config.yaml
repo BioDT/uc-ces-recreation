@@ -1,6 +1,8 @@
+# NOTE: run with `pre-commit run --all-files`
+#
 # All available hooks: https://pre-commit.com/hooks.html
 # R specific hooks: https://github.com/lorenzwalthert/precommit
-exclude: ^(data|notebooks|shiny_app|model)
+exclude: ^(data_production|inst)
     
 repos:
 -   repo: https://github.com/lorenzwalthert/precommit
@@ -8,13 +10,26 @@ repos:
     hooks: 
     -   id: style-files
         args:
-            - --style_pkg=styler
-            - '--style_fun=tidyverse_style(indent_by = 4L, start_comments_with_one_space = TRUE)'
+            - '--path="."'
+            - '--style_pkg=styler'
+            - '--style_fun=tidyverse_style'
+            - '--indent_by=4L'
+            - '--start_comments_with_one_space=TRUE'
+    -   id: lintr
     -   id: parsable-R
     -   id: no-browser-statement
     -   id: no-debug-statement
-            #-   id: deps-in-desc
+    -   id: deps-in-desc
     -   id: roxygenize
+        # roxygen requires loading pkg -> add dependencies from DESCRIPTION
+        additional_dependencies:
+        -    readr
+        -    terra
+        -    bslib
+        -    leaflet
+        -    leaflet.extras
+        -    shiny
+        -    waiter
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks: 
