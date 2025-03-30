@@ -19,6 +19,8 @@ download_data <- function(target_dir = NULL) {
     # Check dir doesn't already exist
     # Create dir with parents
     # Download data (not actually sure how to do this with R...)
+    # Verify data download using assert_valid_data_dir etc
+    # Message user to tell them where exactly the data dir is
     message(paste(
         "This is not yet implemented.",
         "Please download the data manually from XYZ."

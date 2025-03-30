@@ -5,6 +5,8 @@
 ^\.pre-commit-config\.yaml$
 ^CONTRIBUTING.md$
 ^LICENSE.md$
+^vignettes/\.quarto$
+^vignettes/*_files$
 ^rsconnect$
 ^data_production$
 ^scripts$

@@ -1,0 +1,29 @@
+---
+title: "Run App"
+vignette: >
+  %\VignetteIndexEntry{Run App}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+library(biodt.recreation)
+```
+
+## Download the data
+
+```{r}
+download_data()
+```
+
+## Run the app
+
+```{r, eval=FALSE}
+run_app()
+```
+

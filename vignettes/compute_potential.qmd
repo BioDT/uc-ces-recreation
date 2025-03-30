@@ -1,0 +1,20 @@
+---
+title: "Compute Potential"
+vignette: >
+  %\VignetteIndexEntry{Compute Potential}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+
+Persona
+
+```r
+persona_file <- system.file("extdata", "example_personas.csv", package = "biodt.recreation")
+persona <- load_persona(persona_file, "Hard_Recreationalist")
+persona
+```
