@@ -1,3 +1,0 @@
-# Quarto Notebooks
-
-WIP

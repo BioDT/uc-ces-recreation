@@ -6,16 +6,12 @@ style <- styler::tidyverse_style(
 git_root <- rprojroot::find_root(rprojroot::is_git_root)
 
 # Do the less important ones first!
-setwd(file.path(git_root, "cli"))
+setwd(file.path(git_root, "inst", "cli"))
 styler::style_dir(transformers = style)
 lintr::lint_dir()
 
-setwd(file.path(git_root, "shiny_app"))
-styler::style_dir(transformers = style, exclude_files = list("R/content.R"))
-lintr::lint_dir(exclusions = list("renv", "R/content.R"))
-
-setwd(file.path(git_root, "model"))
+setwd(file.path(git_root))
 devtools::document()
 testthat::test_dir("tests/testthat")
-styler::style_pkg(transformers = style)
-lintr::lint_package()
+styler::style_pkg(transformers = style, exclude_files = list("R/app_text.R"))
+lintr::lint_package(exclusions = list("renv", "R/app_text.R"))
