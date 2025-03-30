@@ -1,5 +1,11 @@
 ^renv$
 ^renv\.lock$
-^.git/
-^notebooks/
-^workbench/
+^.git$
+^data_production$
+^legacy$
+^.lintr$
+^run_app.sh$
+^test_cli.sh$
+^pre-commit.R$
+^CONTRIBUTING.md$
+^LICENSE.md$

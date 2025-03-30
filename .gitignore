@@ -21,3 +21,6 @@ rsconnect/
 *.pdf
 *.tif
 *.png
+
+# Temporary directories
+tmp

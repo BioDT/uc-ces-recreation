@@ -1,0 +1,35 @@
+Package: biodt.recreation
+Title: BioDT Recreational Potential Model
+Version: 0.0.1
+Authors@R: 
+    c(
+	person("Will", "Bolton", role = c("aut")),
+	person("Chris", "Andrews", role = c("aut")),
+	person("Simon", "Rolph", role = c("aut")),
+	person("Maddalena", "Tigli", role = c("aut")),
+	person("Joe", "Marsh Rossney", email = "17361029+jmarshrossney@users.noreply.github.com", role = c("aut", "cre"))
+    )
+Description: This package provides the BioDT Recreational Potential Model,
+    which was developed by researchers at the UK Centre for Ecology & Hydrology.
+    The model takes a geographic area and a collection of numerical parameters
+    that we call a recreational 'persona', and computes a scalar metric that
+    represents what we call the 'Recreational Potential' for each point or
+    pixel in the area considered.
+License: MIT + file LICENSE
+Depends:
+    R (>= 4.4)
+Imports:
+    readr,
+    terra,
+    bslib,
+    leaflet,
+    leaflet.extras,
+    shiny,
+    waiter
+Suggests:
+    devtools,
+    lintr,
+    styler
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
