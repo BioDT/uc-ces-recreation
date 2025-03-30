@@ -20,18 +20,24 @@ scotland <- vect("data/Scotland/boundaries.shp")
 ## Check things makes sense
 
 ```{r}
-rast("data/Stage_2/FIPS_I.tif") |> crop(bush) |> plot(col = c("black", "red"))
+rast("data/Stage_2/FIPS_I.tif") |>
+    crop(bush) |>
+    plot(col = c("black", "red"))
 ```
 
 ```{r}
 stage_3_files <- get_files("data/Stage_3")
 stage_3_files
 
-#stage_3_files[["FIPS_I_buf"]] |> rast() |> plot()
+# stage_3_files[["FIPS_I_buf"]] |> rast() |> plot()
 
-stage_3_files[["FIPS_I_dist"]] |> rast() |> plot()
+stage_3_files[["FIPS_I_dist"]] |>
+    rast() |>
+    plot()
 
-stage_3_files[["FIPS_I"]] |> rast() |> plot()
+stage_3_files[["FIPS_I"]] |>
+    rast() |>
+    plot()
 ```
 
 ## Using focal

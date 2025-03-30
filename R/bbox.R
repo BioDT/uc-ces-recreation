@@ -5,6 +5,12 @@
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
 
+get_example_bbox <- function() {
+    terra::vect(
+        system.file("examples", "data", "Bush", "Bush.shp", package = "biodt.recreation")
+    )
+}
+
 get_scot_boundaries <- function() {
     terra::vect(
         system.file("extdata", "Scotland", "boundaries.shp", package = "biodt.recreation", mustWork = TRUE)
@@ -80,7 +86,7 @@ assert_valid_bbox <- function(bbox, min_area = 1e4, max_area = 1e9, warn_if_not_
 }
 
 #' Is Valid Bbox
-#' 
+#'
 #' Alternative to [biodt.recreation::assert_valid_bbox] that returns `TRUE`
 #' or `FALSE` depending on whether the conditions are met or not.
 #'
@@ -93,8 +99,8 @@ is_valid_bbox <- function(...) {
 }
 
 #' Check Valid Bbox
-#' 
-#' Alternative to [biodt.recreation::assert_valid_bbox] that returns either 
+#'
+#' Alternative to [biodt.recreation::assert_valid_bbox] that returns either
 #' `TRUE` or an instance of `simpleError` depending on whether the conditions
 #' are met or not.
 #'

@@ -5,8 +5,12 @@
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
 
-get_default_data_dir <- function() system.file("extdata", package = "biodt.recreation", mustWork = TRUE)
-
+get_example_data_dir <- function() {
+    system.file("examples", "data", package = "biodt.recreation", mustWork = TRUE)
+}
+get_default_data_dir <- function() {
+    system.file("extdata", package = "biodt.recreation", mustWork = TRUE)
+}
 
 assert_valid_data_dir <- function(data_dir) {
     if (!dir.exists(data_dir)) {

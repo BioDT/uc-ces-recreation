@@ -51,7 +51,7 @@ load_legacy_config <- function(config_path) {
         Name = readr::col_character(),
         Description = readr::col_character(),
         Raster_Val = readr::col_double(), # Note difference
-        .default = readr::col_integer()  # Note addition
+        .default = readr::col_integer() # Note addition
     )
     loaded_config <- readr::read_csv(config_path, col_types = column_spec)
 

@@ -81,11 +81,11 @@ make_server <- function(persona_dir = NULL, data_dir = NULL) {
     config <- load_config()
     layer_names <- config[["Name"]]
 
-    if (is.null(data_dir)) {
-        data_dir <- get_default_data_dir()
-    }
     if (is.null(persona_dir)) {
         persona_dir <- system.file("extdata", package = "biodt.recreation")
+    }
+    if (is.null(data_dir)) {
+        data_dir <- get_default_data_dir()
     }
 
     server <- function(input, output, session) {

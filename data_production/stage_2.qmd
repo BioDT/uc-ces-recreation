@@ -24,11 +24,13 @@ scotland <- vect("data/Scotland/boundaries.shp")
 ```{r}
 layer_name <- "FIPS_N_Landform"
 
-layer_in <- stage_1_files[[layer_name]] |> rast() |> crop(bush)
+layer_in <- stage_1_files[[layer_name]] |>
+    rast() |>
+    crop(bush)
 plot(layer_in)
 
 feature_mapping <- feature_mappings[[layer_name]]
-#print(feature_mapping)
+# print(feature_mapping)
 ```
 
 One-hot encode, and check that the features match up to each other.
@@ -51,7 +53,9 @@ names(layer_out) <- names(feature_mapping)
 
 plot(layer_out)
 
-config |> filter(Dataset == layer_name) |> select(Name, Description, Raster_Val)
+config |>
+    filter(Dataset == layer_name) |>
+    select(Name, Description, Raster_Val)
 ```
 
 Note that `FIPS_N_Landform_16` is denoted by value `17` in the plot above, and so on and so forth.
@@ -63,7 +67,9 @@ It looks like 8, 9, 12, 14, 16 (values 9, 10, 13, 15, 17, excluding 2 which is l
 ```{r}
 layer_name <- "FIPS_I_RoadsTracks"
 
-layer_in <- stage_1_files[[layer_name]] |> rast() |> crop(bush)
+layer_in <- stage_1_files[[layer_name]] |>
+    rast() |>
+    crop(bush)
 plot(layer_in)
 
 feature_mapping <- feature_mappings[[layer_name]]
@@ -76,14 +82,18 @@ names(layer_out) <- names(feature_mapping)
 
 plot(layer_out, col = c("grey", "red"))
 
-config |> filter(Dataset == layer_name) |> select(Name, Description, Raster_Val)
+config |>
+    filter(Dataset == layer_name) |>
+    select(Name, Description, Raster_Val)
 ```
 
 Now we see the issue with mapping absence of the feature to 0.
 
 ```{r}
-
-stage_2_files[[layer_name]] |> rast() |> crop(bush) |> plot(col = c("grey", "red"))
+stage_2_files[[layer_name]] |>
+    rast() |>
+    crop(bush) |>
+    plot(col = c("grey", "red"))
 ```
 
 ## Finding the bug
@@ -103,7 +113,6 @@ names(test)
 
 test2 <- rast("data/Stage_2/Water.tif")
 names(test2)
-
 ```
 
 ```{r}
@@ -145,11 +154,13 @@ names(rast("smee.tif"))
 ## Check the fixed outputs
 
 ```{r}
-rast("data/Stage_2/FIPS_I.tif") |> crop(bush) |> plot(col = c("black", "red"))
+rast("data/Stage_2/FIPS_I.tif") |>
+    crop(bush) |>
+    plot(col = c("black", "red"))
 
-config |> filter(Component == "FIPS_I") |> 
+config |>
+    filter(Component == "FIPS_I") |>
     select(Name, Description)
-
 ```
 
 ```r

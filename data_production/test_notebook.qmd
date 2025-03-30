@@ -11,31 +11,29 @@ library(terra)
 devtools::load_all("../model")
 
 getwd()
-
 ```
 
 ```{r}
 # Sets NA, NaN, Inf -> 0
 na_to_zero <- function(raster) {
-  return(ifel(is.na(raster), 0, raster))
+    return(ifel(is.na(raster), 0, raster))
 }
 
 get_feature_mappings <- function(config) {
-  # Group by layer, results in {layer_name : layer_config}
-  config_by_layer <- split(config, as.factor(config[["Dataset"]]))
+    # Group by layer, results in {layer_name : layer_config}
+    config_by_layer <- split(config, as.factor(config[["Dataset"]]))
 
-  # Generate mapping {layer_name : {raster_value : feature_name}}
-  mappings <- lapply(
-    config_by_layer, function(layer_config) {
-      setNames(layer_config[["Name"]], layer_config[["Raster_Val"]])
-    }
-  )
-  return(mappings)
+    # Generate mapping {layer_name : {raster_value : feature_name}}
+    mappings <- lapply(
+        config_by_layer, function(layer_config) {
+            setNames(layer_config[["Name"]], layer_config[["Raster_Val"]])
+        }
+    )
+    return(mappings)
 }
 ```
 
 ```{r}
-
 config <- biodt.recreation::load_config()
 
 feature_mappings <- get_feature_mappings(config)
@@ -73,8 +71,8 @@ stopifnot(length(feature_mappings) == length(raw_tiffs))
 print(raw_tiffs[[1]])
 bush <- vect("../Data/input/Raw_Shapefile/Bush/Bush.shp")
 raster <- file.path(raw_data_dir, raw_tiffs[[21]]) |>
-  rast() |>
-  crop(bush)
+    rast() |>
+    crop(bush)
 
 unique(values(raster))
 ```

@@ -13,6 +13,9 @@
 #'
 #' @export
 download_data <- function(target_dir = NULL) {
+    if (is.null(target_dir)) {
+        target_dir <- get_default_data_dir()
+    }
     # Check dir doesn't already exist
     # Create dir with parents
     # Download data (not actually sure how to do this with R...)

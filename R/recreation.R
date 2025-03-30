@@ -37,8 +37,6 @@ assert_valid_component <- function(component) {
 #'
 #' @returns A single-layered `SpatRaster` which is the contribution to the Recreational Potential from this component.
 #'
-#' @example inst/examples/compute_component.R
-#'
 #' @export
 compute_component <- function(component, persona, data_dir, bbox = NULL, skip_checks = FALSE) {
     if (!skip_checks) {
@@ -156,8 +154,6 @@ rescale_to_unit_interval <- function(raster) {
 #' @seealso
 #' [biodt.recreation::compute_component] used to compute each component.
 #' [biodt.recreation::rescale_to_unit_interval] performs the normalisation.
-#'
-#' @example inst/examples/compute_potential.R
 #'
 #' @export
 compute_potential <- function(persona, data_dir = NULL, bbox = NULL) {
