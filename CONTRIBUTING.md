@@ -70,14 +70,14 @@ See examples of this in `R/app_server.R` and `R/app_ui.R`.
 ## Pre-commit hooks
 
 Recommend enabling [pre-commit hooks](https://pre-commit.com/) to make sure that code that gets committed is 'ok'.
+R-specific instructions can be found at [lorenzwalthert.github.io/precommit](https://lorenzwalthert.github.io/precommit/articles/precommit.html).
 
-Follow the instructions at [lorenzwalthert.github.io/precommit](https://lorenzwalthert.github.io/precommit/articles/precommit.html) to get started.
+If you are happy for the `{precommit}` R package to handle everything, you can simply run the following in an R session in the repository root:
 
-Suggestion (Ubuntu linux), run the following in the repo root:
-
-```sh
-sudo apt install pre-commit
-Rscript -e 'install.packages("precommit"); precommit::use_precommit()'
+```R
+install.packages("precommit")
+precommit::install_precommit()  # omit this if you already installed pre-commit
+precommit::use_precommit()
 ```
 
 Now, when you commit a bunch of hooks will run that will check various things.
