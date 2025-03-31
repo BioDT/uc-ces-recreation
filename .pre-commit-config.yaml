@@ -20,7 +20,7 @@ repos:
         -   --start_comments_with_one_space=TRUE
     -   id: lintr
         args: [--warn_only, --load_package]
-        exclude: ^R/app_text.R
+        exclude: ^(renv|R/app_text.R)
         verbose: true
         additional_dependencies:
         -    readr
