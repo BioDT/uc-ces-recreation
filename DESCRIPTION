@@ -33,7 +33,7 @@ Suggests:
     quarto,
     R.utils,
     rprojroot,
-    testthat
+    testthat,
     styler
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
