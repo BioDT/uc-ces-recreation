@@ -30,6 +30,7 @@ Suggests:
     devtools,
     lintr,
     rprojroot,
+    R.utils,
     styler,
     testthat
 Encoding: UTF-8

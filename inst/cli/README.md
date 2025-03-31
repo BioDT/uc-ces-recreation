@@ -23,4 +23,3 @@ Both outputs are automatically named according to the persona and bbox provided,
 ## Singularity container
 
 To do
-
