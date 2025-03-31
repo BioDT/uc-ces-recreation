@@ -5,9 +5,6 @@
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
 
-# NOTE: cannot use system.file in the top-level scope, or devtools::install
-# will throw an error due to "hard coded paths". This *needs* to be wrapped in
-# a function and only called within other functions!
 get_default_config <- function() system.file("extdata", "config.csv", package = "biodt.recreation", mustWork = TRUE)
 
 #' Load Config

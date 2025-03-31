@@ -5,8 +5,8 @@
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
 
-# Wrap this in a function so that it can be accessed from app_server.R!
 get_base_layers <- function() {
+    # Wrap this in a function so that it can be accessed from app_server.R!
     list(
         "Street" = "Esri.WorldStreetMap",
         "Topographical" = "Esri.WorldTopoMap",

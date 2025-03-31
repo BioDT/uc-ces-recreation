@@ -24,3 +24,7 @@ rsconnect/
 
 # Temporary directories
 tmp
+
+# Vignettes
+inst/doc
+**/.quarto/

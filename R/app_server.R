@@ -126,7 +126,7 @@ make_server <- function(persona_dir = NULL, data_dir = NULL) {
         }
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-        # Loading                  #
+        # Loading                                   #
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
         load_dialog <- make_load_dialog(persona_dir)
@@ -218,7 +218,7 @@ make_server <- function(persona_dir = NULL, data_dir = NULL) {
         })
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-        # Saving                   #
+        # Saving                                    #
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
         save_dialog <- make_save_dialog(persona_dir)
@@ -279,7 +279,7 @@ make_server <- function(persona_dir = NULL, data_dir = NULL) {
         )
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-        # Map                    #
+        # Map                                       #
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
         # Initialize Leaflet map

@@ -5,15 +5,16 @@
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
 
+#' @export
 get_example_bbox <- function() {
     terra::vect(
-        system.file("examples", "data", "Bush", "Bush.shp", package = "biodt.recreation")
+        system.file("extdata", "shapefiles", "Bush", "Bush.shp", package = "biodt.recreation", mustWork = TRUE)
     )
 }
 
 get_scot_boundaries <- function() {
     terra::vect(
-        system.file("extdata", "Scotland", "boundaries.shp", package = "biodt.recreation", mustWork = TRUE)
+        system.file("extdata", "shapefiles", "Scotland", "Scotland.shp", package = "biodt.recreation", mustWork = TRUE)
     )
 }
 

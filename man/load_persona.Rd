@@ -25,9 +25,11 @@ which personal (column) to load must also be provided.
 \examples{
 library(biodt.recreation)
 
-csv_path <- system.file("extdata", "example_personas.csv", package = "biodt.recreation")
+# Path to a CSV file containing one or more personas
+csv_path <- get_example_persona_file()
 
-loaded_persona <- load_persona(csv_path, name = "Hard_Recreationalist")
+# Load a single persona from this file
+loaded_persona <- load_persona(csv_path, "Hard_Recreationalist")
 }
 \seealso{
 \code{\link[=read_persona_csv]{read_persona_csv()}} reads the entire CSV file

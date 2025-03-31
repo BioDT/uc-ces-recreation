@@ -34,11 +34,15 @@ assert_valid_component <- function(component) {
 #' @param data_dir Path to the directory containing the rasters.
 #' @param bbox An optional bounding box for cropping.
 #' @param skip_checks Pass `TRUE` to skip checks of the validity of the inputs.
-#'
 #' @returns A single-layered `SpatRaster` which is the contribution to the Recreational Potential from this component.
 #'
+#' @example inst/examples/compute_component.R
+#'
 #' @export
-compute_component <- function(component, persona, data_dir, bbox = NULL, skip_checks = FALSE) {
+compute_component <- function(component, persona, bbox, data_dir = NULL, skip_checks = FALSE) {
+    if (is.null(data_dir)) {
+        data_dir <- get_default_data_dir()
+    }
     if (!skip_checks) {
         assert_valid_component(component)
         assert_valid_data_dir(data_dir)
@@ -113,7 +117,6 @@ compute_water <- function(...) compute_component("Water", ...)
 #' the layer cannot be rescaled due to being single-valued.
 #'
 #' @param raster The `SpatRaster` to be transformed.
-#'
 #' @returns A rescaled `SpatRaster` of the same dimensions as the input.
 #'
 #' @export
@@ -147,7 +150,6 @@ rescale_to_unit_interval <- function(raster) {
 #' @param persona A named vector containing the persona scores.
 #' @param data_dir Path to the directory containing the rasters.
 #' @param bbox An optional bounding box for cropping.
-#'
 #' @returns A `SpatRaster` with five layers: the four components and the Recreational
 #' Potential. All five layers are normalised to the unit interval \[0, 1\].
 #'
@@ -155,8 +157,10 @@ rescale_to_unit_interval <- function(raster) {
 #' [biodt.recreation::compute_component] used to compute each component.
 #' [biodt.recreation::rescale_to_unit_interval] performs the normalisation.
 #'
+#' @example inst/examples/compute_potential.R
+#'
 #' @export
-compute_potential <- function(persona, data_dir = NULL, bbox = NULL) {
+compute_potential <- function(persona, bbox, data_dir = NULL) {
     if (is.null(data_dir)) {
         data_dir <- get_default_data_dir()
     }
@@ -164,13 +168,13 @@ compute_potential <- function(persona, data_dir = NULL, bbox = NULL) {
     assert_valid_data_dir(data_dir)
     assert_valid_bbox(bbox)
 
-    slsra <- compute_component("SLSRA", persona, data_dir, bbox, skip_checks = TRUE) |>
+    slsra <- compute_component("SLSRA", persona, bbox, data_dir, skip_checks = TRUE) |>
         rescale_to_unit_interval()
-    fips_n <- compute_component("FIPS_N", persona, data_dir, bbox, skip_checks = TRUE) |>
+    fips_n <- compute_component("FIPS_N", persona, bbox, data_dir, skip_checks = TRUE) |>
         rescale_to_unit_interval()
-    fips_i <- compute_component("FIPS_I", persona, data_dir, bbox, skip_checks = TRUE) |>
+    fips_i <- compute_component("FIPS_I", persona, bbox, data_dir, skip_checks = TRUE) |>
         rescale_to_unit_interval()
-    water <- compute_component("Water", persona, data_dir, bbox, skip_checks = TRUE) |>
+    water <- compute_component("Water", persona, bbox, data_dir, skip_checks = TRUE) |>
         rescale_to_unit_interval()
 
     total <- sum(slsra, fips_n, fips_i, water, na.rm = TRUE) |>

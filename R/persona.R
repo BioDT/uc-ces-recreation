@@ -31,18 +31,23 @@ check_valid_persona <- function(persona) {
 }
 
 
-#' List CSV Files
-#'
-#' Returns a list of the names of all CSV files in a directory.
-#'
-#' @param dir The directory in which to look.
-#' @returns A list of names
-#'
-#' @keywords internal
-#' @export
 list_csv_files <- function(dir) {
     return(list.files(path = dir, pattern = "\\.csv$", full.names = FALSE))
 }
+
+list_personas_in_file <- function(persona_file) {
+    # TODO: replace with call to read_persona_csv?
+    personas <- names(utils::read.csv(persona_file, nrows = 1))
+    return(personas[personas != "index"])
+}
+
+#' Get Example Persona File
+#'
+#' @export
+get_example_persona_file <- function() {
+    system.file("extdata", "example_personas.csv", package = "biodt.recreation", mustWork = TRUE)
+}
+
 
 #' Read Persona CSV
 #'
@@ -57,6 +62,8 @@ list_csv_files <- function(dir) {
 #' @returns data.frame containing _at least_ two columns: the `index` column and the persona(s)
 #'
 #' @seealso [biodt.recreation::load_persona()] loads a single persona.
+#'
+#' @example inst/examples/read_persona_csv.R
 #'
 #' @keywords internal
 #' @export
@@ -79,21 +86,6 @@ read_persona_csv <- function(csv_path) {
     }
 
     return(df)
-}
-
-#' List Personas in File
-#'
-#' Returns a list of personas in a given file.
-#'
-#' @param persona_file The path to a persona file.
-#' @returns A list of names.
-#'
-#' @keywords internal
-#' @export
-list_personas_in_file <- function(persona_file) {
-    # TODO: replace with call to read_persona_csv
-    personas <- names(utils::read.csv(persona_file, nrows = 1))
-    return(personas[personas != "index"])
 }
 
 #' Load Persona

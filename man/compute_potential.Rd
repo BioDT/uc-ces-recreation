@@ -4,14 +4,14 @@
 \alias{compute_potential}
 \title{Compute Recreational Potential}
 \usage{
-compute_potential(persona, data_dir = NULL, bbox = NULL)
+compute_potential(persona, bbox, data_dir = NULL)
 }
 \arguments{
 \item{persona}{A named vector containing the persona scores.}
 
-\item{data_dir}{Path to the directory containing the rasters.}
-
 \item{bbox}{An optional bounding box for cropping.}
+
+\item{data_dir}{Path to the directory containing the rasters.}
 }
 \value{
 A \code{SpatRaster} with five layers: the four components and the Recreational
@@ -30,6 +30,19 @@ where the hat denotes values that have been rescaled to the unit interval
 using a data-dependent shift-and-rescale
 
 \deqn{ \hat{v}(x, y) = \frac{v(x, y) - \min_{x,y}(v)}{\max_{x,y}(v) - \min_{x,y}(v)} }
+}
+\examples{
+library(biodt.recreation)
+
+persona <- load_persona(get_example_persona_file(), "Hard_Recreationalist")
+bbox <- terra::ext(terra::vect(get_example_bbox()))
+data_dir <- get_default_data_dir()
+
+# Compute all layers
+layers <- compute_potential(persona, bbox)
+
+# Get the full RP layer only
+rp <- layers[["Recreational_Potential"]]
 }
 \seealso{
 \link{compute_component} used to compute each component.
