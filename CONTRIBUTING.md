@@ -66,6 +66,30 @@ Instead, opt for the more explicit `package::function` syntax for packages that 
 In cases where external functions are used many times, and the explicit syntax would cause readibility issues, you can flag this package for import on a per-function basis in the Roxygen2 section above the function, with the syntax `@import package`. 
 See examples of this in `R/app_server.R` and `R/app_ui.R`.
 
+
+## Pre-commit hooks
+
+Recommend enabling [pre-commit hooks](https://pre-commit.com/) to make sure that code that gets committed is 'ok'.
+
+Follow the instructions at [lorenzwalthert.github.io/precommit](https://lorenzwalthert.github.io/precommit/articles/precommit.html) to get started.
+
+Suggestion (Ubuntu linux), run the following in the repo root:
+
+```sh
+sudo apt install pre-commit
+Rscript -e 'install.packages("precommit"); precommit::use_precommit()'
+```
+
+Now, when you commit a bunch of hooks will run that will check various things.
+You may find that you need to fix something and attempt the commit again.
+
+You can run the hooks manually with
+
+```sh
+pre-commit run --all-files
+```
+
+
 ## Code of conduct
 
 To do.
