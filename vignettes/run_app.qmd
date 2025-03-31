@@ -27,3 +27,6 @@ download_data()
 run_app()
 ```
 
+## Usage
+
+To do: add screenshots with very basic usage instructions.

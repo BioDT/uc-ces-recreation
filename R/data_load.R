@@ -1,16 +1,9 @@
-# File:       data.R
+# File:       data_load.R
 # Package:    biodt.recreation
 # Repository: https://github.com/BioDT/uc-ces-recreation2
 # License:    MIT
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
-
-get_example_data_dir <- function() {
-    system.file("examples", "data", package = "biodt.recreation", mustWork = TRUE)
-}
-get_default_data_dir <- function() {
-    system.file("extdata", package = "biodt.recreation", mustWork = TRUE)
-}
 
 assert_valid_data_dir <- function(data_dir) {
     if (!dir.exists(data_dir)) {
