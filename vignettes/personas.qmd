@@ -1,8 +1,44 @@
-library(biodt.recreation)
+---
+title: Personas
+vignette: >
+  %\VignetteIndexEntry{Compute Potential}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
 
+
+```{r}
+#| label: setup
+devtools::load_all("../")
+```
+
+(replace with `library(biodt.recreation)` when finished developing)
+
+## Load the preset personas
+
+```{r}
 persona_file <- get_example_persona_file()
-hr_persona <- load_persona(persona_file, "Hard_Recreationalist")
 
+persona_df <- read_persona_csv(persona_file)
+
+persona_df
+```
+
+
+## Load a single persona
+
+```{r}
+hr_persona <- load_persona(persona_file, "Hard_Recreationalist")
+hr_persona
+```
+
+## Save a new persona
+
+```{r}
 # create a temporary file to save
 new_persona_file <- tempfile(fileext = ".csv")
 
@@ -26,3 +62,4 @@ save_persona(random_persona, new_persona_file, "Random")
 read_persona_csv(new_persona_file)
 
 unlink(new_persona_file)
+```

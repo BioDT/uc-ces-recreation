@@ -20,6 +20,15 @@ This function essentially calls \code{readr::read_csv} with \code{col_types} set
 expected columns in a persona file. That is: one \code{character} column for the index,
 and \emph{at least} one integer column for the persona scores.
 }
+\examples{
+library(biodt.recreation)
+
+# Any path to a persona file
+csv_path <- biodt.recreation::get_example_persona_file()
+
+# Read the file into a data.frame
+loaded_personas <- read_persona_csv(csv_path)
+}
 \seealso{
 \code{\link[=load_persona]{load_persona()}} loads a single persona.
 }

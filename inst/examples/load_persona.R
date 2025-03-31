@@ -1,5 +1,7 @@
 library(biodt.recreation)
 
-csv_path <- system.file("extdata", "example_personas.csv", package = "biodt.recreation")
+# Path to a CSV file containing one or more personas
+csv_path <- get_example_persona_file()
 
-loaded_persona <- load_persona(csv_path, name = "Hard_Recreationalist")
+# Load a single persona from this file
+loaded_persona <- load_persona(csv_path, "Hard_Recreationalist")

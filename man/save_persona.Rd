@@ -27,9 +27,30 @@ column, in which case it will overwrite the existing data.
 \examples{
 library(biodt.recreation)
 
-csv_path <- system.file("extdata", "example_personas.csv", package = "biodt.recreation")
-loaded_persona <- load_persona(csv_path, name = "Hard_Recreationalist")
+persona_file <- get_example_persona_file()
+hr_persona <- load_persona(persona_file, "Hard_Recreationalist")
 
-temp_file <- tempfile(fileext = ".csv")
-save_persona(loaded_persona, temp_file, "Hard_Recreationalist_Copy")
+# create a temporary file to save
+new_persona_file <- tempfile(fileext = ".csv")
+
+# Save a copy of the Hard_Recreationalist persona
+save_persona(hr_persona, new_persona_file, "Hard_Copy")
+
+# Check the file contents
+read_persona_csv(new_persona_file)
+
+# Create a random new person
+feature_names <- load_config()[["Name"]]
+random_persona <- stats::setNames(
+    sample(0:10, size = 87, replace = TRUE),
+    feature_names
+)
+
+# Append it to the file
+save_persona(random_persona, new_persona_file, "Random")
+
+# Check the file contents
+read_persona_csv(new_persona_file)
+
+unlink(new_persona_file)
 }
