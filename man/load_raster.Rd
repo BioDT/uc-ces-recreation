@@ -4,12 +4,12 @@
 \alias{load_raster}
 \title{Load Raster}
 \usage{
-load_raster(raster_path, area = NULL)
+load_raster(raster_path, crop = NULL)
 }
 \arguments{
 \item{raster_path}{Path to a file from which to load the raster.}
 
-\item{area}{A \code{SpatExtent} or another valid object (such as a \code{SpatVector})
+\item{crop}{A \code{SpatExtent} or another valid object (such as a \code{SpatVector})
 with which to crop the raster.}
 }
 \value{
@@ -22,4 +22,22 @@ Load a \code{SpatRaster} from a file, optionally cropping it to a given area.
 This function is a convenience wrapped around \link[terra:rast]{terra::rast} which also
 crops the raster to an area (if given) using \link[terra:crop]{terra::crop}, and finally
 masks it using \link[terra:mask]{terra::mask} if \code{area} is a \code{SpatVector}.
+}
+\examples{
+library(biodt.recreation)
+
+# Take any path to a file that can be loaded using terra::rast
+raster_path <- file.path(biodt.recreation::get_default_data_dir(), "Water.tif")
+
+# Load the full raster
+raster <- load_raster(raster_path)
+
+# `crop` is a `SpatExtent`
+# TODO
+
+# `crop` is a `SpatVector`
+# TODO
+
+# `crop` is a path
+# TODO
 }

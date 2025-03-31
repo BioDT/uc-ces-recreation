@@ -14,3 +14,4 @@ download_example_data(dest = NULL, timeout = 60)
 \description{
 Downloads some smaller example dara for testing the model.
 }
+\keyword{internal}

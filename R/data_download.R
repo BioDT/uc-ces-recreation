@@ -48,11 +48,11 @@
 }
 
 get_default_data_dir <- function() {
-    system.file("extdata", package = "biodt.recreation", mustWork = TRUE)
+    system.file("extdata", "rasters", "Scotland", package = "biodt.recreation", mustWork = TRUE)
 }
 
 get_default_example_data_dir <- function() {
-    system.file("examples", "data", package = "biodt.recreation", mustWork = TRUE)
+    system.file("extdata", "rasters", "Bush", package = "biodt.recreation", mustWork = TRUE)
 }
 
 #' Download Data
@@ -78,6 +78,7 @@ download_data <- function(dest = NULL, timeout = 120) {
 #' @param dest Optional non-default path to a directory in which to save the data.
 #' @param timeout Number of seconds before timing out.
 #'
+#' @keywords internal
 #' @export
 download_example_data <- function(dest = NULL, timeout = 60) {
     if (is.null(dest)) {
