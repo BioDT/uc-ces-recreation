@@ -5,6 +5,7 @@
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
 
+#' @export
 get_example_bbox <- function() {
     terra::vect(
         system.file("extdata", "shapefiles", "Bush", "Bush.shp", package = "biodt.recreation", mustWork = TRUE)

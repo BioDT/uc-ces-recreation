@@ -19,7 +19,7 @@ devtools::load_all("../")
 
 ## Download the data
 
-```{r}
+```{r, eval = FALSE}
 download_data()
 ```
 
