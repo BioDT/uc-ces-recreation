@@ -12,8 +12,10 @@ knitr:
 
 ```{r}
 #| label: setup
-library(biodt.recreation)
+devtools::load_all("../")
 ```
+
+(replace with `library(biodt.recreation)` when finished developing)
 
 ## Download the data
 

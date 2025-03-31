@@ -7,8 +7,8 @@
 compute_component(
   component,
   persona,
-  data_dir,
-  bbox = NULL,
+  bbox,
+  data_dir = NULL,
   skip_checks = FALSE
 )
 }
@@ -17,9 +17,9 @@ compute_component(
 
 \item{persona}{A named vector containing the persona scores (for all components).}
 
-\item{data_dir}{Path to the directory containing the rasters.}
-
 \item{bbox}{An optional bounding box for cropping.}
+
+\item{data_dir}{Path to the directory containing the rasters.}
 
 \item{skip_checks}{Pass \code{TRUE} to skip checks of the validity of the inputs.}
 }

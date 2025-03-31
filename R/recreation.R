@@ -38,7 +38,10 @@ assert_valid_component <- function(component) {
 #' @returns A single-layered `SpatRaster` which is the contribution to the Recreational Potential from this component.
 #'
 #' @export
-compute_component <- function(component, persona, data_dir, bbox = NULL, skip_checks = FALSE) {
+compute_component <- function(component, persona, bbox, data_dir = NULL, skip_checks = FALSE) {
+    if (is.null(data_dir)) {
+        data_dir <- get_default_data_dir()
+    }
     if (!skip_checks) {
         assert_valid_component(component)
         assert_valid_data_dir(data_dir)
@@ -156,7 +159,7 @@ rescale_to_unit_interval <- function(raster) {
 #' [biodt.recreation::rescale_to_unit_interval] performs the normalisation.
 #'
 #' @export
-compute_potential <- function(persona, data_dir = NULL, bbox = NULL) {
+compute_potential <- function(persona, bbox, data_dir = NULL) {
     if (is.null(data_dir)) {
         data_dir <- get_default_data_dir()
     }
@@ -164,13 +167,13 @@ compute_potential <- function(persona, data_dir = NULL, bbox = NULL) {
     assert_valid_data_dir(data_dir)
     assert_valid_bbox(bbox)
 
-    slsra <- compute_component("SLSRA", persona, data_dir, bbox, skip_checks = TRUE) |>
+    slsra <- compute_component("SLSRA", persona, bbox, data_dir, skip_checks = TRUE) |>
         rescale_to_unit_interval()
-    fips_n <- compute_component("FIPS_N", persona, data_dir, bbox, skip_checks = TRUE) |>
+    fips_n <- compute_component("FIPS_N", persona, bbox, data_dir, skip_checks = TRUE) |>
         rescale_to_unit_interval()
-    fips_i <- compute_component("FIPS_I", persona, data_dir, bbox, skip_checks = TRUE) |>
+    fips_i <- compute_component("FIPS_I", persona, bbox, data_dir, skip_checks = TRUE) |>
         rescale_to_unit_interval()
-    water <- compute_component("Water", persona, data_dir, bbox, skip_checks = TRUE) |>
+    water <- compute_component("Water", persona, bbox, data_dir, skip_checks = TRUE) |>
         rescale_to_unit_interval()
 
     total <- sum(slsra, fips_n, fips_i, water, na.rm = TRUE) |>
