@@ -31,6 +31,19 @@ using a data-dependent shift-and-rescale
 
 \deqn{ \hat{v}(x, y) = \frac{v(x, y) - \min_{x,y}(v)}{\max_{x,y}(v) - \min_{x,y}(v)} }
 }
+\examples{
+library(biodt.recreation)
+
+persona <- load_persona(get_example_persona_file(), "Hard_Recreationalist")
+bbox <- terra::ext(terra::vect(get_example_bbox()))
+data_dir <- get_default_data_dir()
+
+# Compute all layers
+layers <- compute_potential(persona, bbox)
+
+# Get the full RP layer only
+rp <- layers[["Recreational_Potential"]]
+}
 \seealso{
 \link{compute_component} used to compute each component.
 \link{rescale_to_unit_interval} performs the normalisation.

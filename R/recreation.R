@@ -34,8 +34,9 @@ assert_valid_component <- function(component) {
 #' @param data_dir Path to the directory containing the rasters.
 #' @param bbox An optional bounding box for cropping.
 #' @param skip_checks Pass `TRUE` to skip checks of the validity of the inputs.
-#'
 #' @returns A single-layered `SpatRaster` which is the contribution to the Recreational Potential from this component.
+#'
+#' @example inst/examples/compute_component.R
 #'
 #' @export
 compute_component <- function(component, persona, bbox, data_dir = NULL, skip_checks = FALSE) {
@@ -116,7 +117,6 @@ compute_water <- function(...) compute_component("Water", ...)
 #' the layer cannot be rescaled due to being single-valued.
 #'
 #' @param raster The `SpatRaster` to be transformed.
-#'
 #' @returns A rescaled `SpatRaster` of the same dimensions as the input.
 #'
 #' @export
@@ -150,13 +150,14 @@ rescale_to_unit_interval <- function(raster) {
 #' @param persona A named vector containing the persona scores.
 #' @param data_dir Path to the directory containing the rasters.
 #' @param bbox An optional bounding box for cropping.
-#'
 #' @returns A `SpatRaster` with five layers: the four components and the Recreational
 #' Potential. All five layers are normalised to the unit interval \[0, 1\].
 #'
 #' @seealso
 #' [biodt.recreation::compute_component] used to compute each component.
 #' [biodt.recreation::rescale_to_unit_interval] performs the normalisation.
+#'
+#' @example inst/examples/compute_potential.R
 #'
 #' @export
 compute_potential <- function(persona, bbox, data_dir = NULL) {

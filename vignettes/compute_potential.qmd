@@ -21,7 +21,7 @@ devtools::load_all("../")
 ## Load/create a persona
 
 ```{r}
-persona_file <- system.file("extdata", "example_personas.csv", package = "biodt.recreation")
+persona_file <- get_example_persona_file()
 persona <- load_persona(persona_file, "Hard_Recreationalist")
 persona
 ```
@@ -29,7 +29,8 @@ persona
 ## Select an area of interest
 
 ```{r}
-bbox_file <- system.file("extdata", "shapefiles", "Bush", "Bush.shp", package = "biodt.recreation")
+# TODO: example with explicit coordinates
+bbox_file <- get_example_bbox()
 bbox <- terra::ext(terra::vect(bbox_file))
 bbox
 ```
