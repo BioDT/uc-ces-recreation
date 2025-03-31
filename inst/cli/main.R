@@ -34,7 +34,7 @@ persona <- biodt.recreation::load_persona(args$persona_file, name = args$persona
 bbox <- terra::ext(args$xmin, args$xmax, args$ymin, args$ymax)
 
 # Run the model, data_dir is a #TODO
-layers <- biodt.recreation::compute_potential(persona, data_dir = NULL, bbox = bbox)
+layers <- biodt.recreation::compute_potential(persona, bbox = bbox)
 
 # Write the output raster
 output_dir <- dirname(args$persona_file)

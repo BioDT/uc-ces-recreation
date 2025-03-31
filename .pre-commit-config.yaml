@@ -1,0 +1,65 @@
+# NOTE: run locally with `pre-commit run --all-files`
+#
+# All available hooks: https://pre-commit.com/hooks.html
+# R specific hooks: https://github.com/lorenzwalthert/precommit
+exclude: ^(data_production|inst/examples/data|inst/extdata)
+    
+repos:
+-   repo: https://github.com/lorenzwalthert/precommit
+    rev: 328f1edf7ec5a5a8acf967afa591eddb30a95677
+    hooks: 
+    -   id: parsable-R
+    -   id: no-browser-statement
+    -   id: no-debug-statement
+    -   id: deps-in-desc
+    -   id: style-files
+        args:
+        -   --style_pkg=styler
+        -   --style_fun=tidyverse_style
+        -   --indent_by=4L
+        -   --start_comments_with_one_space=TRUE
+    -   id: lintr
+        args: [--warn_only, --load_package]
+        exclude: ^(renv|R/app_text.R)
+        verbose: true
+        additional_dependencies:
+        -    readr
+        -    terra
+        -    bslib
+        -    leaflet
+        -    leaflet.extras
+        -    shiny
+        -    waiter
+    -   id: roxygenize
+        # roxygen requires loading pkg -> add dependencies from DESCRIPTION
+        additional_dependencies:
+        -    readr
+        -    terra
+        -    bslib
+        -    leaflet
+        -    leaflet.extras
+        -    shiny
+        -    waiter
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: 31903eabdb97f5a3375fb1ea419ff782de64d7e7
+    hooks: 
+    -   id: check-added-large-files
+        args: ['--maxkb=200']
+    -   id: end-of-file-fixer
+        exclude: '\.Rd'
+-   repo: https://github.com/pre-commit-ci/pre-commit-ci-config
+    rev: acbe10d08456be05bf22bf03228cf98258749145
+    hooks:
+    # Only required when https://pre-commit.ci is used for config validation
+    -   id: check-pre-commit-ci-config
+-   repo: local
+    hooks:
+    -   id: forbid-to-commit
+        name: Don't commit common R artifacts
+        entry: Cannot commit .Rhistory, .RData, .Rds or .rds.
+        language: fail
+        files: '\.(Rhistory|RData|Rds|rds)$'
+        # `exclude: <regex>` to allow committing specific files
+
+ci:
+    autoupdate_schedule: monthly

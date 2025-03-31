@@ -1,11 +1,10 @@
 ^renv$
 ^renv\.lock$
-^.git$
-^data_production$
-^legacy$
-^.lintr$
-^run_app.sh$
-^test_cli.sh$
-^pre-commit.R$
+^\.git$
+^\.lintr$
+^\.pre-commit-config\.yaml$
 ^CONTRIBUTING.md$
 ^LICENSE.md$
+^rsconnect$
+^data_production$
+^scripts$
