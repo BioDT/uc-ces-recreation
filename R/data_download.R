@@ -5,6 +5,8 @@
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
 
+options(timeout = 180)
+
 # TODO: currently using dropbox, but switch to Zenodo once the data is published.
 
 # https://www.dropbox.com/scl/fo/zvm0bgajsa0iuamzthn8u/ALxdRaPDZqkKKsyWijMW2cQ?rlkey=8tgvzv4a2ynawqszz62fku3p0&st=24i8e965&dl=0  # nolint
@@ -23,7 +25,7 @@
     Water = "https://www.dropbox.com/scl/fi/u9k1gnln8eac8zkn3ow4q/Water.tif?rlkey=obo59hgyzg9inevze4w3kptm7&st=29yg7olq&dl=1" # nolint
 )
 
-.download_data <- function(dest, example, timeout) {
+.download_data <- function(dest, example) {
     if (!dir.exists(dest)) dir.create(dest)
 
     if (example) urls <- .example_data_urls else urls <- .data_urls
@@ -36,13 +38,7 @@
         } else {
             message(paste("Downloading", layer, "raster to", destfile))
 
-            utils::download.file(
-                urls[[layer]],
-                destfile = destfile,
-                method = "auto",
-                timeout = timeout,
-                verbose = TRUE
-            )
+            utils::download.file(urls[[layer]], destfile = destfile, method = "auto")
         }
     }
 }
@@ -78,14 +74,13 @@ get_data_dir <- function() {
 #' Downloads the data required to compute Recreational Potential.
 #'
 #' @param dest Optional non-default path to a directory in which to save the data.
-#' @param timeout Number of seconds before timing out.
 #'
 #' @export
-download_data <- function(dest = NULL, timeout = 120) {
+download_data <- function(dest = NULL) {
     if (is.null(dest)) {
         dest <- get_data_dir()
     }
-    .download_data(dest, example = FALSE, timeout = timeout)
+    .download_data(dest, example = FALSE)
 }
 
 
@@ -96,13 +91,12 @@ download_data <- function(dest = NULL, timeout = 120) {
 #' Downloads some smaller example dara for testing the model.
 #'
 #' @param dest Optional non-default path to a directory in which to save the data.
-#' @param timeout Number of seconds before timing out.
 #'
 #' @keywords internal
 #' @export
-download_example_data <- function(dest = NULL, timeout = 60) {
+download_example_data <- function(dest = NULL) {
     if (is.null(dest)) {
         dest <- get_example_data_dir()
     }
-    .download_data(dest, example = TRUE, timeout = timeout)
+    .download_data(dest, example = TRUE)
 }

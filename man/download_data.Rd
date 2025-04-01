@@ -4,12 +4,10 @@
 \alias{download_data}
 \title{Download Data}
 \usage{
-download_data(dest = NULL, timeout = 120)
+download_data(dest = NULL)
 }
 \arguments{
 \item{dest}{Optional non-default path to a directory in which to save the data.}
-
-\item{timeout}{Number of seconds before timing out.}
 }
 \description{
 Downloads the data required to compute Recreational Potential.

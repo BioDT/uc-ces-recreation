@@ -133,7 +133,6 @@ Pull up the documentation for a function, e.g. `compute_potential`
 
 To do.
 
-
 ### Enabling pre-commit hooks
 
 We recommend the use of [pre-commit hooks](https://pre-commit.com/), which help ensure that code that gets committed is 'ok'.
@@ -159,6 +158,51 @@ pre-commit run --all-files
 ### Additional tools
 
 If you're comfortable running things from the shell, the `scripts/` directory may be useful to you. See [scripts/README.md](scripts/README.md) for further guidance.
+
+
+### Testing the installed package
+
+It is a good idea to frequently test a fresh installation of the package, rather than simply relying on `devtools::load_all`.
+
+Create a fresh environment in a temporary directory
+
+```R
+renv::init(bare = TRUE)
+renv::install("devtools")
+```
+
+You can install from GitHub
+
+```sh
+remotes::install_github("BioDT/uc-ces-recreation2")
+```
+
+or locally
+
+```sh
+Rscript -e "devtools::build('path/to/uc-ces-recreation2')"
+tar -xvzf .biodt.recreation_0.0.1.tar.gz
+Rscript -r "devtools::install('./biodt.recreation')"
+```
+
+Download the data using 
+
+```R
+biodt.recreation::download_data()
+```
+
+Run the tests
+
+```R
+renv::install("testthat")
+testthat::test_package("biodt.recreation")
+```
+
+Check the app works...
+
+```R
+biodt.recreation::run_app()
+```
 
 
 ### Contributing guidelines

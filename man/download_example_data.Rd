@@ -4,12 +4,10 @@
 \alias{download_example_data}
 \title{Download Example Data}
 \usage{
-download_example_data(dest = NULL, timeout = 60)
+download_example_data(dest = NULL)
 }
 \arguments{
 \item{dest}{Optional non-default path to a directory in which to save the data.}
-
-\item{timeout}{Number of seconds before timing out.}
 }
 \description{
 Downloads some smaller example dara for testing the model.
