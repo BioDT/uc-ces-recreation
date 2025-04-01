@@ -42,7 +42,8 @@ Further details can be found in [inst/cli/README.md](inst/cli/README.md).
 \[To do\]
 
 
-## Quickstart for users
+
+## For users
 
 ### Prerequisites
 
@@ -90,7 +91,9 @@ plot(layers$Recreational_Potential)
 
 <!-- prerequisites: gdal, a bunch of c++ libs..? -->
 
-## Quickstart for developers
+## For developers
+
+### Quickstart for developers
 
 Clone the repository
 
@@ -126,15 +129,52 @@ Pull up the documentation for a function, e.g. `compute_potential`
 ?biodt.recreation::compute_potential
 ```
 
-For more detailed guidance, see [CONTRIBUTING.md](CONTRIBUTING.md).
+### NERC DataLabs
+
+To do.
 
 
-## Contributing
+### Enabling pre-commit hooks
+
+We recommend the use of [pre-commit hooks](https://pre-commit.com/), which help ensure that code that gets committed is 'ok'.
+R-specific instructions can be found at [lorenzwalthert.github.io/precommit](https://lorenzwalthert.github.io/precommit/articles/precommit.html).
+
+If you are happy for the `{precommit}` R package to handle everything, you can simply run the following in an R session in the repository root:
+
+```R
+install.packages("precommit")
+precommit::install_precommit()  # omit this if you already installed pre-commit
+precommit::use_precommit()
+```
+
+Now, when you commit a bunch of hooks will run that will check various things.
+**You may find that you need to fix something and attempt the commit again.**
+
+You can run the hooks manually using
+
+```sh
+pre-commit run --all-files
+```
+
+### Additional tools
+
+If you're comfortable running things from the shell, the `scripts/` directory may be useful to you. See [scripts/README.md](scripts/README.md) for further guidance.
+
+
+### Contributing guidelines
 
 If you are interested in contributing, please take a quick look at [CONTRIBUTING.md](CONTRIBUTING.md).
 
 
 ## Contributors
+
+- Chris Andrews
+- Will Bolton
+- Joe Marsh Rossney @jmarshrossney
+- Simon Rolph
+- Maddalena Tigli
+
+## Older versions
 
 The code has gone through 3 major iterations.
 
@@ -142,8 +182,11 @@ The code has gone through 3 major iterations.
 - 2024 version, primarily developed by Chris Andrews and Maddalena Tigli (https://github.com/BioDT/uc-ces-recreation2/tree/2024-model)
 - 2025 version, primarily developed by Joe Marsh Rossney and Maddalena Tigli (this version)
 
-
 ## Acknowledgements
 
 - BioDT
 - SPEAK funding, and feedback from participants in this study
+
+## Citation
+
+\[TODO\]
