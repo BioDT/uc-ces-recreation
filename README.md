@@ -173,16 +173,14 @@ renv::install("devtools")
 
 You can install from GitHub
 
-```sh
+```R
 remotes::install_github("BioDT/uc-ces-recreation2")
 ```
 
 or locally
 
-```sh
-Rscript -e "devtools::build('path/to/uc-ces-recreation2')"
-tar -xvzf .biodt.recreation_0.0.1.tar.gz
-Rscript -r "devtools::install('./biodt.recreation')"
+```R
+devtools::install("path/to/uc-ces-recreation2", dependencies = TRUE)
 ```
 
 Download the data using 
