@@ -1,5 +1,12 @@
 # Recreational Potential Model - CLI
 
+
+If you installed the package, you will need to copy the script from `path/to/biodt.recreation/cli/main.R`.
+
+If you cloned the repository from GitHub, you will find the script in `uc-ces-recreation/inst/cli/main.R`.
+
+
+
 ## Basic usage
 
 ```sh

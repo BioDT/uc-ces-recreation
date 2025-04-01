@@ -90,6 +90,16 @@ pre-commit run --all-files
 ```
 
 
+## Scripts
+
+If you prefer to run things from the shell, you can also run the app from the command line (bash shell required),
+
+```sh
+chmod +x run_app.sh
+./run_app.sh
+```
+
+
 ## Code of conduct
 
 To do.
