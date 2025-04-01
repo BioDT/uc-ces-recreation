@@ -1,5 +1,9 @@
 # Rscript main.R --persona_file example/personas.csv --xmin=300000 --xmax=310000 --ymin 700000 --ymax 710000 --persona_name Hard_Recreationalist --pdf  # nolint
 
+# Replace with library(biodt.recreation) if installed
+root <- rprojroot::find_root(rprojroot::is_git_root)
+devtools::load_all(root)
+
 # Display full command
 cmd <- paste(base::commandArgs(), collapse = " ")
 cat(cmd, "\n")

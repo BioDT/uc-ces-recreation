@@ -24,7 +24,7 @@ and \emph{at least} one integer column for the persona scores.
 library(biodt.recreation)
 
 # Any path to a persona file
-csv_path <- biodt.recreation::get_example_persona_file()
+csv_path <- get_preset_persona_file()
 
 # Read the file into a data.frame
 loaded_personas <- read_persona_csv(csv_path)

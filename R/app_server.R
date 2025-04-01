@@ -85,12 +85,12 @@ make_server <- function(persona_dir = NULL, data_dir = NULL) {
         persona_dir <- system.file("extdata", package = "biodt.recreation")
     }
     if (is.null(data_dir)) {
-        data_dir <- get_default_data_dir()
+        data_dir <- get_data_dir()
     }
 
     server <- function(input, output, session) {
         # Reactive variable to track the selected user
-        reactiveUserSelect <- reactiveVal("example_personas")
+        reactiveUserSelect <- reactiveVal("preset_personas")
 
         # Reactive variable for caching computed raster
         reactiveLayers <- reactiveVal()

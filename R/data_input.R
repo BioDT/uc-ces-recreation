@@ -1,4 +1,4 @@
-# File:       data_load.R
+# File:       data_input.R
 # Package:    biodt.recreation
 # Repository: https://github.com/BioDT/uc-ces-recreation2
 # License:    MIT

@@ -10,5 +10,6 @@
 ^rsconnect$
 ^data_production$
 ^scripts$
+^inst/extdata/rasters/Scotland$
 ^.*\.Rproj$
 ^\.Rproj\.user$

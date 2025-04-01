@@ -41,7 +41,7 @@ assert_valid_component <- function(component) {
 #' @export
 compute_component <- function(component, persona, bbox, data_dir = NULL, skip_checks = FALSE) {
     if (is.null(data_dir)) {
-        data_dir <- get_default_data_dir()
+        data_dir <- get_data_dir()
     }
     if (!skip_checks) {
         assert_valid_component(component)
@@ -162,7 +162,7 @@ rescale_to_unit_interval <- function(raster) {
 #' @export
 compute_potential <- function(persona, bbox, data_dir = NULL) {
     if (is.null(data_dir)) {
-        data_dir <- get_default_data_dir()
+        data_dir <- get_data_dir()
     }
     # Perform checks once here, and skip them in the individual components
     assert_valid_data_dir(data_dir)

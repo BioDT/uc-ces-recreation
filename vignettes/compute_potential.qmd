@@ -18,39 +18,41 @@ devtools::load_all("../")
 
 (replace with `library(biodt.recreation)` when finished developing)
 
+```{r}
+# Replace this with get_data_dir() if you have downloaded the full dataset!
+data_dir <- get_example_data_dir()
+```
+
 ## Load/create a persona
 
 ```{r}
-persona_file <- get_example_persona_file()
-persona <- load_persona(persona_file, "Hard_Recreationalist")
+persona <- get_example_persona()
 persona
 ```
 
 ## Select an area of interest
 
 ```{r}
-# TODO: example with explicit coordinates
-bbox_file <- get_example_bbox()
-bbox <- terra::ext(terra::vect(bbox_file))
+bbox <- get_example_bbox()
 bbox
 ```
 
 ## Compute a single component
 
 ```{r}
-fips_n <- compute_fips_n(persona, bbox)
+fips_n <- compute_fips_n(persona, bbox, data_dir)
 terra::plot(fips_n)
 ```
 
 ```{r}
-water <- compute_component("Water", persona, bbox)
+water <- compute_component("Water", persona, bbox, data_dir)
 terra::plet(water)
 ```
 
 ## Compute all layers
 
 ```{r}
-layers <- compute_potential(persona, bbox)
+layers <- compute_potential(persona, bbox, data_dir)
 names(layers)
 
 terra::plot(layers[["Recreational_Potential"]])

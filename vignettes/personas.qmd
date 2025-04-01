@@ -21,7 +21,7 @@ devtools::load_all("../")
 ## Load the preset personas
 
 ```{r}
-persona_file <- get_example_persona_file()
+persona_file <- get_preset_persona_file()
 
 persona_df <- read_persona_csv(persona_file)
 

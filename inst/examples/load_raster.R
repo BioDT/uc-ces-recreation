@@ -1,7 +1,7 @@
 library(biodt.recreation)
 
 # Take any path to a file that can be loaded using terra::rast
-raster_path <- file.path(biodt.recreation::get_default_data_dir(), "Water.tif")
+raster_path <- file.path(get_example_data_dir(), "Water.tif")
 
 # Load the full raster
 raster <- load_raster(raster_path)

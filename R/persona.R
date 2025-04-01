@@ -41,13 +41,18 @@ list_personas_in_file <- function(persona_file) {
     return(personas[personas != "index"])
 }
 
-#' Get Example Persona File
+#' Get Preset Persona File
+#'
+#' Get the path to the CSV file containing preset personas.
+#'
+#' @returns Path to the preset persona file.
 #'
 #' @export
-get_example_persona_file <- function() {
-    system.file("extdata", "example_personas.csv", package = "biodt.recreation", mustWork = TRUE)
+get_preset_persona_file <- function() {
+    system.file("extdata", "preset_personas.csv",
+        package = "biodt.recreation", mustWork = TRUE
+    )
 }
-
 
 #' Read Persona CSV
 #'
