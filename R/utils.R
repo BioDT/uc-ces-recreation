@@ -125,3 +125,26 @@ make_safe_string <- function(string) {
     string <- gsub("^_+|_+$", "", string) # remove leading or trailing underscores
     return(string)
 }
+
+#' Timed
+#'
+#' Wrap a function in a timer. The resulting function does exactly the same
+#' thing, but upon completion it prints a message containing the time in
+#' taken in seconds.
+#'
+#' @param func The function to be timed.
+#' @returns The wrapped function.
+#'
+#' @keywords internal
+#' @export
+timed <- function(func) {
+    wrapped_func <- function(...) {
+        start_time <- Sys.time()
+        result <- func(...)
+        end_time <- Sys.time()
+        delta <- difftime(end_time, start_time, units = "secs")
+        message(paste("Took", delta, "seconds"))
+        return(result)
+    }
+    return(wrapped_func)
+}
