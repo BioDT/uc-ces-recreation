@@ -81,8 +81,10 @@ make_server <- function(persona_dir = NULL, data_dir = NULL) {
     config <- load_config()
     layer_names <- config[["Name"]]
 
+    # TODO: this will need rethinking when the app is moved to
+    # datalabs and there is no write access
     if (is.null(persona_dir)) {
-        persona_dir <- system.file("extdata", package = "biodt.recreation")
+        persona_dir <- get_persona_dir()
     }
     if (is.null(data_dir)) {
         data_dir <- get_data_dir()
@@ -90,7 +92,7 @@ make_server <- function(persona_dir = NULL, data_dir = NULL) {
 
     server <- function(input, output, session) {
         # Reactive variable to track the selected user
-        reactiveUserSelect <- reactiveVal("preset_personas")
+        reactiveUserSelect <- reactiveVal("presets")
 
         # Reactive variable for caching computed raster
         reactiveLayers <- reactiveVal()
