@@ -1,8 +1,24 @@
+# File:       scripts/cli/main.R
+# Package:    biodt.recreation
+# Repository: https://github.com/BioDT/uc-ces-recreation2
+# License:    MIT
+# Copyright:  2025 BioDT
+# Author(s):  Joe Marsh Rossney
+
 # Rscript main.R --persona_file example/personas.csv --xmin=300000 --xmax=310000 --ymin 700000 --ymax 710000 --persona_name Hard_Recreationalist --pdf  # nolint
 
-# Replace with library(biodt.recreation) if installed
-root <- rprojroot::find_root(rprojroot::is_git_root)
-devtools::load_all(root)
+# NOTE: Load package using library(...) if installed, and using
+# devtools::load_all(...) if developing
+git_root <- tryCatch(
+    rprojroot::find_root(rprojroot::is_git_root),
+    error = function(e) NULL
+)
+if (is.null(git_root)) {
+    library(biodt.recreation)
+} else {
+    devtools::load_all(git_root)
+}
+
 
 # Display full command
 cmd <- paste(base::commandArgs(), collapse = " ")
