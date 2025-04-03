@@ -35,12 +35,15 @@ A live instance of the Recreational Potential app is hosted at _\[todo: link to 
 
 The directory `inst/scripts/cli/` contains an R script that allows you to run the Recreational Potential model from the command line, providing the required inputs as arguments.
 
+There is also a singularity container definition file which builds a container that becomes a drop-in replacement for the script.
+
 Further details can be found in [inst/scripts/cli/README.md](inst/scripts/cli/README.md).
 
 ### Data production script
 
 The directory `inst/scripts/data_production/` contains an R script that produces the input data for the Recreational Potential model from some pre-existing raster files.
 Unfortunately at this point we do not have the full provenance of this data, but we expect to figure this out and complete the data processing pipeline in the near future.
+There is also a singularity container.
 
 Further details can be found in [inst/scripts/data_production/README.md](inst/scripts/data_production/README.md).
 

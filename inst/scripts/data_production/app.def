@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: rocker/r-ver:latest
+
+%post
+  # Install dependencies using apt
+  apt-get update && apt-get install -y \
+  build-essential \
+  libcurl4-openssl-dev \
+  libssl-dev \
+  libxml2-dev \
+  libgdal-dev \
+  libudunits2-dev \
+  libharfbuzz-dev \
+  libfribidi-dev \
+  autoconf \
+  automake \
+  libtool \
+  libfontconfig1-dev \
+  git \
+  && apt-get clean
+
+  # Install devtools (contains remotes and testthat)
+  Rscript -e 'install.packages("devtools")'
+
+  # Install and test the package
+  Rscript -e 'remotes::install_github("BioDT/uc-ces-recreation2")'
+  Rscript -e 'testthat::test_package("biodt.recreation")'
+
+%runscript
+  SCRIPT_PATH=$(Rscript -e 'cat(system.file("scripts", "data_production", "main.R", package = "biodt.recreation"))')
+  exec Rscript $SCRIPT_PATH
