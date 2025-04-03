@@ -1,10 +1,9 @@
-# File:       scripts/cli/main.R
+# File:       main.R
 # Package:    biodt.recreation
 # Repository: https://github.com/BioDT/uc-ces-recreation2
 # License:    MIT
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
-
 # Rscript main.R --persona_file example/personas.csv --xmin=300000 --xmax=310000 --ymin 700000 --ymax 710000 --persona_name Hard_Recreationalist --pdf  # nolint
 
 # NOTE: Load package using library(...) if installed, and using

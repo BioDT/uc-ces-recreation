@@ -1,4 +1,4 @@
-# File:       scripts/data_production/main.R
+# File:       main.R
 # Package:    biodt.recreation
 # Repository: https://github.com/BioDT/uc-ces-recreation2
 # License:    MIT
