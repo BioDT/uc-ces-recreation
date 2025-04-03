@@ -148,3 +148,36 @@ timed <- function(func) {
     }
     return(wrapped_func)
 }
+
+
+#' List Files
+#'
+#' Returns a named list of files with a given extension in a given
+#' directory, potentially recursing into subdirectories. The named
+#' list has the structure ( file_stem = file_path ).
+#'
+#' @param dir_ The directory in which to search for files.
+#' @param ext The file extension, e.g. "csv", "tif".
+#' @param recursive If `TRUE`, search subdirectories.
+#' @returns Named list of files.
+#'
+#' @keywords internal
+#' @export
+list_files <- function(dir_, ext, recursive = TRUE) {
+    # Generate a mapping { file_step : file_path }
+    file_paths <- lapply(
+        list.files(
+            path = dir_,
+            pattern = paste0("\\.", ext, "$"),
+            recursive = recursive
+        ),
+        function(file_) file.path(dir_, file_)
+    )
+    file_stems <- lapply(
+        file_paths,
+        function(path) tools::file_path_sans_ext(basename(path))
+    )
+    files_mapping <- setNames(file_paths, file_stems)
+
+    return(files_mapping)
+}

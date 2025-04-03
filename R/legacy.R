@@ -54,12 +54,9 @@ to_int <- function(raster, tol = 1e-5) {
 }
 
 # Useless because `terra::buffer` calls the same `proximity` function as
-# `terra::distance`
+# `terra::distance`, so has same memory requirements
 .compute_buffer <- function(infile, outfile) {
     raster <- terra::rast(infile)
-
-    # TODO: remove crop and run somewhere with more memory
-    # raster <- terra::crop(raster, terra::vect("data/Shapefiles/Bush/Bush.shp"))
 
     terra::buffer(
         raster,
@@ -76,9 +73,6 @@ to_int <- function(raster, tol = 1e-5) {
 # over a window of finite extent
 compute_buffer <- function(infile, outfile) {
     raster <- terra::rast(infile)
-
-    # TODO: remove crop and run somewhere with more memory
-    # raster <- terra::crop(raster, terra::vect("data/Shapefiles/Bush/Bush.shp"))
 
     circle <- terra::focalMat(raster, d = 500, type = "circle", fillNA = TRUE)
     circle[!is.na(circle)] <- 0
@@ -151,4 +145,52 @@ na_to_zero <- function(raster) {
 #' Sum the layers of a SpatRaster
 sum_layers <- function(raster) {
     return(terra::app(raster, sum))
+}
+
+compute_distance_slow <- function(indir, outdir) {
+    for (component in c("FIPS_I", "Water")) {
+        infile <- file.path(indir, paste0(component, ".tif"))
+        buf_file <- file.path(outdir, paste0(component, "_buf.tif"))
+        dist_file <- file.path(outdir, paste0(component, "_dist.tif"))
+        outfile <- file.path(outdir, paste0(component, ".tif"))
+        dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
+
+        message(paste("Computing buffer:", infile, "->", buf_file))
+        timed(compute_buffer)(infile, buf_file)
+
+        message(paste("Performing distance calculation:", buf_file, "->", dist_file))
+        timed(compute_distance_in_buffer)(buf_file, dist_file)
+
+        message(paste("Mapping distance to unit interval:", dist_file, "->", outfile))
+        timed(map_distance_to_unit)(dist_file, outfile)
+    }
+
+    for (component in c("SLSRA", "FIPS_N")) {
+        infile <- file.path(indir, component)
+        outfile <- file.path(outdir, paste0(component, ".tif"))
+        dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
+        message(paste("Creating symbolic link:", infile, "->", outfile))
+        file.symlink(infile, outfile)
+    }
+}
+
+
+# NOTE: nothing to do with distance. Misnomer. Fix
+compute_distance_gauss <- function(indir, outdir) {
+    for (component in c("FIPS_I", "Water")) {
+        infile <- file.path(indir, paste0(component, ".tif"))
+        outfile <- file.path(outdir, paste0(component, ".tif"))
+        dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
+
+        message(paste("Applying Gaussian kernel:", infile, "->", outfile))
+        timed(gauss_blur)(infile, outfile)
+    }
+
+    for (component in c("SLSRA", "FIPS_N")) {
+        infile <- file.path(indir, component)
+        outfile <- file.path(outdir, paste0(component, ".tif"))
+        dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
+        message(paste("Creating symbolic link:", infile, "->", outfile))
+        file.symlink(infile, outfile)
+    }
 }
