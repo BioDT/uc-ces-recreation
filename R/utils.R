@@ -125,3 +125,59 @@ make_safe_string <- function(string) {
     string <- gsub("^_+|_+$", "", string) # remove leading or trailing underscores
     return(string)
 }
+
+#' Timed
+#'
+#' Wrap a function in a timer. The resulting function does exactly the same
+#' thing, but upon completion it prints a message containing the time in
+#' taken in seconds.
+#'
+#' @param func The function to be timed.
+#' @returns The wrapped function.
+#'
+#' @keywords internal
+#' @export
+timed <- function(func) {
+    wrapped_func <- function(...) {
+        start_time <- Sys.time()
+        result <- func(...)
+        end_time <- Sys.time()
+        delta <- difftime(end_time, start_time, units = "secs")
+        message(paste("Took", delta, "seconds"))
+        return(result)
+    }
+    return(wrapped_func)
+}
+
+
+#' List Files
+#'
+#' Returns a named list of files with a given extension in a given
+#' directory, potentially recursing into subdirectories. The named
+#' list has the structure ( file_stem = file_path ).
+#'
+#' @param dir_ The directory in which to search for files.
+#' @param ext The file extension, e.g. "csv", "tif".
+#' @param recursive If `TRUE`, search subdirectories.
+#' @returns Named list of files.
+#'
+#' @keywords internal
+#' @export
+list_files <- function(dir_, ext, recursive = TRUE) {
+    # Generate a mapping { file_step : file_path }
+    file_paths <- lapply(
+        list.files(
+            path = dir_,
+            pattern = paste0("\\.", ext, "$"),
+            recursive = recursive
+        ),
+        function(file_) file.path(dir_, file_)
+    )
+    file_stems <- lapply(
+        file_paths,
+        function(path) tools::file_path_sans_ext(basename(path))
+    )
+    files_mapping <- setNames(file_paths, file_stems)
+
+    return(files_mapping)
+}

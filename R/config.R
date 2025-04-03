@@ -5,7 +5,11 @@
 # Copyright:  2025 BioDT
 # Author(s):  Joe Marsh Rossney
 
-get_default_config <- function() system.file("extdata", "config.csv", package = "biodt.recreation", mustWork = TRUE)
+get_default_config <- function() {
+    system.file("extdata", "config", "config.csv",
+        package = "biodt.recreation", mustWork = TRUE
+    )
+}
 
 #' Load Config
 #'
