@@ -4,12 +4,14 @@
 \alias{compute_proximity_rasters}
 \title{Compute Proximity Rasters}
 \usage{
-compute_proximity_rasters(indir, outdir)
+compute_proximity_rasters(indir, outdir, splitting)
 }
 \arguments{
 \item{indir}{Path to directory containing the input rasters.}
 
 \item{outdir}{Path to directory in which to write the ouput rasters.}
+
+\item{splitting}{T or F; weather to use the splitting, computing and recomposing approach or calcuate the distance for the whole layer.}
 }
 \description{
 For each layer in the \code{FIPS_I} and \code{Water} rasters, compute the distance

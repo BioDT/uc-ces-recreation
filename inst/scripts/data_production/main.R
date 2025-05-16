@@ -26,4 +26,12 @@ terra::terraOptions(
 reproject_all(indir = "Stage_0", outdir = "Stage_1")
 one_hot_all(indir = "Stage_1", outdir = "Stage_2")
 stack_all(indir = "Stage_2", outdir = "Stage_3")
-compute_proximity_rasters(indir = "Stage_3", outdir = "Stage_4")
+#compute_proximity_rasters(indir = "Stage_3", outdir = "Stage_4")
+#compute_proximity_rasters(indir = "~/Desktop/repositories/uc-ces-recreation2/inst/extdata/rasters/Stage_3",
+#                          outdir = "~/Desktop/repositories/uc-ces-recreation2/inst/extdata/rasters/Stage_4",
+#                          splitting = TRUE)
+compute_proximity_rasters(indir = "~/Desktop/repositories/uc-ces-recreation2/inst/extdata/rasters/Bush",
+                          outdir = "~/Desktop/repositories/uc-ces-recreation2/inst/extdata/rasters/Bush_4",
+                          splitting = TRUE)
+
+
