@@ -479,6 +479,11 @@ compute_distance_window <- function (infile, dist_file, target_tiles = 20, buffe
   #2) calculate the window
   tiles <- create_overlapping_windows(r = r, target_tiles = target_tiles, buffer_dist = buffer_dist)
   
+  #2b) create temporary directory to store files in
+  temp_dir <- file.path(tempdir(), paste0("distance_tiles_", as.integer(Sys.time())))
+  dir.create(temp_dir, recursive = TRUE)
+  message("Temporary files will be saved in: ", temp_dir)
+  
   #3) calculate distance for each window
   output_files <- character(length(tiles))
   original_layer_names <- names(r)
@@ -520,7 +525,7 @@ compute_distance_window <- function (infile, dist_file, target_tiles = 20, buffe
     dist_ras_cropped <- crop_to_original_extent(dist_ras, tile_info)
     
     # Save to file
-    outfile <- paste0("tile_dist_", i, ".tif")
+    outfile <- file.path(temp_dir, paste0("tile_dist_", i, ".tif"))
     if (file.exists(outfile)) file.remove(outfile)
     terra::writeRaster(dist_ras_cropped, outfile, overwrite = TRUE)
     output_files[i] <- outfile
@@ -535,6 +540,7 @@ compute_distance_window <- function (infile, dist_file, target_tiles = 20, buffe
   #7) writing the final distance raster
   terra::writeRaster(full_distance_raster, dist_file, overwrite = TRUE)
   
-  file.remove(output_files)
+  # Delete the entire temp directory with all intermediate files
+  unlink(temp_dir, recursive = TRUE)
   
 }

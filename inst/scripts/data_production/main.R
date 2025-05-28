@@ -30,8 +30,13 @@ stack_all(indir = "Stage_2", outdir = "Stage_3")
 #compute_proximity_rasters(indir = "~/Desktop/repositories/uc-ces-recreation2/inst/extdata/rasters/Stage_3",
 #                          outdir = "~/Desktop/repositories/uc-ces-recreation2/inst/extdata/rasters/Stage_4",
 #                          splitting = TRUE)
-compute_proximity_rasters(indir = "~/Desktop/repositories/uc-ces-recreation2/inst/extdata/rasters/Bush",
-                          outdir = "~/Desktop/repositories/uc-ces-recreation2/inst/extdata/rasters/Bush_4",
+compute_proximity_rasters(indir = paste0(getwd(), "/inst/extdata/rasters/Bush_3"),
+                          outdir = paste0(getwd(), "/inst/extdata/rasters/Bush_4"),
                           splitting = TRUE)
 
 
+r <- terra::rast("inst/extdata/rasters/Bush_4/Water.tif")
+r_original <- terra::rast("inst/extdata/rasters/Bush_3/Water.tif")
+
+# terra::plot(r)
+# terra::plot(r_original, col = "red")
