@@ -303,6 +303,10 @@ map_distance_to_unit <- function(infile, outfile, kappa = 6, alpha = 0.01011) {
         (kappa + 1) / (kappa + exp(alpha * x))
     }
     raster <- terra::rast(infile)
+    
+    #exclude cells that are further than 500m from features, as this won't impact the model output and setting values to NAs does reduce file size when compressed
+    raster[raster > 500] <- NA
+    
     terra::app(
         raster,
         fun = logistic_func,
@@ -338,17 +342,30 @@ compute_proximity_rasters <- function(indir, outdir, splitting) {
         infile <- file.path(indir, paste0(component, ".tif"))
         dist_file <- file.path(outdir, paste0(component, "_dist.tif"))
         outfile <- file.path(outdir, paste0(component, ".tif"))
+        
+        #check it wasn't already done 
+        if (file.exists(dist_file) && file.exists(outfile)) {
+          cat("Files for", component, "already exist. Skipping...\n")
+          next  # Skip this iteration
+        }
+        
         dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
 
-        message(paste("Performing distance calculation:", infile, "->", dist_file))
-        if (splitting == T){
-          timed(compute_distance_window)(infile, dist_file, target_tiles = 20, buffer_dist = 10000)
-        }else{
-          timed(compute_distance)(infile, dist_file)
+        if(!file.exists(dist_file)){
+          message(paste("Performing distance calculation:", infile, "->", dist_file))
+          if (splitting == T){
+            timed(compute_distance_window)(infile, dist_file, target_tiles = 20, buffer_dist = 10000)
+          }else{
+            timed(compute_distance)(infile, dist_file)
+          }
+          message(paste("Mapping distance to unit interval:", dist_file, "->", outfile))
+          timed(map_distance_to_unit)(dist_file, outfile)
+        }else {
+          message(paste("distance file found, only calculating the map to distance"))
+          message(paste("Mapping distance to unit interval:", dist_file, "->", outfile))
+          timed(map_distance_to_unit)(dist_file, outfile)
         }
-
-        message(paste("Mapping distance to unit interval:", dist_file, "->", outfile))
-        timed(map_distance_to_unit)(dist_file, outfile)
+        
     }
   
   
