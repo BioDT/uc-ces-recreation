@@ -100,7 +100,7 @@ The RP Model uses of 4 key components, each representing a different aspect of a
 
 4\) the water component (Water)
 
-For each of the 4 components, a corresponding raster file was generated ( see [3. The underlying data] paragraph to see where they came from), covering the entirety of Scotland, which is the domain that the RP model covers at the moment. Each component's raster file store several layers, each describing a specific aspect of that component. The four raster files form the basis for calculating the recreational potential of an area, which is the main output of the RP Model.
+For each of the 4 components, a corresponding raster file was generated ( see \[3. The underlying data\] paragraph to see where they came from), covering the entirety of Scotland, which is the domain that the RP model covers at the moment. Each component's raster file store several layers, each describing a specific aspect of that component. The four raster files form the basis for calculating the recreational potential of an area, which is the main output of the RP Model.
 
 In order to run the RP model the user must have made 2 decisions:
 
