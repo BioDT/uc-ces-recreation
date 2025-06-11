@@ -22,6 +22,10 @@ rsconnect/
 *.tif
 *.png
 
+# But NOT these .tif files:
+!inst/extdata/rasters/bush/
+!inst/extdata/rasters/bush/*.tif
+
 # Temporary directories
 tmp
 
