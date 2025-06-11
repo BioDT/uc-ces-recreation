@@ -6,45 +6,45 @@
 # Author(s):  Joe Marsh Rossney
 
 assert_valid_persona <- function(persona) {
-    expected_names <- load_config()[["Name"]]
-    if (!identical(sort(names(persona)), sort(expected_names))) {
-        stop("Error: malformed names in the persona vector")
-    }
-    if (!all(persona == floor(persona))) {
-        stop("Error: persona contains non-integer values")
-    }
-    if (all(sapply(persona, function(score) score == 0))) {
-        stop(paste(
-            "All the persona scores are zero. At least one score must be non-zero.",
-            "Perhaps you have forgotten to load a persona?"
-        ))
-    }
-    return(TRUE)
+  expected_names <- load_config()[["Name"]]
+  if (!identical(sort(names(persona)), sort(expected_names))) {
+    stop("Error: malformed names in the persona vector")
+  }
+  if (!all(persona == floor(persona))) {
+    stop("Error: persona contains non-integer values")
+  }
+  if (all(sapply(persona, function(score) score == 0))) {
+    stop(paste(
+      "All the persona scores are zero. At least one score must be non-zero.",
+      "Perhaps you have forgotten to load a persona?"
+    ))
+  }
+  return(TRUE)
 }
 
 is_valid_persona <- function(persona) {
-    assert_to_bool(assert_valid_persona)(persona)
+  assert_to_bool(assert_valid_persona)(persona)
 }
 
 check_valid_persona <- function(persona) {
-    capture_messages(errors_as_messages(assert_valid_persona))(persona)
+  capture_messages(errors_as_messages(assert_valid_persona))(persona)
 }
 
 
 list_csv_files <- function(dir) {
-    return(list.files(path = dir, pattern = "\\.csv$", full.names = FALSE))
+  return(list.files(path = dir, pattern = "\\.csv$", full.names = FALSE))
 }
 
 list_personas_in_file <- function(persona_file) {
-    # TODO: replace with call to read_persona_csv?
-    personas <- names(utils::read.csv(persona_file, nrows = 1))
-    return(personas[personas != "index"])
+  # TODO: replace with call to read_persona_csv?
+  personas <- names(utils::read.csv(persona_file, nrows = 1))
+  return(personas[personas != "index"])
 }
 
 get_persona_dir <- function() {
-    system.file("extdata", "personas",
-        package = "biodt.recreation", mustWork = TRUE
-    )
+  system.file("extdata", "personas",
+    package = "biodt.recreation", mustWork = TRUE
+  )
 }
 
 #' Get Preset Persona File
@@ -55,9 +55,9 @@ get_persona_dir <- function() {
 #'
 #' @export
 get_preset_persona_file <- function() {
-    system.file("extdata", "personas", "presets.csv",
-        package = "biodt.recreation", mustWork = TRUE
-    )
+  system.file("extdata", "personas", "presets.csv",
+    package = "biodt.recreation", mustWork = TRUE
+  )
 }
 
 #' Read Persona CSV
@@ -79,24 +79,24 @@ get_preset_persona_file <- function() {
 #' @keywords internal
 #' @export
 read_persona_csv <- function(csv_path) {
-    # Read csv as a dataframe of integers, throwing an error for non-integer elements
-    df <- readr::read_csv(
-        csv_path,
-        col_types = readr::cols(
-            index = readr::col_character(),
-            .default = readr::col_integer()
-        )
+  # Read csv as a dataframe of integers, throwing an error for non-integer elements
+  df <- readr::read_csv(
+    csv_path,
+    col_types = readr::cols(
+      index = readr::col_character(),
+      .default = readr::col_integer()
     )
-    # NOTE: this may be redundant given index specified in col_types
-    if (!"index" %in% colnames(df)) {
-        stop("Error: the file does not contain an index column")
-    }
+  )
+  # NOTE: this may be redundant given index specified in col_types
+  if (!"index" %in% colnames(df)) {
+    stop("Error: the file does not contain an index column")
+  }
 
-    if (!ncol(df) > 1) {
-        stop("Error: the file does not contain any personas")
-    }
+  if (!ncol(df) > 1) {
+    stop("Error: the file does not contain any personas")
+  }
 
-    return(df)
+  return(df)
 }
 
 #' Load Persona
@@ -118,29 +118,29 @@ read_persona_csv <- function(csv_path) {
 #'
 #' @export
 load_persona <- function(csv_path, name = NULL) {
-    message(paste0("Loading persona '", name, "' from file '", csv_path, "'"))
+  message(paste0("Loading persona '", name, "' from file '", csv_path, "'"))
 
-    df <- read_persona_csv(csv_path)
+  df <- read_persona_csv(csv_path)
 
-    stopifnot(names(df)[1] == "index")
+  stopifnot(names(df)[1] == "index")
 
-    if (is.null(name)) {
-        if (ncol(df) > 2) {
-            stop("Error: A name is required when the persona file contains >1 persona")
-        }
-        # There is only one persona in the file (after index)
-        scores <- df[[2]]
-    } else {
-        # Select the column with the provided name
-        scores <- df[[name]]
+  if (is.null(name)) {
+    if (ncol(df) > 2) {
+      stop("Error: A name is required when the persona file contains >1 persona")
     }
+    # There is only one persona in the file (after index)
+    scores <- df[[2]]
+  } else {
+    # Select the column with the provided name
+    scores <- df[[name]]
+  }
 
-    # Convert to named vector
-    persona <- stats::setNames(scores, df[["index"]])
+  # Convert to named vector
+  persona <- stats::setNames(scores, df[["index"]])
 
-    assert_valid_persona(persona)
+  assert_valid_persona(persona)
 
-    return(persona)
+  return(persona)
 }
 
 #' Save Persona
@@ -163,41 +163,41 @@ load_persona <- function(csv_path, name = NULL) {
 #'
 #' @export
 save_persona <- function(persona, csv_path, name, overwrite = FALSE) {
-    if (name == "index") {
-        message("Cannot name the persona 'index'. Persona not saved")
+  if (name == "index") {
+    message("Cannot name the persona 'index'. Persona not saved")
+    return()
+  }
+  # TODO: add messages here, without polluting printed user info in shiny app
+  assert_valid_persona(persona)
+
+  # If file exists, we need to append the new persona carefully, making
+  # sure the row names of the new persona are aligned with the 'index'
+  # column of the dataframe
+  if (file.exists(csv_path)) {
+    df <- read_persona_csv(csv_path)
+
+    # Check if we are overwriting an existing persona and delete the column if so
+    # since otherwise we end up with `name1` and `name2` or something like that
+    if (name %in% colnames(df)) {
+      message(paste0("A persona with name '", name, "' already exists"))
+      if (overwrite) {
+        message("This will be overwritten with the new persona")
+        df[[name]] <- NULL
+      } else {
+        message("Cannot overwrite existing persona. Please choose a different name")
         return()
-    }
-    # TODO: add messages here, without polluting printed user info in shiny app
-    assert_valid_persona(persona)
-
-    # If file exists, we need to append the new persona carefully, making
-    # sure the row names of the new persona are aligned with the 'index'
-    # column of the dataframe
-    if (file.exists(csv_path)) {
-        df <- read_persona_csv(csv_path)
-
-        # Check if we are overwriting an existing persona and delete the column if so
-        # since otherwise we end up with `name1` and `name2` or something like that
-        if (name %in% colnames(df)) {
-            message(paste0("A persona with name '", name, "' already exists"))
-            if (overwrite) {
-                message("This will be overwritten with the new persona")
-                df[[name]] <- NULL
-            } else {
-                message("Cannot overwrite existing persona. Please choose a different name")
-                return()
-            }
-        }
-
-        # Reorder persona to align it with the `index` column, then add
-        # the reordered list to the data.frame as a new column
-        df[[name]] <- persona[df[["index"]]]
-    } else {
-        # If file does *not* exist, simply crete a dataframe with two columns,
-        # 'index' and '<name>'
-        df <- data.frame(index = names(persona))
-        df[[name]] <- persona
+      }
     }
 
-    readr::write_csv(df, csv_path)
+    # Reorder persona to align it with the `index` column, then add
+    # the reordered list to the data.frame as a new column
+    df[[name]] <- persona[df[["index"]]]
+  } else {
+    # If file does *not* exist, simply crete a dataframe with two columns,
+    # 'index' and '<name>'
+    df <- data.frame(index = names(persona))
+    df[[name]] <- persona
+  }
+
+  readr::write_csv(df, csv_path)
 }

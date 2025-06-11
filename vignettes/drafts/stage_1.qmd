@@ -24,19 +24,19 @@ After reprojection, all layers have the same resolution, extent and origin.
 
 ```{r}
 properties <- lapply(files, function(file_) {
-    raster <- rast(file_)
-    info <- c(
-        # file_size = file.info(file_)$size,
-        nlyr = nlyr(raster),
-        res = res(raster),
-        ext = as.vector(ext(raster)),
-        origin = origin(raster)
-    )
-    return(info)
+  raster <- rast(file_)
+  info <- c(
+    # file_size = file.info(file_)$size,
+    nlyr = nlyr(raster),
+    res = res(raster),
+    ext = as.vector(ext(raster)),
+    origin = origin(raster)
+  )
+  return(info)
 })
 properties_df <- as.data.frame(
-    do.call(rbind, properties), # creates matrix
-    stringsAsFactor = FALSE
+  do.call(rbind, properties), # creates matrix
+  stringsAsFactor = FALSE
 )
 properties_df
 ```
@@ -49,18 +49,18 @@ Weird thing where if you plot too large an area using `plet`, it auto rescales a
 layer <- "FIPS_N_Landform"
 # layer <- "Water_Lakes"
 files[[layer]] |>
-    rast() |>
-    plot() # et(type = "classes")
+  rast() |>
+  plot() # et(type = "classes")
 lines(scotland, col = "black", lwd = 1)
 
 files[[layer]] |>
-    rast() |>
-    crop(stirlingshire) |>
-    plet(type = "classes")
+  rast() |>
+  crop(stirlingshire) |>
+  plet(type = "classes")
 
 config |>
-    filter(Dataset == layer) |>
-    select(Name, Description, Raster_Val)
+  filter(Dataset == layer) |>
+  select(Name, Description, Raster_Val)
 ```
 
 ## Sanity check the layers
@@ -71,34 +71,34 @@ config |>
 ```{r}
 layer <- "FIPS_I_LocalPathNetwork"
 files[[layer]] |>
-    rast() |>
-    crop(bush) |>
-    plet(type = "classes")
+  rast() |>
+  crop(bush) |>
+  plet(type = "classes")
 config |>
-    filter(Dataset == layer) |>
-    select(Name, Description, Raster_Val)
+  filter(Dataset == layer) |>
+  select(Name, Description, Raster_Val)
 ```
 
 ```{r}
 layer <- "FIPS_I_RoadsTracks"
 files[[layer]] |>
-    rast() |>
-    crop(bush) |>
-    plet(type = "classes")
+  rast() |>
+  crop(bush) |>
+  plet(type = "classes")
 config |>
-    filter(Dataset == layer) |>
-    select(Name, Description, Raster_Val)
+  filter(Dataset == layer) |>
+  select(Name, Description, Raster_Val)
 ```
 
 ```{r}
 layer <- "FIPS_I_NationalCycleNetwork"
 files[[layer]] |>
-    rast() |>
-    crop(bush) |>
-    plet(type = "classes")
+  rast() |>
+  crop(bush) |>
+  plet(type = "classes")
 config |>
-    filter(Dataset == layer) |>
-    select(Name, Description, Raster_Val)
+  filter(Dataset == layer) |>
+  select(Name, Description, Raster_Val)
 ```
 
 ### FIPS_N
@@ -108,23 +108,23 @@ NOTE: 2 corresponds to Lakes in the original data.
 ```{r}
 layer <- "FIPS_N_Landform"
 files[[layer]] |>
-    rast() |>
-    crop(bush) |>
-    plet(type = "classes")
+  rast() |>
+  crop(bush) |>
+  plet(type = "classes")
 config |>
-    filter(Dataset == layer) |>
-    select(Name, Description, Raster_Val)
+  filter(Dataset == layer) |>
+  select(Name, Description, Raster_Val)
 ```
 
 ```{r}
 layer <- "FIPS_N_Slope"
 files[[layer]] |>
-    rast() |>
-    crop(bush) |>
-    plet()
+  rast() |>
+  crop(bush) |>
+  plet()
 config |>
-    filter(Dataset == layer) |>
-    select(Name, Description, Raster_Val)
+  filter(Dataset == layer) |>
+  select(Name, Description, Raster_Val)
 ```
 
 ### Water
@@ -132,23 +132,23 @@ config |>
 ```{r}
 layer <- "Water_Lakes"
 files[[layer]] |>
-    rast() |>
-    crop(bush) |>
-    plet(type = "classes")
+  rast() |>
+  crop(bush) |>
+  plet(type = "classes")
 config |>
-    filter(Dataset == layer) |>
-    select(Name, Description, Raster_Val)
+  filter(Dataset == layer) |>
+  select(Name, Description, Raster_Val)
 ```
 
 ```{r}
 layer <- "Water_Rivers"
 files[[layer]] |>
-    rast() |>
-    crop(bush) |>
-    plet(type = "classes")
+  rast() |>
+  crop(bush) |>
+  plet(type = "classes")
 config |>
-    filter(Dataset == layer) |>
-    select(Name, Description, Raster_Val)
+  filter(Dataset == layer) |>
+  select(Name, Description, Raster_Val)
 ```
 
 ### SLSRA
@@ -156,28 +156,28 @@ config |>
 ```{r}
 layer <- "SLSRA_LCM"
 files[[layer]] |>
-    rast() |>
-    crop(bush) |>
-    plet(type = "classes")
+  rast() |>
+  crop(bush) |>
+  plet(type = "classes")
 config |>
-    filter(Dataset == layer) |>
-    select(Name, Description, Raster_Val)
+  filter(Dataset == layer) |>
+  select(Name, Description, Raster_Val)
 ```
 
 ```{r}
 layers <- c(
-    "SLSRA_CP",
-    "SLSRA_HNV",
-    "SLSRA_NNR",
-    "SLSRA_NP",
-    "SLSRA_NR",
-    "SLSRA_RP",
-    "SLSRA_RSPB",
-    "SLSRA_SAC",
-    "SLSRA_SPA",
-    "SLSRA_SSSI",
-    "SLSRA_SWT",
-    "SLSRA_WLA"
+  "SLSRA_CP",
+  "SLSRA_HNV",
+  "SLSRA_NNR",
+  "SLSRA_NP",
+  "SLSRA_NR",
+  "SLSRA_RP",
+  "SLSRA_RSPB",
+  "SLSRA_SAC",
+  "SLSRA_SPA",
+  "SLSRA_SSSI",
+  "SLSRA_SWT",
+  "SLSRA_WLA"
 )
 # NOTE: this produces an un-named list. files[[layers]] does not work
 # since [[ ]] is only designed to extract single elements
@@ -185,11 +185,11 @@ layers <- c(
 # layers <- lapply(files_, rast)
 
 . <- lapply(layers, function(layer) {
-    plot(rast(files[[layer]]), col = c("grey", "red"), main = layer)
-    lines(scotland, col = "black", lwd = 1)
+  plot(rast(files[[layer]]), col = c("grey", "red"), main = layer)
+  lines(scotland, col = "black", lwd = 1)
 })
 
 config |>
-    filter((Component == "SLSRA") & (Dataset != "SLSRA_LCM")) |>
-    select(Name, Description)
+  filter((Component == "SLSRA") & (Dataset != "SLSRA_LCM")) |>
+  select(Name, Description)
 ```

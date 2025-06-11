@@ -6,48 +6,48 @@
 # Author(s):  Joe Marsh Rossney
 
 get_scot_boundaries <- function() {
-    terra::vect(
-        system.file("extdata", "shapefiles", "Scotland", "Scotland.shp",
-            package = "biodt.recreation", mustWork = TRUE
-        )
+  terra::vect(
+    system.file("extdata", "shapefiles", "Scotland", "Scotland.shp",
+      package = "biodt.recreation", mustWork = TRUE
     )
+  )
 }
 
 .assert_bbox_intersects_scot <- function(bbox, warn_if_not_within = FALSE) {
-    scotland <- get_scot_boundaries()
-    if (!terra::relate(bbox, scotland, "intersects")) {
-        stop(paste(
-            "The area specified does not contain any of Scotland's land surface.",
-            "Please specify a different bounding box"
-        ))
+  scotland <- get_scot_boundaries()
+  if (!terra::relate(bbox, scotland, "intersects")) {
+    stop(paste(
+      "The area specified does not contain any of Scotland's land surface.",
+      "Please specify a different bounding box"
+    ))
+  }
+  if (warn_if_not_within) {
+    if (!terra::relate(bbox, scotland, "within")) {
+      warning("Part of the bounding box is outside Scotland's land surface.")
     }
-    if (warn_if_not_within) {
-        if (!terra::relate(bbox, scotland, "within")) {
-            warning("Part of the bounding box is outside Scotland's land surface.")
-        }
-    }
+  }
 }
 
 .assert_bbox_is_valid_size <- function(bbox, min_area = 1e4, max_area = 1e9) {
-    if (is.null(bbox)) {
-        stop("No area has been selected. Please select an area.")
-    }
-    area <- (terra::xmax(bbox) - terra::xmin(bbox)) * (terra::ymax(bbox) - terra::ymin(bbox))
-    if (area > max_area) {
-        stop(paste(
-            "The area specified is too large to be computed at this time",
-            "(", sprintf("%.1e", area), ">", max_area, " m^2 ).",
-            "Please specify a smaller area."
-        ))
-    }
-    if (area < min_area) {
-        stop(paste(
-            "The area specified is too small",
-            "(", round(area), "<", min_area, " m^2 ).",
-            "Please specify a larger area."
-        ))
-    }
-    message(paste("Selected an area of", sprintf("%.1e", area), "m^2 ."))
+  if (is.null(bbox)) {
+    stop("No area has been selected. Please select an area.")
+  }
+  area <- (terra::xmax(bbox) - terra::xmin(bbox)) * (terra::ymax(bbox) - terra::ymin(bbox))
+  if (area > max_area) {
+    stop(paste(
+      "The area specified is too large to be computed at this time",
+      "(", sprintf("%.1e", area), ">", max_area, " m^2 ).",
+      "Please specify a smaller area."
+    ))
+  }
+  if (area < min_area) {
+    stop(paste(
+      "The area specified is too small",
+      "(", round(area), "<", min_area, " m^2 ).",
+      "Please specify a larger area."
+    ))
+  }
+  message(paste("Selected an area of", sprintf("%.1e", area), "m^2 ."))
 }
 
 #' Assert Valid Bbox
@@ -77,8 +77,8 @@ get_scot_boundaries <- function() {
 #' @keywords internal
 #' @export
 assert_valid_bbox <- function(bbox, min_area = 1e4, max_area = 1e9, warn_if_not_within = FALSE) {
-    .assert_bbox_intersects_scot(bbox, warn_if_not_within)
-    .assert_bbox_is_valid_size(bbox, min_area, max_area)
+  .assert_bbox_intersects_scot(bbox, warn_if_not_within)
+  .assert_bbox_is_valid_size(bbox, min_area, max_area)
 }
 
 #' Is Valid Bbox
@@ -91,7 +91,7 @@ assert_valid_bbox <- function(bbox, min_area = 1e4, max_area = 1e9, warn_if_not_
 #' @keywords internal
 #' @export
 is_valid_bbox <- function(...) {
-    assert_to_bool(assert_valid_bbox)(...)
+  assert_to_bool(assert_valid_bbox)(...)
 }
 
 #' Check Valid Bbox
@@ -105,5 +105,5 @@ is_valid_bbox <- function(...) {
 #' @keywords internal
 #' @export
 check_valid_bbox <- function(...) {
-    capture_messages(errors_as_messages(assert_valid_bbox))(...)
+  capture_messages(errors_as_messages(assert_valid_bbox))(...)
 }
