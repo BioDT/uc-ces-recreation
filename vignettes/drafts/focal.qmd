@@ -27,12 +27,12 @@ datatype(raster)
 circle <- focalMat(raster, d = 500, type = "circle", fillNA = TRUE)
 
 buf <- terra::focal(
-    raster,
-    w = circle,
-    fun = max,
-    na.rm = TRUE,
-    na.policy = "only",
-    silent = FALSE
+  raster,
+  w = circle,
+  fun = max,
+  na.rm = TRUE,
+  na.policy = "only",
+  silent = FALSE
 )
 
 plot(raster)
@@ -49,12 +49,12 @@ raster <- rast("data/Stage_2/Water.tif") |> crop(bush)
 circle <- focalMat(raster, d = 500, type = "circle", fillNA = TRUE)
 
 buf <- terra::focal(
-    raster,
-    w = circle,
-    fun = max,
-    na.rm = TRUE,
-    na.policy = "only",
-    silent = FALSE
+  raster,
+  w = circle,
+  fun = max,
+  na.rm = TRUE,
+  na.policy = "only",
+  silent = FALSE
 )
 
 plot(raster)
@@ -74,12 +74,12 @@ raster <- raster[["FIPS_I_RoadsTracks_1"]]
 circle <- focalMat(raster, d = 500, type = "circle", fillNA = TRUE)
 
 raster |>
-    focal(w = circle, fun = min, na.rm = TRUE, na.policy = "only") |>
-    plot()
+  focal(w = circle, fun = min, na.rm = TRUE, na.policy = "only") |>
+  plot()
 
 raster |>
-    focal(w = circle, fun = sum, na.rm = TRUE, na.policy = "only") |>
-    plot()
+  focal(w = circle, fun = sum, na.rm = TRUE, na.policy = "only") |>
+  plot()
 ```
 
 ## Weight matrix
@@ -94,21 +94,21 @@ circle <- focalMat(raster, d = 500, type = "circle", fillNA = TRUE)
 circle[!is.na(circle)] <- 1
 
 raster |>
-    focal(w = circle, fun = max, na.rm = TRUE, na.policy = "only") |>
-    plot()
+  focal(w = circle, fun = max, na.rm = TRUE, na.policy = "only") |>
+  plot()
 
 circle[!is.na(circle)] <- 0.1
 
 raster |>
-    focal(w = circle, fun = max, na.rm = TRUE, na.policy = "only") |>
-    plot()
+  focal(w = circle, fun = max, na.rm = TRUE, na.policy = "only") |>
+  plot()
 
 # This is what we actually want to do, for maximum clarity
 circle[!is.na(circle)] <- 0
 
 raster |>
-    focal(w = circle, fun = max, na.rm = TRUE, na.policy = "only") |>
-    plot()
+  focal(w = circle, fun = max, na.rm = TRUE, na.policy = "only") |>
+  plot()
 ```
 
 
@@ -123,17 +123,17 @@ circle <- focalMat(raster, d = 500, type = "circle", fillNA = TRUE)
 circle[!is.na(circle)] <- 0
 
 raster |>
-    focal(w = circle, fun = max, na.rm = TRUE, na.policy = "only") |>
-    distance(target = 0, exclude = NA, unit = "m", method = "haversine") |>
-    app(fun = function(x, kappa = 6, alpha = 0.01011) (kappa + 1) / (kappa + exp(alpha * x))) |>
-    plot()
+  focal(w = circle, fun = max, na.rm = TRUE, na.policy = "only") |>
+  distance(target = 0, exclude = NA, unit = "m", method = "haversine") |>
+  app(fun = function(x, kappa = 6, alpha = 0.01011) (kappa + 1) / (kappa + exp(alpha * x))) |>
+  plot()
 
 gauss <- focalMat(raster, 100, type = "Gauss")
 
 raster |>
-    focal(w = gauss, fun = sum, na.rm = TRUE, na.policy = "all") |>
-    rescale_to_unit_interval() |>
-    plot()
+  focal(w = gauss, fun = sum, na.rm = TRUE, na.policy = "all") |>
+  rescale_to_unit_interval() |>
+  plot()
 ```
 
 

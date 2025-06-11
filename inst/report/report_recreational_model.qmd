@@ -1,0 +1,401 @@
+---
+title: "BioDT - The Recreational Model"
+authors: "Maddalena Tigli, Joe Marsh Rossney, Christopher Andrews"
+date: "June 2025"
+format:
+  html:
+    embed-resources: true
+    self-contained: true
+    toc: true
+    toc-location: right
+---
+
+```{r, echo=FALSE}
+library(magrittr)
+library(biodt.recreation)
+
+source(here::here("inst", "report", "functions_report.R"))
+
+water <- terra::rast(here::here("inst", "extdata", "rasters", "Bush", "original", "Water.tif"))
+
+slsra <- terra::rast(here::here("inst", "extdata", "rasters", "Bush", "SLSRA.tif"))
+
+fips_n <- terra::rast(here::here("inst", "extdata", "rasters", "Bush", "FIPS_N.tif"))
+
+fips_i <- terra::rast(here::here("inst", "extdata", "rasters", "Bush","original", "FIPS_I.tif"))
+
+
+
+# the box of bush estate
+e <- terra::ext(water)
+coords <- matrix(c(
+  e$xmin, e$ymin,
+  e$xmax, e$ymin,
+  e$xmax, e$ymax,
+  e$xmin, e$ymax,
+  e$xmin, e$ymin # close polygon
+), ncol = 2, byrow = TRUE)
+bbox_poly <- terra::vect(coords,
+  type = "polygons",
+  crs = terra::crs(water)
+) %>%
+  sf::st_as_sf() %>%
+  sf::st_transform(crs = 4326)
+
+base_map <- 
+  leaflet::leaflet() %>%
+  leaflet::addProviderTiles("OpenStreetMap.Mapnik", options = leaflet::providerTileOptions(zIndex = 0, noWrap = TRUE), group = "Streets") %>%
+  leaflet::addProviderTiles("Esri.WorldImagery", options = leaflet::providerTileOptions(zIndex = 0, noWrap = TRUE), group = "Satellite") %>%
+  leaflet::addPolygons(
+    data = bbox_poly,
+    color = "black",
+    weight = 3,
+    fill = FALSE
+  ) 
+
+```
+
+## 1. Scope of the Model
+
+The **recreational potential model** (RP Model) was developed as part of the *Cultural Ecosystem Services prototype Digital Twin (CES-pDT)* workpackage within the [BioDT](https://biodt.eu/) project. The *([CES-pDT](https://app.biodt.lifewatch.eu/app_proxy/b6d219cf-f46c-4ef5-a517-e9a7289f81fa/?_inputs_&app-navbar=%22CES%22#tab-6956-4))* has two [independent]{.underline} core models:
+
+-   the Biodiversity model (developed by Simon Rolph and Dylan Carbone, UK Centre for Ecology & Hydrology, Wallingford, United Kingdom): aims *at estimating biodiversity levels across mammals, birds, plant and insects.*
+
+-   the Recreational Potential model (developed by Jan Dick, Chris Andrews, Maddalena Tigli, Megan Williams and Joe Marsh Rossney, UK Centre for Ecology & Hydrology, Edinburgh, United Kingdom): aims at *estimating the landscapes' capacity to provide opportunities for outdoor recreation based on varying user interests.*
+
+This report specifically documents the Recreational Potential (RP) Model, detailing its methodology, data sources, operational mechanisms, and outlining areas for future refinement and development.
+
+## 2. The model
+
+### 2.1. Model description
+
+```{mermaid}
+flowchart LR
+ subgraph s1["compute recreational potential"]
+        C[("cropping of the 4<br>components file to the<br>extent of interest")]
+        E["Compute each component's<br>contribution"]
+        F["Rescale to unit interval"]
+  end
+    A("Definition of the<br><i>persona preferences</i>") ---> E
+    B("Definition of the<br><i>area of interest</i>") --> C
+    C --> E
+    E --> F
+    F --> G["recreational potential spatRast"]
+    style s1 fill:#FFF9C4
+    style A color:#000000
+    style B color:#000000
+    style C color:#000000
+    style E color:#000000
+    style F color:#000000
+    style G color:#000000
+```
+
+The RP Model uses of 4 key components, each representing a different aspect of a landscape's recreational value:
+
+1\) the landscape component (SLSRA)
+
+2\) the natural features component (FIPS_N)
+
+3\) the infrastructure component (FIPS_I)
+
+4\) the water component (Water)
+
+For each of the 4 components, a corresponding raster file was generated ( see \[3. The underlying data\] paragraph to see where they came from), covering the entirety of Scotland, which is the domain that the RP model covers at the moment. Each component's raster file store several layers, each describing a specific aspect of that component. The four raster files form the basis for calculating the recreational potential of an area, which is the main output of the RP Model.
+
+In order to run the RP model the user must have made 2 decisions:
+
+-   the area of interest
+
+-   the persona preferences
+
+Using the 4 components raster files, the recreational potential is calculated by (1) cropping the files to the area of interest, (2) compute each components contribution, (3) re scaling to unit interval.
+
+#### area of interest
+
+defined with a bounding box generated with the terra::ext() function
+
+#### persona preferences
+
+a csv with a numeric score from 0 to 10 for each of the 87 features (one feature = one layer): 13 features for the water component, 40 features for the landscape component, 24 features for the natural component and 10 features for the infrastructure component. The csv has in the first column, the name of the features, and in the second one the name and score of each persona. (see example persona file "presets.csv"). Where a higher score means a higher interest for that specific feature.
+
+#### cropping the files to the area of interest
+
+The first action the model completes is to crop the 4 components rasters to the area of interest and it does so by using the terra package in R. The terra::vect() function is used to convert the extent object provided by the user ("area of interest") into a vector polygon (i.e., a rectangular polygon bounding box), and then the terra::crop() function to reduce the size of the raster to that of the vector polygon, trimming the rasters into the desired area of interest.
+
+#### compute each component's contribution
+
+For each of the 4 components rasters, the model extracts the values of all its layers for each cell (20m x 20m) and multiplies them (if not NAs) with the corresponding score provided by the user ("persona preference"), the, it sums the values of that cell throughout the layers. In other words, the model computes a **weighted sum of the raster layers at each cell**, returning a new single layer raster with the result.
+
+#### rescale to unit interval
+
+Each of the components contribution rasters is then re-scaled so that its values are between 0 and 1 using a "min-max normalization":
+
+$$
+scaled.value = (x-min)/mix-min
+$$
+
+So the minimum values get assigned a 0, the maximum values get assigned a 1 and all other values are proportionally in between.
+
+Them the 4 components re-scaled rasters are summed (each cell's value is summed with its respective cell of the other components) and the final raster re-scaled once again using the "min-max normalization".
+
+#### recreational potential spatRast
+
+The model's output is a Spat raster with 5 layers. The first 4 layers show the scores for each component: SLSRA, FIPS_N, FIPS_I, Water, and the 5th layer is that of the combined Recreational_Potential.
+
+### 2.1. Example run
+
+Here we show examples of model output for 2 different and "opposite" personas (a hard recreationalist and a soft recreationalist) fort the Bush area. From the maps it is possible to observe how the model estimates different areas of higher recreational potential for the two personas. Moreover, it is possible to observe how each of the components contributes to the RP.
+
+#### Hard recreationalist
+
+Here we show a model run the Bush Estate area using a "hard recreationalist" example of persona (saved as "Hard_Recreationalist" in the persona presets in the model's package). In the tables below it is possible to see which features had the highest and lowest score for this persona.
+
+```{r, echo=FALSE, message=FALSE}
+
+hard_recr <- 
+  data.frame(get_example_persona())%>%
+  tibble::rownames_to_column(var = "Name")%>%
+  dplyr::select(Name,
+                Score = `get_example_persona..`)
+
+meaningful_scores <- summarise_persona_scores(hard_recr)
+  
+knitr::kable(meaningful_scores,format = "html",
+             caption = "Features scored the highest and the lowest in the hard recreationalist persona")
+```
+
+The hard recreationalist for this example highly values rock walls, mountains, inland and rock cliffs, national parks and traffic free areas, whilst are of less interest features like built-up areas, motorways etc.
+
+```{r, echo=FALSE, warning=FALSE, results='hide', message = FALSE}
+hard_recreationalist <- get_example_persona()
+bush_estate <- get_example_bbox()
+data_dir <- get_example_data_dir()
+
+# Compute all layers
+layers_HR <- compute_potential(hard_recreationalist,
+                            bush_estate,
+                            data_dir)
+```
+
+```{r, echo=FALSE }
+build_rp_map(base_map, RP_output = layers_HR)
+```
+
+#### Soft recreationalist
+
+Here we show a model run the Bush Estate area using a "soft recreationalist" example of persona (saved as "Soft_Recreationalist" in the persona presets in the model's package). In the tables below it is possible to see which features had the highest and lowest score for this persona.
+
+```{r, echo=FALSE, warning=FALSE, results='hide', message = FALSE}
+
+soft_recr <- 
+  read.csv(here::here("inst", "extdata", "personas", "presets.csv"))%>%
+  dplyr::select(Name = index,
+                Score = Soft_Recreationalist)
+
+meaningful_scores <- summarise_persona_scores(soft_recr)
+  
+knitr::kable(meaningful_scores,format = "html",
+             caption = "Features scored the highest and the lowest in the soft recreationalist persona")
+```
+
+The soft recreationalist for this example highly values traffic free areas, coastal features (beaches, dunes), lochs and national parks, whilst are of less interest features like rock walls, buil-up areas, steep slopes etc.
+
+```{r, echo=FALSE, warning=FALSE, results='hide'}
+soft_recreationalist <- 
+  load_persona(get_preset_persona_file(), "Soft_Recreationalist")
+  
+# Compute all layers
+layers_SR <- compute_potential(soft_recreationalist,
+                            bush_estate,
+                            data_dir)
+```
+
+```{r, echo=FALSE}
+build_rp_map(base_map, RP_output = layers_SR)
+```
+
+### 2.3. The underlying data
+
+The methodology used to create each of the 4 components' raster file is described in detail in this section.
+
+```{r, echo=FALSE, results='hide'}
+print(paste("water:", length(names(water))))
+print(paste("slsra:", length(names(slsra))))
+print(paste("fips_n:", length(names(fips_n))))
+print(paste("fips_i:", length(names(fips_i))))
+```
+
++-------------+--------------------------------------------------------------------------------------------------------------------------+
+| name raster | description                                                                                                              |
++=============+==========================================================================================================================+
+| SLSRA.tif   | ***Landscape component***                                                                                                |
+|             |                                                                                                                          |
+|             | This includes data on land cover type, landscape designations and conservation, and farmland of high nature value.       |
+|             |                                                                                                                          |
+|             | resolution: 20x20\                                                                                                       |
+|             | extent: whole of Scotland\                                                                                               |
+|             | crs: British National Grid\                                                                                              |
+|             | nr. features: 40                                                                                                         |
+|             |                                                                                                                          |
+|             | Contains values that either NAs or 1. NAs if that particular layers' feature is NOT present in the cell, and 1 if it is. |
++-------------+--------------------------------------------------------------------------------------------------------------------------+
+| FIPS_N.tif  | ***Natural Features component***                                                                                         |
+|             |                                                                                                                          |
+|             | This includes data on land form types, soil types and slope.                                                             |
+|             |                                                                                                                          |
+|             | resolution: 20x20\                                                                                                       |
+|             | extent: whole of Scotland\                                                                                               |
+|             | crs: British National Grid\                                                                                              |
+|             | nr. features: 24                                                                                                         |
+|             |                                                                                                                          |
+|             | Contains values that either NAs or 1. NAs if that particular layers' feature is NOT present in the cell, and 1 if it is. |
++-------------+--------------------------------------------------------------------------------------------------------------------------+
+| Water.tif   | ***Water component***                                                                                                    |
+|             |                                                                                                                          |
+|             | This includes data on water feature types, as the presence of a lake or river.                                           |
+|             |                                                                                                                          |
+|             | resolution: 20x20\                                                                                                       |
+|             | extent: whole of Scotland\                                                                                               |
+|             | crs: British National Grid\                                                                                              |
+|             | nr. features: 13                                                                                                         |
++-------------+--------------------------------------------------------------------------------------------------------------------------+
+| FIPS_I.tif  | ***Infrastructure component***                                                                                           |
+|             |                                                                                                                          |
+|             | This includes data on road and track, footpaths and cycle networks.                                                      |
+|             |                                                                                                                          |
+|             | \                                                                                                                        |
+|             | resolution: 20x20\                                                                                                       |
+|             | extent: whole of Scotland\                                                                                               |
+|             | crs: British National Grid\                                                                                              |
+|             | nr. features: 10                                                                                                         |
++-------------+--------------------------------------------------------------------------------------------------------------------------+
+
+: Description of the 4 components' raster files.
+
+#### Landscape component
+
+```{r, echo=FALSE}
+slsra_variables <- 
+  read.csv(here::here("inst", "extdata", "config", "config.csv"))%>%
+  dplyr::filter(Component == "SLSRA")
+
+slsra_variables <- slsra_variables %>%
+  dplyr::mutate(nr = c(1:nrow(slsra_variables)))%>%
+  dplyr::select(nr, Name, Description)
+
+knitr::kable(slsra_variables,format = "html",  caption = "Landscape component features")
+```
+
+```{r, echo=FALSE}
+
+make_layer_map(rstack = slsra,  base_map = base_map,
+               show_index = 5, #start with SLSRA_LCM_6 selected as example
+               color = "#386641")
+
+
+```
+
+#### Natural Features component
+
+```{r, echo=FALSE}
+fips_n_variables <- 
+  read.csv(here::here("inst", "extdata", "config", "config.csv"))%>%
+  dplyr::filter(Component == "FIPS_N")
+
+fips_n_variables <- fips_n_variables %>%
+  dplyr::mutate(nr = c(1:nrow(fips_n_variables)))%>%
+  dplyr::select(nr, Name, Description)
+
+knitr::kable(fips_n_variables,format = "html",  caption = "Natural Features component features")
+```
+
+```{r, echo=FALSE}
+make_layer_map(rstack = fips_n,  base_map = base_map,
+               show_index = 5, #start with FIPS_N_Landform_16 selected as example
+               color = "#CBA340")
+
+```
+
+#### Infrastructure component
+
+```{r, echo=FALSE}
+fips_i_variables <- 
+  read.csv(here::here("inst", "extdata", "config", "config.csv"))%>%
+  dplyr::filter(Component == "FIPS_I")
+
+fips_i_variables <- fips_i_variables %>%
+  dplyr::mutate(nr = c(1:nrow(fips_i_variables)))%>%
+  dplyr::select(nr, Name, Description)
+
+knitr::kable(fips_i_variables,format = "html",  caption = "Infrastructure component features")
+```
+
+The infrastructure component is derived from a raster with weather or not the cell had or not that feature (1 = it had it; and NA= did not have it). - which is labelled "original" in the example map for Easter Bush; which **CHRISTOPHER ANDREWS TO ADD INFO ABOUT IT HERE.**
+
+Then, a value = to the the distance in m its center has from the closest value named "distance" in example map, using the terra::distance function. Since this procedure is very memory consuming, the original Scotland wide raster was split into 20 "windows" and for each of them a 10km "buffer" was allowed (to make sure to not overlook the vicinity to features belonging to neighboring windows).
+
+Then, considering only the cells that were \<= 500m distance from a feature, the values were re-scaled from 0 to 1 (1 = present in cell, and then decreasing score as you get away from that cell) named "scored" in map below, using the **JOE TO ADD PAPER THIS FUNCTION and kappa and alpha values COMES FROM:**
+
+$$
+distance (m) = \frac{\kappa + 1}{\kappa + \exp(\alpha x)}
+$$
+
+```{r, echo=FALSE, out.height = 650}
+
+fips_i_rstack <- list(
+  "original" = fips_i,
+  "distance" = terra::rast(here::here("inst", "extdata", "rasters", "Bush", "dist", "FIPS_I_dist.tif")),
+  "scored" = terra::rast(here::here("inst", "extdata", "rasters", "Bush", "FIPS_I.tif"))
+  )
+
+make_layer_map_dist(rstack = fips_i_rstack, base_map,
+                    show_index = 2,
+                    color_original = "#DA627D")
+```
+
+#### Water component
+
+```{r, echo=FALSE}
+water_variables <- read.csv(here::here("inst", "extdata", "config", "config.csv")) %>%
+  dplyr::filter(Component == "Water")
+
+water_variables <- water_variables %>%
+  dplyr::mutate(nr = c(1:nrow(water_variables)))%>%
+  dplyr::select(nr, Name, Description)
+
+knitr::kable(water_variables,format = "html",  caption = "Water component features")
+```
+
+In the same way as infrastructure:
+
+```{r, echo=FALSE, out.height = 650}
+water_rstack <- list(
+  "original" = water,
+  "distance" = terra::rast(here::here("inst", "extdata", "rasters", "Bush", "dist", "Water_dist.tif")),
+  "scored" = terra::rast(here::here("inst", "extdata", "rasters", "Bush", "Water.tif"))
+  )
+
+make_layer_map_dist(rstack = water_rstack, base_map,
+                    show_index = 6, # "water rivers 3 distance"
+                    color_original = "#4E6766")
+```
+
+## 3. The Shiny app for the "watches" spin off
+
+## 4. Running the model for the whole of Scotland
+
+## 5. Lessons learned
+
+-   using terra:: spatrasts instead of raster:: rasters has improved the performance significantly
+
+-   pre-processing the majority of the operations on the scotland wide component rasters (uniforming their extent, resolution, projection, pre calculating the distance, and score etc.) incredibly reduces the run time.
+
+## 6. Future improvements
+
+-   less features o score, merge features into bigger categories
+
+-   link the model to "alive" data set" that gets updated regularly to generate up to date original raster layers
+
+-   at the moment all four components weight the same, there can be an option to have them weight differently, as the user specifies.
+
+-   

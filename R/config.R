@@ -6,9 +6,9 @@
 # Author(s):  Joe Marsh Rossney
 
 get_default_config <- function() {
-    system.file("extdata", "config", "config.csv",
-        package = "biodt.recreation", mustWork = TRUE
-    )
+  system.file("extdata", "config", "config.csv",
+    package = "biodt.recreation", mustWork = TRUE
+  )
 }
 
 #' Load Config
@@ -30,33 +30,33 @@ get_default_config <- function() {
 #'
 #' @export
 load_config <- function(config_path = NULL) {
-    if (is.null(config_path)) {
-        config_path <- get_default_config()
-    }
-    column_spec <- readr::cols(
-        Component = readr::col_character(),
-        Dataset = readr::col_character(),
-        Name = readr::col_character(),
-        Description = readr::col_character(),
-        Raster_Val = readr::col_integer()
-    )
-    loaded_config <- readr::read_csv(config_path, col_types = column_spec)
+  if (is.null(config_path)) {
+    config_path <- get_default_config()
+  }
+  column_spec <- readr::cols(
+    Component = readr::col_character(),
+    Dataset = readr::col_character(),
+    Name = readr::col_character(),
+    Description = readr::col_character(),
+    Raster_Val = readr::col_integer()
+  )
+  loaded_config <- readr::read_csv(config_path, col_types = column_spec)
 
-    return(loaded_config)
+  return(loaded_config)
 }
 
 load_legacy_config <- function(config_path) {
-    column_spec <- readr::cols(
-        Component = readr::col_character(),
-        Dataset = readr::col_character(),
-        Name = readr::col_character(),
-        Description = readr::col_character(),
-        Raster_Val = readr::col_double(), # Note difference
-        .default = readr::col_integer() # Note addition
-    )
-    loaded_config <- readr::read_csv(config_path, col_types = column_spec)
+  column_spec <- readr::cols(
+    Component = readr::col_character(),
+    Dataset = readr::col_character(),
+    Name = readr::col_character(),
+    Description = readr::col_character(),
+    Raster_Val = readr::col_double(), # Note difference
+    .default = readr::col_integer() # Note addition
+  )
+  loaded_config <- readr::read_csv(config_path, col_types = column_spec)
 
-    return(loaded_config)
+  return(loaded_config)
 }
 
 #' Get Feature Mappings
@@ -76,14 +76,14 @@ load_legacy_config <- function(config_path) {
 #'
 #' @export
 get_feature_mappings <- function(config) {
-    # Group by layer, results in {layer_name : layer_config}
-    config_by_layer <- split(config, as.factor(config[["Dataset"]]))
+  # Group by layer, results in {layer_name : layer_config}
+  config_by_layer <- split(config, as.factor(config[["Dataset"]]))
 
-    # Generate mapping {layer_name : {feature_name: raster_value}}
-    mappings <- lapply(
-        config_by_layer, function(layer_config) {
-            stats::setNames(as.numeric(layer_config[["Raster_Val"]]), layer_config[["Name"]])
-        }
-    )
-    return(mappings)
+  # Generate mapping {layer_name : {feature_name: raster_value}}
+  mappings <- lapply(
+    config_by_layer, function(layer_config) {
+      stats::setNames(as.numeric(layer_config[["Raster_Val"]]), layer_config[["Name"]])
+    }
+  )
+  return(mappings)
 }

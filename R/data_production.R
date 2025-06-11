@@ -35,13 +35,13 @@
 #' @keywords internal
 #' @export
 quantise_slope <- function(layer) {
-    # Quantise the slope values
-    slope_rcl <- data.matrix(data.frame(
-        lower_bound = c(0, 1.72, 2.86, 5.71, 11.31, 16.7),
-        upper_bound = c(1.72, 2.86, 5.71, 11.31, 16.7, Inf),
-        mapped_to = c(1, 2, 3, 4, 5, 6)
-    ))
-    return(terra::classify(layer, rcl = slope_rcl))
+  # Quantise the slope values
+  slope_rcl <- data.matrix(data.frame(
+    lower_bound = c(0, 1.72, 2.86, 5.71, 11.31, 16.7),
+    upper_bound = c(1.72, 2.86, 5.71, 11.31, 16.7, Inf),
+    mapped_to = c(1, 2, 3, 4, 5, 6)
+  ))
+  return(terra::classify(layer, rcl = slope_rcl))
 }
 
 #' Reproject Layer
@@ -66,27 +66,27 @@ quantise_slope <- function(layer) {
 #' @keywords internal
 #' @export
 reproject_layer <- function(infile, outfile) {
-    if (basename(infile) == "FIPS_N_Slope.tif") {
-        layer <- terra::rast(infile) |> quantise_slope()
-    } else {
-        layer <- terra::rast(infile)
-    }
+  if (basename(infile) == "FIPS_N_Slope.tif") {
+    layer <- terra::rast(infile) |> quantise_slope()
+  } else {
+    layer <- terra::rast(infile)
+  }
 
-    onto <- terra::rast(
-        crs = "EPSG:27700",
-        res = c(20, 20),
-        ext = terra::ext(-10000, 660000, 460000, 1220000) # xmin, xmax, ymin, ymax
-    )
+  onto <- terra::rast(
+    crs = "EPSG:27700",
+    res = c(20, 20),
+    ext = terra::ext(-10000, 660000, 460000, 1220000) # xmin, xmax, ymin, ymax
+  )
 
-    terra::project(
-        layer,
-        onto,
-        method = "near",
-        filename = outfile,
-        datatype = "INT1U",
-        threads = TRUE,
-        overwrite = TRUE
-    )
+  terra::project(
+    layer,
+    onto,
+    method = "near",
+    filename = outfile,
+    datatype = "INT1U",
+    threads = TRUE,
+    overwrite = TRUE
+  )
 }
 
 #' Reproject All
@@ -104,23 +104,23 @@ reproject_layer <- function(infile, outfile) {
 #' @keywords internal
 #' @export
 reproject_all <- function(indir, outdir) {
-    infiles <- list_files(indir, "tif", recursive = TRUE)
-    feature_mappings <- get_feature_mappings(load_config())
+  infiles <- list_files(indir, "tif", recursive = TRUE)
+  feature_mappings <- get_feature_mappings(load_config())
 
-    # NOTE: Stage 0 data contains more layers than are used in the final potential
-    # Drop any tiffs whose name does not match a layer name in feature_mappings
-    infiles <- infiles[intersect(names(infiles), names(feature_mappings))]
-    stopifnot(all(names(feature_mappings) %in% names(infiles)))
+  # NOTE: Stage 0 data contains more layers than are used in the final potential
+  # Drop any tiffs whose name does not match a layer name in feature_mappings
+  infiles <- infiles[intersect(names(infiles), names(feature_mappings))]
+  stopifnot(all(names(feature_mappings) %in% names(infiles)))
 
-    for (infile in infiles) {
-        # TODO: fix this for nested indir/outdir
-        outfile <- sub("^[^/]+", outdir, infile)
-        dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
+  for (infile in infiles) {
+    # TODO: fix this for nested indir/outdir
+    outfile <- sub("^[^/]+", outdir, infile)
+    dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
 
-        message(paste("Reprojecting:", infile, "->", outfile))
+    message(paste("Reprojecting:", infile, "->", outfile))
 
-        timed(reproject_layer)(infile, outfile)
-    }
+    timed(reproject_layer)(infile, outfile)
+  }
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -141,27 +141,27 @@ reproject_all <- function(indir, outdir) {
 #' @keywords internal
 #' @export
 one_hot_layer <- function(infile, outfile, feature_mapping) {
-    layer <- terra::rast(infile)
-    stopifnot(terra::nlyr(layer) == 1)
+  layer <- terra::rast(infile)
+  stopifnot(terra::nlyr(layer) == 1)
 
-    one_hot_pixel <- function(x) {
-        out <- matrix(0, nrow = length(x), ncol = length(feature_mapping))
-        for (i in seq_along(feature_mapping)) {
-            out[, i] <- ifelse(x == as.numeric(feature_mapping[i]), 1, NA)
-        }
-        return(out)
+  one_hot_pixel <- function(x) {
+    out <- matrix(0, nrow = length(x), ncol = length(feature_mapping))
+    for (i in seq_along(feature_mapping)) {
+      out[, i] <- ifelse(x == as.numeric(feature_mapping[i]), 1, NA)
     }
+    return(out)
+  }
 
-    layer <- terra::lapp(
-        layer,
-        fun = one_hot_pixel,
-        filename = outfile,
-        overwrite = TRUE,
-        wopt = list(
-            names = names(feature_mapping),
-            datatype = "INT1U"
-        )
+  layer <- terra::lapp(
+    layer,
+    fun = one_hot_pixel,
+    filename = outfile,
+    overwrite = TRUE,
+    wopt = list(
+      names = names(feature_mapping),
+      datatype = "INT1U"
     )
+  )
 }
 
 #' One Hot All
@@ -180,23 +180,23 @@ one_hot_layer <- function(infile, outfile, feature_mapping) {
 #' @keywords internal
 #' @export
 one_hot_all <- function(indir, outdir) {
-    infiles <- list_files(indir, "tif", recursive = TRUE)
-    feature_mappings <- get_feature_mappings(load_config())
+  infiles <- list_files(indir, "tif", recursive = TRUE)
+  feature_mappings <- get_feature_mappings(load_config())
 
-    stopifnot(all(names(feature_mappings) %in% names(infiles)))
+  stopifnot(all(names(feature_mappings) %in% names(infiles)))
 
-    for (infile in infiles) {
-        # TODO: fix this for nested indir/outdir
-        outfile <- sub("^[^/]+", outdir, infile)
-        dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
+  for (infile in infiles) {
+    # TODO: fix this for nested indir/outdir
+    outfile <- sub("^[^/]+", outdir, infile)
+    dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
 
-        layer_name <- tools::file_path_sans_ext(basename(infile))
-        feature_mapping <- feature_mappings[[layer_name]]
+    layer_name <- tools::file_path_sans_ext(basename(infile))
+    feature_mapping <- feature_mappings[[layer_name]]
 
-        message(paste("Converting to one-hot representation:", infile, "->", outfile))
+    message(paste("Converting to one-hot representation:", infile, "->", outfile))
 
-        timed(one_hot_layer)(infile, outfile, feature_mapping)
-    }
+    timed(one_hot_layer)(infile, outfile, feature_mapping)
+  }
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -217,24 +217,24 @@ one_hot_all <- function(indir, outdir) {
 #' @keywords internal
 #' @export
 stack_all <- function(indir, outdir) {
-    for (component in c("SLSRA", "FIPS_N", "FIPS_I", "Water")) {
-        infiles <- list_files(file.path(indir, component), "tif", recursive = TRUE)
+  for (component in c("SLSRA", "FIPS_N", "FIPS_I", "Water")) {
+    infiles <- list_files(file.path(indir, component), "tif", recursive = TRUE)
 
-        outfile <- file.path(outdir, paste0(component, ".tif"))
-        dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
+    outfile <- file.path(outdir, paste0(component, ".tif"))
+    dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
 
-        message(paste("Stacking", component, "into a single raster:", indir, "->", outfile))
+    message(paste("Stacking", component, "into a single raster:", indir, "->", outfile))
 
-        rasters <- lapply(infiles, terra::rast)
-        stacked <- terra::rast(rasters)
+    rasters <- lapply(infiles, terra::rast)
+    stacked <- terra::rast(rasters)
 
-        # NOTE: rast(list_of_rasters) does not preserve layer names!
-        # Need to manually reapply them here (assumes order is preserved)
-        layer_names <- unlist(lapply(rasters, names))
-        names(stacked) <- layer_names
+    # NOTE: rast(list_of_rasters) does not preserve layer names!
+    # Need to manually reapply them here (assumes order is preserved)
+    layer_names <- unlist(lapply(rasters, names))
+    names(stacked) <- layer_names
 
-        terra::writeRaster(stacked, outfile, overwrite = TRUE)
-    }
+    terra::writeRaster(stacked, outfile, overwrite = TRUE)
+  }
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -255,16 +255,16 @@ stack_all <- function(indir, outdir) {
 #' @keywords internal
 #' @export
 compute_distance <- function(infile, outfile) {
-    raster <- terra::rast(infile)
+  raster <- terra::rast(infile)
 
-    terra::distance(
-        raster,
-        target = NA, # targets everything excluding the features (v expensive!)
-        unit = "m",
-        method = "haversine",
-        filename = outfile,
-        datatype = "FLT4S"
-    )
+  terra::distance(
+    raster,
+    target = NA, # targets everything excluding the features (v expensive!)
+    unit = "m",
+    method = "haversine",
+    filename = outfile,
+    datatype = "FLT4S"
+  )
 }
 
 # TODO: add link to paper, equation, values for kappa & alpha
@@ -283,16 +283,16 @@ compute_distance <- function(infile, outfile) {
 #' @keywords internal
 #' @export
 map_distance_to_unit <- function(infile, outfile, kappa = 6, alpha = 0.01011) {
-    logistic_func <- function(x) {
-        (kappa + 1) / (kappa + exp(alpha * x))
-    }
-    raster <- terra::rast(infile)
-    terra::app(
-        raster,
-        fun = logistic_func,
-        filename = outfile
-        # note that datatype inferred from raster - cannot be changed
-    )
+  logistic_func <- function(x) {
+    (kappa + 1) / (kappa + exp(alpha * x))
+  }
+  raster <- terra::rast(infile)
+  terra::app(
+    raster,
+    fun = logistic_func,
+    filename = outfile
+    # note that datatype inferred from raster - cannot be changed
+  )
 }
 
 #' Compute Proximity Rasters
@@ -316,24 +316,24 @@ map_distance_to_unit <- function(infile, outfile, kappa = 6, alpha = 0.01011) {
 #' @keywords internal
 #' @export
 compute_proximity_rasters <- function(indir, outdir) {
-    for (component in c("FIPS_I", "Water")) {
-        infile <- file.path(indir, paste0(component, ".tif"))
-        dist_file <- file.path(outdir, paste0(component, "_dist.tif"))
-        outfile <- file.path(outdir, paste0(component, ".tif"))
-        dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
+  for (component in c("FIPS_I", "Water")) {
+    infile <- file.path(indir, paste0(component, ".tif"))
+    dist_file <- file.path(outdir, paste0(component, "_dist.tif"))
+    outfile <- file.path(outdir, paste0(component, ".tif"))
+    dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
 
-        message(paste("Performing distance calculation:", infile, "->", dist_file))
-        timed(compute_distance)(infile, dist_file)
+    message(paste("Performing distance calculation:", infile, "->", dist_file))
+    timed(compute_distance)(infile, dist_file)
 
-        message(paste("Mapping distance to unit interval:", dist_file, "->", outfile))
-        timed(map_distance_to_unit)(dist_file, outfile)
-    }
+    message(paste("Mapping distance to unit interval:", dist_file, "->", outfile))
+    timed(map_distance_to_unit)(dist_file, outfile)
+  }
 
-    for (component in c("SLSRA", "FIPS_N")) {
-        infile <- file.path(indir, component)
-        outfile <- file.path(outdir, paste0(component, ".tif"))
-        dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
-        message(paste("Creating symbolic link:", infile, "->", outfile))
-        file.symlink(infile, outfile)
-    }
+  for (component in c("SLSRA", "FIPS_N")) {
+    infile <- file.path(indir, component)
+    outfile <- file.path(outdir, paste0(component, ".tif"))
+    dir.create(dirname(outfile), recursive = TRUE, showWarnings = FALSE)
+    message(paste("Creating symbolic link:", infile, "->", outfile))
+    file.symlink(infile, outfile)
+  }
 }

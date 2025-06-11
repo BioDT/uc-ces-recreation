@@ -14,8 +14,8 @@
 #' @importFrom shiny shinyApp runApp
 #' @export
 run_app <- function(persona_dir = NULL, data_dir = NULL, ...) {
-    ui <- make_ui()
-    server <- make_server(persona_dir, data_dir)
-    app <- shinyApp(ui = ui, server = server)
-    runApp(app, ...)
+  ui <- make_ui()
+  server <- make_server(persona_dir, data_dir)
+  app <- shinyApp(ui = ui, server = server)
+  runApp(app, ...)
 }

@@ -6,10 +6,10 @@
 # Author(s):  Joe Marsh Rossney
 
 assert_valid_component <- function(component) {
-    valid_components <- c("SLSRA", "FIPS_N", "FIPS_I", "Water")
-    if (!component %in% valid_components) {
-        stop(paste("Error:", component, "is not a valid component; should be one of", valid_components)) # nolint
-    }
+  valid_components <- c("SLSRA", "FIPS_N", "FIPS_I", "Water")
+  if (!component %in% valid_components) {
+    stop(paste("Error:", component, "is not a valid component; should be one of", valid_components)) # nolint
+  }
 }
 
 #' Compute Component
@@ -40,24 +40,24 @@ assert_valid_component <- function(component) {
 #'
 #' @export
 compute_component <- function(component, persona, bbox, data_dir = NULL, skip_checks = FALSE) {
-    if (is.null(data_dir)) {
-        data_dir <- get_data_dir()
-    }
-    if (!skip_checks) {
-        assert_valid_component(component)
-        assert_valid_data_dir(data_dir)
-        assert_valid_bbox(bbox)
-    }
+  if (is.null(data_dir)) {
+    data_dir <- get_data_dir()
+  }
+  if (!skip_checks) {
+    assert_valid_component(component)
+    assert_valid_data_dir(data_dir)
+    assert_valid_bbox(bbox)
+  }
 
-    raster <- load_raster(
-        file.path(data_dir, paste0(component, ".tif")),
-        bbox
-    )
-    scores <- persona[names(raster)]
-    result <- terra::app(raster, function(features) {
-        sum(scores * features, na.rm = TRUE)
-    })
-    return(result)
+  raster <- load_raster(
+    file.path(data_dir, paste0(component, ".tif")),
+    bbox
+  )
+  scores <- persona[names(raster)]
+  result <- terra::app(raster, function(features) {
+    sum(scores * features, na.rm = TRUE)
+  })
+  return(result)
 }
 
 #' Compute SLSRA Component
@@ -121,16 +121,16 @@ compute_water <- function(...) compute_component("Water", ...)
 #'
 #' @export
 rescale_to_unit_interval <- function(raster) {
-    min_value <- min(terra::values(raster), na.rm = TRUE)
-    max_value <- max(terra::values(raster), na.rm = TRUE)
+  min_value <- min(terra::values(raster), na.rm = TRUE)
+  max_value <- max(terra::values(raster), na.rm = TRUE)
 
-    if (max_value == min_value) {
-        message(paste("The data could not be rescaled to the interval [0, 1], because the smallest and largest value are the same number", max_value)) # nolint
-    }
+  if (max_value == min_value) {
+    message(paste("The data could not be rescaled to the interval [0, 1], because the smallest and largest value are the same number", max_value)) # nolint
+  }
 
-    result <- (raster - min_value) / (max_value - min_value)
+  result <- (raster - min_value) / (max_value - min_value)
 
-    return(result)
+  return(result)
 }
 
 #' Compute Recreational Potential
@@ -161,27 +161,27 @@ rescale_to_unit_interval <- function(raster) {
 #'
 #' @export
 compute_potential <- function(persona, bbox, data_dir = NULL) {
-    if (is.null(data_dir)) {
-        data_dir <- get_data_dir()
-    }
-    # Perform checks once here, and skip them in the individual components
-    assert_valid_data_dir(data_dir)
-    assert_valid_bbox(bbox)
+  if (is.null(data_dir)) {
+    data_dir <- get_data_dir()
+  }
+  # Perform checks once here, and skip them in the individual components
+  assert_valid_data_dir(data_dir)
+  assert_valid_bbox(bbox)
 
-    slsra <- compute_component("SLSRA", persona, bbox, data_dir, skip_checks = TRUE) |>
-        rescale_to_unit_interval()
-    fips_n <- compute_component("FIPS_N", persona, bbox, data_dir, skip_checks = TRUE) |>
-        rescale_to_unit_interval()
-    fips_i <- compute_component("FIPS_I", persona, bbox, data_dir, skip_checks = TRUE) |>
-        rescale_to_unit_interval()
-    water <- compute_component("Water", persona, bbox, data_dir, skip_checks = TRUE) |>
-        rescale_to_unit_interval()
+  slsra <- compute_component("SLSRA", persona, bbox, data_dir, skip_checks = TRUE) |>
+    rescale_to_unit_interval()
+  fips_n <- compute_component("FIPS_N", persona, bbox, data_dir, skip_checks = TRUE) |>
+    rescale_to_unit_interval()
+  fips_i <- compute_component("FIPS_I", persona, bbox, data_dir, skip_checks = TRUE) |>
+    rescale_to_unit_interval()
+  water <- compute_component("Water", persona, bbox, data_dir, skip_checks = TRUE) |>
+    rescale_to_unit_interval()
 
-    total <- sum(slsra, fips_n, fips_i, water, na.rm = TRUE) |>
-        rescale_to_unit_interval()
+  total <- sum(slsra, fips_n, fips_i, water, na.rm = TRUE) |>
+    rescale_to_unit_interval()
 
-    layers <- c(slsra, fips_n, fips_i, water, total)
-    names(layers) <- c("SLSRA", "FIPS_N", "FIPS_I", "Water", "Recreational_Potential")
+  layers <- c(slsra, fips_n, fips_i, water, total)
+  names(layers) <- c("SLSRA", "FIPS_N", "FIPS_I", "Water", "Recreational_Potential")
 
-    return(layers)
+  return(layers)
 }

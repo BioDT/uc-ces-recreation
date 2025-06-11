@@ -51,8 +51,8 @@ read_persona_csv(new_persona_file)
 # Create a random new person
 feature_names <- load_config()[["Name"]]
 random_persona <- stats::setNames(
-    sample(0:10, size = 87, replace = TRUE),
-    feature_names
+  sample(0:10, size = 87, replace = TRUE),
+  feature_names
 )
 
 # Append it to the file

@@ -33,19 +33,19 @@ We see that the 21 layers have every-so-slightly different resolutions, extents 
 
 ```{r}
 properties <- lapply(files, function(file_) {
-    raster <- rast(file_)
-    info <- c(
-        # file_size = file.info(file_)$size,
-        nlyr = nlyr(raster),
-        res = res(raster),
-        ext = as.vector(ext(raster)),
-        origin = origin(raster)
-    )
-    return(info)
+  raster <- rast(file_)
+  info <- c(
+    # file_size = file.info(file_)$size,
+    nlyr = nlyr(raster),
+    res = res(raster),
+    ext = as.vector(ext(raster)),
+    origin = origin(raster)
+  )
+  return(info)
 })
 properties_df <- as.data.frame(
-    do.call(rbind, properties), # creates matrixc
-    stringsAsFactor = FALSE
+  do.call(rbind, properties), # creates matrixc
+  stringsAsFactor = FALSE
 )
 properties_df
 ```
@@ -57,25 +57,25 @@ Check that all data except slopes are integer-valued, with values matching the f
 ```{r}
 # Check all values are integers
 for (layer in names(files)) {
-    # Slope has non-integer values
-    if (layer == "FIPS_N_Slope") next
+  # Slope has non-integer values
+  if (layer == "FIPS_N_Slope") next
 
-    # NOTE: Too expensive - just do one!
-    if (layer != "FIPS_N_Landform") next
+  # NOTE: Too expensive - just do one!
+  if (layer != "FIPS_N_Landform") next
 
-    unique_vals <- files[[layer]] |>
-        rast() |>
-        # This is more suited to FIPS_N and SLSRA
-        spatSample(size = 100, values = TRUE, na.rm = TRUE) |>
-        # This is more suited to linear features: FIPS_I, Water
-        # spatSample(size = 100, values = TRUE, na.rm = TRUE, ext = bush, exhaustive = TRUE) |>
-        unique()
+  unique_vals <- files[[layer]] |>
+    rast() |>
+    # This is more suited to FIPS_N and SLSRA
+    spatSample(size = 100, values = TRUE, na.rm = TRUE) |>
+    # This is more suited to linear features: FIPS_I, Water
+    # spatSample(size = 100, values = TRUE, na.rm = TRUE, ext = bush, exhaustive = TRUE) |>
+    unique()
 
-    not_mapped <- !sapply(unique_vals, function(val) val %in% feature_mappings[[layer]])
+  not_mapped <- !sapply(unique_vals, function(val) val %in% feature_mappings[[layer]])
 
-    if (any(not_mapped)) {
-        print(paste0("The layer '", layer, "' contains value(s) '", unique_vals[not_mapped], "' which are not present in the feature mappings."))
-    }
+  if (any(not_mapped)) {
+    print(paste0("The layer '", layer, "' contains value(s) '", unique_vals[not_mapped], "' which are not present in the feature mappings."))
+  }
 }
 ```
 
@@ -87,9 +87,9 @@ So even for this quick test we need to reproject the whole scotland-wide raster 
 ```{r}
 layer <- "FIPS_I_RoadsTracks"
 reference <- rast(
-    crs = "EPSG:27700",
-    res = c(20, 20),
-    ext = ext(-10000, 660000, 460000, 1220000) # xmin, xmax, ymin, ymax
+  crs = "EPSG:27700",
+  res = c(20, 20),
+  ext = ext(-10000, 660000, 460000, 1220000) # xmin, xmax, ymin, ymax
 )
 
 # crop_then_proj <- files[[layer]] |>
@@ -98,9 +98,9 @@ reference <- rast(
 # project(reference, method = "near")
 
 proj_then_crop <- files[[layer]] |>
-    rast() |>
-    project(reference, method = "near") |>
-    crop(bush)
+  rast() |>
+  project(reference, method = "near") |>
+  crop(bush)
 
 # plet(crop_then_proj, type="classes")
 plet(proj_then_crop, type = "classes")
@@ -109,6 +109,6 @@ plet(proj_then_crop, type = "classes")
 
 ```{r}
 config |>
-    filter(Dataset == "FIPS_I_RoadsTracks") |>
-    select(Name, Description, Raster_Val)
+  filter(Dataset == "FIPS_I_RoadsTracks") |>
+  select(Name, Description, Raster_Val)
 ```

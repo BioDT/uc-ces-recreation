@@ -24,20 +24,20 @@
 #' @keywords internal
 #' @export
 errors_as_messages <- function(func) {
-    wrapped_func <- function(...) {
-        result <- tryCatch(
-            func(...),
-            error = function(e) {
-                message(conditionMessage(e))
-                return(e)
-            },
-            warning = function(w) {
-                message(conditionMessage(w))
-            }
-        )
-        return(result)
-    }
-    return(wrapped_func)
+  wrapped_func <- function(...) {
+    result <- tryCatch(
+      func(...),
+      error = function(e) {
+        message(conditionMessage(e))
+        return(e)
+      },
+      warning = function(w) {
+        message(conditionMessage(w))
+      }
+    )
+    return(result)
+  }
+  return(wrapped_func)
 }
 
 #' Assert to Bool
@@ -56,20 +56,20 @@ errors_as_messages <- function(func) {
 #' @keywords internal
 #' @export
 assert_to_bool <- function(func) {
-    wrapped_func <- function(...) {
-        tryCatch(
-            func(...),
-            error = function(e) {
-                message(conditionMessage(e))
-                return(FALSE)
-            },
-            warning = function(w) {
-                message(conditionMessage(w))
-            }
-        )
-        return(TRUE)
-    }
-    return(wrapped_func)
+  wrapped_func <- function(...) {
+    tryCatch(
+      func(...),
+      error = function(e) {
+        message(conditionMessage(e))
+        return(FALSE)
+      },
+      warning = function(w) {
+        message(conditionMessage(w))
+      }
+    )
+    return(TRUE)
+  }
+  return(wrapped_func)
 }
 
 #' Capture Messages
@@ -85,15 +85,15 @@ assert_to_bool <- function(func) {
 #' @keywords internal
 #' @export
 capture_messages <- function(func) {
-    wrapped_func <- function(...) {
-        message <- utils::capture.output(
-            result <- func(...),
-            type = "message"
-        )
-        message <- paste(message, collapse = "\n") # split messages over lines
-        return(list(result = result, message = message))
-    }
-    return(wrapped_func)
+  wrapped_func <- function(...) {
+    message <- utils::capture.output(
+      result <- func(...),
+      type = "message"
+    )
+    message <- paste(message, collapse = "\n") # split messages over lines
+    return(list(result = result, message = message))
+  }
+  return(wrapped_func)
 }
 
 #' Is Error
@@ -120,10 +120,10 @@ is_error <- function(value) inherits(value, "simpleError")
 #' @keywords internal
 #' @export
 make_safe_string <- function(string) {
-    string <- gsub(" ", "_", string) # Spaces to underscore
-    string <- gsub("[^a-zA-Z0-9_]+", "", string) # remove non alpha-numeric
-    string <- gsub("^_+|_+$", "", string) # remove leading or trailing underscores
-    return(string)
+  string <- gsub(" ", "_", string) # Spaces to underscore
+  string <- gsub("[^a-zA-Z0-9_]+", "", string) # remove non alpha-numeric
+  string <- gsub("^_+|_+$", "", string) # remove leading or trailing underscores
+  return(string)
 }
 
 #' Timed
@@ -138,15 +138,15 @@ make_safe_string <- function(string) {
 #' @keywords internal
 #' @export
 timed <- function(func) {
-    wrapped_func <- function(...) {
-        start_time <- Sys.time()
-        result <- func(...)
-        end_time <- Sys.time()
-        delta <- difftime(end_time, start_time, units = "secs")
-        message(paste("Took", delta, "seconds"))
-        return(result)
-    }
-    return(wrapped_func)
+  wrapped_func <- function(...) {
+    start_time <- Sys.time()
+    result <- func(...)
+    end_time <- Sys.time()
+    delta <- difftime(end_time, start_time, units = "secs")
+    message(paste("Took", delta, "seconds"))
+    return(result)
+  }
+  return(wrapped_func)
 }
 
 
@@ -164,20 +164,20 @@ timed <- function(func) {
 #' @keywords internal
 #' @export
 list_files <- function(dir_, ext, recursive = TRUE) {
-    # Generate a mapping { file_step : file_path }
-    file_paths <- lapply(
-        list.files(
-            path = dir_,
-            pattern = paste0("\\.", ext, "$"),
-            recursive = recursive
-        ),
-        function(file_) file.path(dir_, file_)
-    )
-    file_stems <- lapply(
-        file_paths,
-        function(path) tools::file_path_sans_ext(basename(path))
-    )
-    files_mapping <- setNames(file_paths, file_stems)
+  # Generate a mapping { file_step : file_path }
+  file_paths <- lapply(
+    list.files(
+      path = dir_,
+      pattern = paste0("\\.", ext, "$"),
+      recursive = recursive
+    ),
+    function(file_) file.path(dir_, file_)
+  )
+  file_stems <- lapply(
+    file_paths,
+    function(path) tools::file_path_sans_ext(basename(path))
+  )
+  files_mapping <- setNames(file_paths, file_stems)
 
-    return(files_mapping)
+  return(files_mapping)
 }
