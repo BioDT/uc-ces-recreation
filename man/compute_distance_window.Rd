@@ -8,7 +8,7 @@ compute_distance_window(
   infile,
   dist_file,
   target_tiles = 20,
-  buffer_dist = 10000
+  buffer_dist = 500
 )
 }
 \arguments{
@@ -21,8 +21,9 @@ compute_distance_window(
 \item{buffer_dist}{(in m) buffer to consider when splitting rasters into windows}
 }
 \description{
-Given a spatrast, it splits it into windows using \link{create_overlapping_windows}, computes the distance to the nearest non-\code{NA} value in a raster
-using haversine distance, writing straight to \code{outfile}.Recomposes the main raster using the windows using
+Given a spatrast, it splits it into windows using \link{create_overlapping_windows},
+computes the distance to the nearest non-\code{NA} value in a raster using haversine
+distance, writing straight to \code{outfile}. Recomposes the main raster using the windows using
 \link{crop_to_original_extent} and, saves the output and deletes intermediate files.
 }
 \keyword{internal}

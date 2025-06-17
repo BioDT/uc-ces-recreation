@@ -9,13 +9,14 @@ crop_to_original_extent(raster, tile_info)
 \arguments{
 \item{raster}{a Spatrast element of the window}
 
-\item{tile_info}{amount of "tiles"/"windows/"chunks" in which to ideally break the raster into}
+\item{tile_info}{amount of "tiles"/"windows/"chunks" in which to ideally break the raster into.}
 }
 \value{
 a  raster cropped to the extant of the un-buffered window.
 }
 \description{
-For a window provided, use the output of \link{create_overlapping_windows} to re-crop the raster to the un-buffered window extent.
+For a window provided, use the output of \link{create_overlapping_windows}
+to re-crop the raster to the un-buffered window extent.
 \strong{Relies on output of:} \link{create_overlapping_windows}
 \strong{Preceded by:} \link{compute_distance}
 }

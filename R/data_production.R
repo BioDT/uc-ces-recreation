@@ -303,7 +303,8 @@ map_distance_to_unit <- function(infile, outfile, kappa = 6, alpha = 0.01011) {
     }
     raster <- terra::rast(infile)
 
-    # exclude cells that are further than 500m from features, as this won't impact the model output and setting values to NAs does reduce file size when compressed
+    # Exclude cells that are further than 500m from features, as this won't impact
+    # the model output and setting values to NAs does reduce file size when compressed
     raster[raster > 500] <- NA
 
     terra::app(
@@ -332,7 +333,8 @@ map_distance_to_unit <- function(infile, outfile, kappa = 6, alpha = 0.01011) {
 #'
 #' @param indir Path to directory containing the input rasters.
 #' @param outdir Path to directory in which to write the ouput rasters.
-#' @param splitting T or F; weather to use the splitting, computing and recomposing approach or calcuate the distance for the whole layer.
+#' @param splitting T or F; weather to use the splitting, computing and recomposing
+#' approach or calcuate the distance for the whole layer.
 #'
 #' @keywords internal
 #' @export
@@ -352,7 +354,7 @@ compute_proximity_rasters <- function(indir, outdir, splitting) {
 
         if (!file.exists(dist_file)) {
             message(paste("Performing distance calculation:", infile, "->", dist_file))
-            if (splitting == T) {
+            if (splitting == TRUE) {
                 timed(compute_distance_window)(infile, dist_file, target_tiles = 20, buffer_dist = 10000)
             } else {
                 timed(compute_distance)(infile, dist_file)
@@ -386,10 +388,11 @@ compute_proximity_rasters <- function(indir, outdir, splitting) {
 #'
 #' For a raster provided, split into n windows and their buffer of n meters (to maintain distance calculation relevant).
 #'
-#' @param r a Spatrast element read in using terra::rast(raster_name.tif)
-#' @param target_tiles amount of "tiles"/"windows/"chunks" in which to ideally break the raster into
+#' @param A SpatRast element read in using terra::rast(raster_name.tif)
+#' @param target_tiles amount of "tiles"/"windows/"chunks" in which to ideally break the raster into.
 #' @param buffer_dist buffer distance to use for each tile
-#' @return a list in which each element is representing a window, and provides a sub list of the buffered extent, and the un-buffered extent of that tile
+#' @return a list in which each element is representing a window, and provides a sub
+#' list of the buffered extent, and the un-buffered extent of that tile
 #' @keywords internal
 #' @export
 create_overlapping_windows <- function(r, target_tiles, buffer_dist) {
@@ -452,11 +455,12 @@ create_overlapping_windows <- function(r, target_tiles, buffer_dist) {
 
 #' crop_to_original_extent
 #'
-#' For a window provided, use the output of [biodt.recreation::create_overlapping_windows] to re-crop the raster to the un-buffered window extent.
+#' For a window provided, use the output of [biodt.recreation::create_overlapping_windows]
+#' to re-crop the raster to the un-buffered window extent.
 #' **Relies on output of:** [biodt.recreation::create_overlapping_windows]
 #' **Preceded by:** [biodt.recreation::compute_distance]
 #' @param raster a Spatrast element of the window
-#' @param tile_info amount of "tiles"/"windows/"chunks" in which to ideally break the raster into
+#' @param tile_info amount of "tiles"/"windows/"chunks" in which to ideally break the raster into.
 #' @return a  raster cropped to the extant of the un-buffered window.
 #' @keywords internal
 #' @export
@@ -475,8 +479,9 @@ crop_to_original_extent <- function(raster, tile_info) {
 
 #' compute_distance_window
 #'
-#' Given a spatrast, it splits it into windows using [biodt.recreation::create_overlapping_windows], computes the distance to the nearest non-`NA` value in a raster
-#' using haversine distance, writing straight to `outfile`.Recomposes the main raster using the windows using
+#' Given a spatrast, it splits it into windows using [biodt.recreation::create_overlapping_windows],
+#' computes the distance to the nearest non-`NA` value in a raster using haversine
+#' distance, writing straight to `outfile`. Recomposes the main raster using the windows using
 #' [biodt.recreation::crop_to_original_extent] and, saves the output and deletes intermediate files.
 #'
 #' @param infile Path to file containing the input raster.
@@ -486,7 +491,7 @@ crop_to_original_extent <- function(raster, tile_info) {
 #'
 #' @keywords internal
 #' @export
-compute_distance_window <- function(infile, dist_file, target_tiles = 20, buffer_dist = 10000) {
+compute_distance_window <- function(infile, dist_file, target_tiles = 20, buffer_dist = 500) {
     # 1) read the raster
     r <- terra::rast(infile)
     # 2) calculate the window
