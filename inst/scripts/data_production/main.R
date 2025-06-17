@@ -23,23 +23,7 @@ terra::terraOptions(
     print = TRUE
 )
 
-# reproject_all(indir = "Stage_0", outdir = "Stage_1")
-# one_hot_all(indir = "Stage_1", outdir = "Stage_2")
-# stack_all(indir = "Stage_2", outdir = "Stage_3")
-compute_proximity_rasters(
-    indir = paste0(getwd(), "/inst/extdata/rasters/Stage_3"),
-    outdir = paste0(getwd(), "/inst/extdata/rasters/Stage_4"),
-    splitting = TRUE
-)
-
-# #check visually it makes sense
-# water
-# r <- terra::rast("inst/extdata/rasters/Stage_4/Water.tif")
-# r_original <- terra::rast("inst/extdata/rasters/Stage_3/Water.tif")
-# terra::plot(r)
-# terra::plot(r_original, col = "red")
-# Fips_I
-r <- terra::rast("inst/extdata/rasters/Stage_4/FIPS_I.tif")
-r_original <- terra::rast("inst/extdata/rasters/Stage_3/FIPS_I.tif")
-terra::plot(r)
-terra::plot(r_original, col = "red")
+reproject_all(indir = "Stage_0", outdir = "Stage_1")
+one_hot_all(indir = "Stage_1", outdir = "Stage_2")
+stack_all(indir = "Stage_2", outdir = "Stage_3")
+compute_proximity_rasters(indir = "Stage_3", outdir = "Stage_4")
