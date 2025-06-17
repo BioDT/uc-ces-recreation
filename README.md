@@ -165,8 +165,8 @@ pre-commit run --all-files
 
 ### Additional tools
 
-If you're comfortable running things from the shell, the `scripts/` directory may be useful to you.
-See [scripts/README.md](scripts/README.md) for further guidance.
+If you're comfortable running things from the shell, the `dev/` directory may be useful to you.
+See [dev/README.md](dev/README.md) for further guidance.
 
 ### Testing the installed package
 
