@@ -120,7 +120,7 @@ To run the RP model the user must define:
 
 -   Persona preferences: a CSV file assigning a score (0–10) to each of the 87 features (see [2.3. The underlying data]), reflecting the persona's interest in each (see example persona file "presets.csv" ).
 
-#### RP model processing steps 
+#### RP model processing steps
 
 1.  **Cropping the raster files**
 
@@ -150,11 +150,11 @@ The model's output is a SpatRaster object (that can be saved as a .tif) with fiv
 
 2.  "FIPS_N": the RP of the natural features component
 
-3.   "FIPS_I": the RP of the infrastructure component
+3.  "FIPS_I": the RP of the infrastructure component
 
-4.   "Water": the RP of the water component
+4.  "Water": the RP of the water component
 
-5.   "Recreational_Potential": the combined RP
+5.  "Recreational_Potential": the combined RP
 
 In all layers, values range from 0 to 1, where higher values (closer to 1) indicate greater recreational potential.
 
@@ -288,7 +288,7 @@ print(paste("fips_i:", length(names(fips_i))))
 
 : Description of the 4 components' raster files.
 
-1.  **Landscape component**
+**Landscape component**
 
 **CHRISTOPHER TO PROVIDE INFO ON THIS RASTRE FILE**
 
@@ -309,13 +309,53 @@ knitr::kable(slsra_variables,format = "html",  caption = "Landscape component fe
 make_layer_map(rstack = slsra,  base_map = base_map,
                show_index = 5, #start with SLSRA_LCM_6 selected as example
                color = "#386641")
-
-
 ```
 
-2.  **Natural Features component**
+**Natural Features component**
 
-**CHRISTOPHER TO PROVIDE INFO ON THIS RASTRE FILE**
+The Natural Features component (FIPS_N.tif) raster file consists of 24 layers, each corresponding to one of its features (see Table X). Each layer has a 20 m x 20 m resolution and covers the entire area of Scotland. A cell value of 1 indicates the presence of a feature, while a value of 0 (or NAs) indicates its absence.
+
+These 24 features are grouped into three main categories: Landform (16 features), Slope (6 features), and Soil (2 features)
+
+Each of these features categories was composed as follows:
+
+-   **Landform features:** The landform data was extracted from the Scotland 250K Soils Map (**CHRIS add APA citation**). The following methodologies were applied:
+
+    1.  Initial dissolve: the dataset was "dissolved" in QGIS using the Landform field, reducing it to 334 unique polygon features.
+
+    2.  Grouping: the 334 landform types were manually grouped into 16 broader categories based on descriptive keywords (e.g. "hills", "foothills" etc...). (**Chris can you confirm they were 16 and not 17? For transparency and reprodcucibility, a table in the appending mapping the original attributes to the grouped category would be ideal)**
+
+    3.  Final dissolve and resterization: The grouped dataset was dissolved again to generate one polygon per broad category. Finally, the data-sets was converted into raster format at a 20 m x 20 m resolution, with each layer corresponding to one of the 16 landform categories.
+
+    **Slope features:** Slope data were derived from the Copernicus GLO-30 Digital Elevation Model (DEM), a global 30 m resolution dataset (**CHRIS add APA citation and confirm resolution**). The following methodologies were applied:
+
+    1.  Slope calculation: the DEM the elevation data were converted into slopes using QGIS (**chris, was this using GDAL in its default setting?**).
+
+    2.  Reclassification: The continuous slope values were re-classified into six slopes classes (which form the six slope features) (see Table X). (**Chris were this category picked by you or do they come from somewhere? I think we need to specify this**)
+
+    | Slope (%) | Slope description     |
+    |-----------|-----------------------|
+    | \<3       | easy                  |
+    | 3-5       | gentle slope          |
+    | 5-10      | medium slope          |
+    | 10-20     | steep slope           |
+    | 20-30     | very steep slope      |
+    | \>30      | extremely steep slope |
+
+    : Slopes categories used to reclassify the Copernicus GLO-30 Digital Elevation Model (DEM) data into the 6 "slope" features of the Natural Features component of the RP model..
+
+    3.   Upsampling: The slope raster was upsampled to a 20m x 20m resolution in QGIS.\
+        (**do you know which method was used to interpolate?**)
+
+        (**was the raster first up-sampled to 20m x 20 m and then the slope calculated or the opposite?**)
+
+-   **Soil features:** The landform data was extracted from the Scotland 250K Soils Map (**APA citation**). The following methodologies were applied:
+
+    1.  Initial dissolve: The dataset was "dissolved" by field “genSoilTyp” in QGIS, reducing it to 12 unique attribute values (12 soil types).
+
+    2.  Grouping: These were manually grouped into 2 soil categories: orgnaic (peat) and mineral. (**chris, table with what soil type was assigned to each group**).
+
+    3.  Final dissolve and rasterization: The grouped dataset was dissolved again to the new soil type. Finally, the data-sets was converted into raster format at a 20 m x 20 m resolution.
 
 ```{r, echo=FALSE}
 fips_n_variables <- 
@@ -336,7 +376,38 @@ make_layer_map(rstack = fips_n,  base_map = base_map,
 
 ```
 
-3.  **Infrastructure component**
+**Infrastructure component (FIPS_I.tif)**
+
+The infrastructure component (FIPS_I.tiff) is derived from a raster indicating the presence/absence or vicinity to 10 infrastructure features. The file for this component is derived through a three-step process:
+
+1.  Presence/Absence of features
+
+    To begin with, a raster with a value of 1 for cells where the features is present, and 0 or NAs for the cells where the feature is absent. The 10 features are grouped into three main categories: "Roads Tracks" (5 features), "Cycle Network" (4 features), and Local Path Network" (1 feature):
+
+    -   **FIPS_I \_RoadsTracks:**  Road Tracks data was sourced from the OS OpenRoads dataset (**add citation**). The following methodologies were applied:
+
+        1.  Initial dissolve: the dataset was "dissolved" in QGIS using the by the “Road type” field, reducing it to XX unique polygon features (.
+
+        2.    “Tracks” were extracted from OSM_Roads datasets then merged with the attribute field “Access Roads” in the OpenRoads dataset to create the attribute value “Access roads / Tracks”.
+
+    -   **FIPS_I \_National Cycle Network:**  Sustrans National Cycle Network dataset were initially dissolved by two attribute fields  “Desc\_” & “Surface” in QGIS.  A new attribute field was created taking the attribute value from “Desc\_” (on road / off road) and suffixing with grouped surface types (paved or unpaved).
+
+    -   
+
+2.  Distance Raster: Proximity to Infrastructure Features
+
+    To account for proximity effects, the distance from each cell to the nearest infrastructure feature was calculated using the terra::distance() function in R. The resulting raster, labeled **"distance"** in the example map, contains the distance in meters from the center of each cell to the nearest feature.\
+    Because this operation is memory-intensive at the national scale, the original Scotland-wide raster was divided into 20 spatial "windows".To ensure accuracy near window boundaries, each window was processed with an additional 10 km buffer, allowing distances to be computed to features located in neighboring windows.
+
+3.  Scored Raster: Distance Weighted Feature Influence
+
+    Finally, considering only the cells that were \<= 500m distance from a feature (everything with features further away than that got assigned a NAs), the values were re-scaled from 0 to 1 (1 = present in cell, and then decreasing score as you get away from that cell). This raster is named "**scored**" in the example map, using the distance decay function **JOE TO ADD PAPER FOR THIS FUNCTION + kappa and alpha values:**
+
+    $$ distance (m) = \frac{\kappa + 1}{\kappa + \exp(\alpha x)} $$
+
+    Where *kappa* has a value of XX and *alpha* has a value of XX.
+
+    The "scored" raster is what it is utilized by the RP model.
 
 ```{r, echo=FALSE}
 fips_i_variables <- 
@@ -349,21 +420,6 @@ fips_i_variables <- fips_i_variables %>%
 
 knitr::kable(fips_i_variables,format = "html",  caption = "Infrastructure component features")
 ```
-
-The infrastructure component is derived from a raster indicating the presence or absence of infrastructure features. This original raster, labeled **"original"** in the Easter Bush example map, contains: 1 for cells where the feature is present, and 0 or NAs for cells where the feature is absent. **CHRISTOPHER TO ADD WHERE THE ORIGINAL RASTER CAME FROM**.
-
-To account for proximity effects, the distance from each cell to the nearest infrastructure feature was calculated using the terra::distance() function in R. The resulting raster, labeled **"distance"** in the example map, contains the distance in meters from the center of each cell to the nearest feature. \
-Because this operation is memory-intensive at the national scale, the original Scotland-wide raster was divided into 20 spatial "windows".To ensure accuracy near window boundaries, each window was processed with an additional 10 km buffer, allowing distances to be computed to features located in neighboring windows.
-
-Finally, considering only the cells that were \<= 500m distance from a feature (everything with features further away than that got assigned a NAs), the values were re-scaled from 0 to 1 (1 = present in cell, and then decreasing score as you get away from that cell). This raster is named "**scored**" in the example map, using the distance decay function **JOE TO ADD PAPER FOR THIS FUNCTION + kappa and alpha values:**
-
-$$
-distance (m) = \frac{\kappa + 1}{\kappa + \exp(\alpha x)}
-$$
-
-Where *kappa* has a value of XX and *alpha* has a value of XX.
-
-The "scored" raster is what it is utilized by the RP model.
 
 ```{r, echo=FALSE, out.height = 650}
 
@@ -378,9 +434,55 @@ make_layer_map_dist(rstack = fips_i_rstack, base_map,
                     color_original = "#DA627D")
 ```
 
-4.  **Water component**
+**Water component**
 
-The water component is derived from a raster indicating the presence or absence of infrastructure features. This original raster, labeled **"original"** in the Easter Bush example map, contains: 1 for cells where the feature is present, and 0 or NAs for cells where the feature is absent. **CHRISTOPHER TO ADD WHERE THE ORIGINAL RASTER CAME FROM**.
+The water component is derived from a raster indicating the presence or absence of infrastructure features. This original raster, labeled **"original"** in the Easter Bush example map, contains: 1 for cells where the feature is present, and 0 or NAs for cells where the feature is absent.
+
+The water copmonent is derived from:
+
+-   **Water \_Rivers:**  Os Open Rivers dataset was reduced from 74997 features, by dissolved by attribute fields “name” and “Region” so that all river segments were joined by a common name. To avoid rivers with the same name but located in different areas being incorrectly joined, “Region” from the OS Boundaries dataset was merged with the OS Open Rivers prior to this step. To reduce the dataset into something scoreable at a national scale, it was decided to use a proxy for river size/regional importance.  This is a subjective process, decided on by the research team.  Seven classes were created and dataset features classified based on either the attribute “form” which was a descriptor for water type, or keywords in the attribute “name” (see table for examples), or researcher knowledge of major rivers of national and regional importance.
+
+    +--------------------------------------+-------------------------------------+
+    | class                                | example search terms/or process     |
+    +======================================+=====================================+
+    | Major river or tributary             | Specific e.g. "Tay", "Spey" etc…    |
+    +--------------------------------------+-------------------------------------+
+    | Tidal river or estuary               | taken from dataset attribute "form" |
+    +--------------------------------------+-------------------------------------+
+    | Minor river or tributary             | e.g. "River", "Abhainn",            |
+    +--------------------------------------+-------------------------------------+
+    | "Uisge"                              |                                     |
+    +--------------------------------------+-------------------------------------+
+    | Named minor stream or tributary      | e.g. "Allt", "Alltan",              |
+    +--------------------------------------+-------------------------------------+
+    | "Burn", "Feadan", "Sruth", "Caochan" |                                     |
+    +--------------------------------------+-------------------------------------+
+    | Unnamed minor stream or tributary    | e.g. "Allt", "Alltan",              |
+    +--------------------------------------+-------------------------------------+
+    | "Burn", "Feadan", "Sruth", "Caochan" |                                     |
+    +--------------------------------------+-------------------------------------+
+    | Canal                                | taken from dataset attribute "form" |
+    +--------------------------------------+-------------------------------------+
+    | Lake                                 | taken from dataset attribute "form" |
+    +--------------------------------------+-------------------------------------+
+
+    : water rivers classification
+
+-   **Water \_Lakes:**  The Spatial inventory of UK waterbodies dataset contained 25404 features for Scotland.  To make it into a relevant and scorable dataset it was reduced to six features based on the given size (in hectares) of a waterbody using the attribute “Poly_Area_Ha”.  Classification was as follows:
+
+| class      | size (ha) |
+|------------|-----------|
+| Pond       | \<0.2     |
+| Lochan     | 0.2-2     |
+| Small loch | 2-10      |
+| Medium     |           |
+| Lochs      | 10-100    |
+| Large      |           |
+| Lochs      | 100-500   |
+| Major      |           |
+| Lochs      | \>500     |
+
+: watre lakes
 
 Then, using the same methodology applied to the infrastructure component's raster the **"distance**" and **"scored"** raster were created.
 
@@ -450,7 +552,7 @@ Overall, the use of this approach has reduced computational overhead significant
 3.  **JOE to add lessons on shiny/compartmentalization if any**
 4.  **CHRIS to add any other lessons if he has any**
 
-##  6. Future improvements
+## 6. Future improvements
 
 As the RP Model was developed as a prototype, several enhancements could improve its usability, accuracy, and performance. The following areas have been identified for future development:
 
