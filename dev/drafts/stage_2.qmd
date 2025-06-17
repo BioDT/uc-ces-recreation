@@ -247,4 +247,3 @@ layers <- c(
 config |> filter((Component == "SLSRA") & (Dataset != "SLSRA_LCM")) |> 
     select(Name, Description)
 ```
-

@@ -167,4 +167,3 @@ raster <- rast(path) |>
 buffer(raster, width = 500, background = NA, filename = "_buffer.tif", overwrite = TRUE, datatype = "INT1S")
 plot(rast("_buffer.tif"))
 ```
-
