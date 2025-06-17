@@ -1,4 +1,4 @@
-# Dev tools and drafting space
+# Shell scripts
 
 If you're happy running things from the shell, the scripts in this directory may be useful to you. (Bash shell required.)
 
@@ -9,7 +9,7 @@ All scripts should be run from the repository root.
 chmod +x run_app.sh
 
 # Run the script from the repo root
-./dev/run_app.sh
+./scripts/run_app.sh
 ```
 
 ## `dev.sh`

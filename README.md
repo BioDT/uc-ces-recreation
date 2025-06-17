@@ -1,15 +1,16 @@
 # BioDT Recreation Potential model
 
--   Introduction to BioDT, appropriate links to UKCEH and BioDT
--   Recreational Potential is one half of the 'Cultural Ecosystem Services prototype Digital Twin' (CES pDT) developed by UKCEH.
+- Introduction to BioDT, appropriate links to UKCEH and BioDT
+- Recreational Potential is one half of the 'Cultural Ecosystem Services prototype Digital Twin' (CES pDT) developed by UKCEH.
+
 
 ## Overview
 
 ### Package
 
-This repository contains an implementation of the Recreational Potential model developed by $$CITATION$$ as an `R` package.
+This repository contains an implementation of the Recreational Potential model developed by \[CITATION\] as an `R` package.
 
-``` r
+```R
 > persona <- load_persona("path/to/personas.csv", name = "Running")
 > bbox <- terra::ext(xmin, xmax, ymin, ymax)  # must be within Scotland!
 > layers <- compute_potential(persona, bbox)
@@ -19,16 +20,16 @@ This repository contains an implementation of the Recreational Potential model d
 > plot(layers$Recreational_Potential)
 ```
 
-$$To do: add image$$
+\[To do: add image\]
 
 ### App
 
 The package comes bundled with an R Shiny app which enables users to visualise Recreational Potential values in Scotland, based on a customisable set of importance scores for 81 different items.
-This was developed independently of the [official BioDT app](https://app.biodt.eu/app/biodtshiny), and was used in a 2025 study $$todo: links when complete$$.
+This was developed independently of the [official BioDT app](https://app.biodt.eu/app/biodtshiny), and was used in a 2025 study _\[todo: links when complete\]_.
 
-$$To do: add image$$
+\[To do: add image\]
 
-A live instance of the Recreational Potential app is hosted at $$todo: link to datalabs instance$$.
+A live instance of the Recreational Potential app is hosted at _\[todo: link to datalabs instance\]_.
 
 ### Command-line interface
 
@@ -46,40 +47,42 @@ There is also a singularity container.
 
 Further details can be found in [inst/scripts/data_production/README.md](inst/scripts/data_production/README.md).
 
+
 ## For users
 
 ### Prerequisites
 
--   R version 4.4.x
--   Ensure you have either `remotes` or `devtools` installed (using e.g. `install.packages` or `renv::install`)
--   It is recommended to perform the following steps using an R envirnoment managed by [`renv`](https://rstudio.github.io/renv/).
--   A whole bunch of c++ libraries (documenting is a TODO - sorry!), most importantly related to GDAL
+- R version 4.4.x
+- Ensure you have either `remotes` or `devtools` installed (using e.g. `install.packages` or `renv::install`)
+- It is recommended to perform the following steps using an R envirnoment managed by [`renv`](https://rstudio.github.io/renv/).
+- A whole bunch of c++ libraries (documenting is a TODO - sorry!), most importantly related to GDAL
+
 
 ### Installation
 
-1.  Install the package:
+1. Install the package:
 
-``` r
+```R
 remotes::install_github("BioDT/uc-ces-recreation")
 ```
 
-2.  Download the data:
+2. Download the data:
 
-``` r
+```R
 biodt.recreation::download_data()
 ```
 
 ### Usage
 
-3.  Run the app:
+3. Run the app:
 
-``` r
+```R
 biodt.recreation::run_app()
 ```
 
-4.  Use the package in a script
+4. Use the package in a script
 
-``` r
+```R
 library(terra)
 library(biodt.recreation)
 
@@ -99,34 +102,35 @@ plot(layers$Recreational_Potential)
 
 Clone the repository
 
-``` sh
+```sh
 git clone https://github.com/BioDT/uc-ces-recreation
 cd uc-ces-recreation
 ```
 
 In an R session, install the dependencies
 
-``` r
+```R
 renv::restore()
 ```
 
-> [!NOTE] If this does not work, try removing `renv.lock` and `renv/` and doing `renv::init()`, followed by selecting (1) 'explicit' mode, followed by (2) re-load library.
+> [!NOTE]
+> If this does not work, try removing `renv.lock` and `renv/` and doing `renv::init()`, followed by selecting (1) 'explicit' mode, followed by (2) re-load library.
 
 Load the package (run this after making any changes!)
 
-``` r
+```R
 devtools::load_all()
 ```
 
 Download the data
 
-``` r
+```R
 download_data()
 ```
 
 Pull up the documentation for a function, e.g. `compute_potential`
 
-``` r
+```R
 ?biodt.recreation::compute_potential
 ```
 
@@ -141,7 +145,7 @@ R-specific instructions can be found at [lorenzwalthert.github.io/precommit](htt
 
 If you are happy for the `{precommit}` R package to handle everything, you can simply run the following in an R session in the repository root:
 
-``` r
+```R
 install.packages("precommit")
 precommit::install_precommit()  # omit this if you already installed pre-commit
 precommit::use_precommit()
@@ -152,14 +156,14 @@ Now, when you commit a bunch of hooks will run that will check various things.
 
 You can run the hooks manually using
 
-``` sh
+```sh
 pre-commit run --all-files
 ```
 
 ### Additional tools
 
-If you're comfortable running things from the shell, the `dev/` directory may be useful to you.
-See [dev/README.md](dev/README.md) for further guidance.
+If you're comfortable running things from the shell, the `scripts/` directory may be useful to you. See [scripts/README.md](scripts/README.md) for further guidance.
+
 
 ### Testing the installed package
 
@@ -167,53 +171,55 @@ It is a good idea to frequently test a fresh installation of the package, rather
 
 Create a fresh environment in a temporary directory
 
-``` r
+```R
 renv::init(bare = TRUE)
 renv::install("devtools")
 ```
 
 You can install from GitHub
 
-``` r
+```R
 remotes::install_github("BioDT/uc-ces-recreation")
 ```
 
 or locally
 
-``` r
+```R
 devtools::install("path/to/uc-ces-recreation", dependencies = TRUE)
 ```
 
-Download the data using
+Download the data using 
 
-``` r
+```R
 biodt.recreation::download_data()
 ```
 
 Run the tests
 
-``` r
+```R
 renv::install("testthat")
 testthat::test_package("biodt.recreation")
 ```
 
 Check the app works...
 
-``` r
+```R
 biodt.recreation::run_app()
 ```
+
 
 ### Contributing guidelines
 
 If you are interested in contributing, please take a quick look at [CONTRIBUTING.md](CONTRIBUTING.md).
 
+
 ## Contributors
 
--   Chris Andrews
--   Will Bolton
--   Joe Marsh Rossney @jmarshrossney
--   Simon Rolph
--   Maddalena Tigli
+- Chris Andrews
+- Will Bolton
+- Joe Marsh Rossney @jmarshrossney
+- Simon Rolph
+- Maddalena Tigli
 
 ## Older versions
 
@@ -223,12 +229,11 @@ The code has gone through 3 major iterations.
 - 2024 version, primarily developed by Chris Andrews and Maddalena Tigli (https://github.com/BioDT/uc-ces-recreation/tree/2024-model)
 - 2025 version, primarily developed by Joe Marsh Rossney and Maddalena Tigli (this version)
 
-
 ## Acknowledgements
 
--   BioDT
--   SPEAK funding, and feedback from participants in this study
+- BioDT
+- SPEAK funding, and feedback from participants in this study
 
 ## Citation
 
-$$TODO$$
+\[TODO\]

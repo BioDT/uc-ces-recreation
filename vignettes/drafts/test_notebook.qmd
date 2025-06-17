@@ -98,3 +98,4 @@ properties_df <- as.data.frame(properties_matrix, stringsAsFactor = FALSE)
 
 properties_df
 ```
+

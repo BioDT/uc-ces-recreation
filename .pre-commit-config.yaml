@@ -2,7 +2,7 @@
 #
 # All available hooks: https://pre-commit.com/hooks.html
 # R specific hooks: https://github.com/lorenzwalthert/precommit
-exclude: ^(inst/extdata|dev/drafts)
+exclude: ^(inst/extdata|vignettes/drafts)
     
 repos:
 -   repo: https://github.com/lorenzwalthert/precommit

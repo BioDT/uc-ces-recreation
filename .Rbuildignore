@@ -8,7 +8,8 @@
 ^vignettes/\.quarto$
 ^vignettes/*_files$
 ^rsconnect$
-^dev$
+^vignettes/drafts$
+^scripts$
 ^inst/extdata/rasters/Scotland$
 ^.*\.Rproj$
 ^\.Rproj\.user$
