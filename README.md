@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: sentence
----
-
 # BioDT Recreation Potential model
 
 -   Introduction to BioDT, appropriate links to UKCEH and BioDT
@@ -116,8 +110,7 @@ In an R session, install the dependencies
 renv::restore()
 ```
 
-> [!N
-> OTE] If this does not work, try removing `renv.lock` and `renv/` and doing `renv::init()`, followed by selecting (1) 'explicit' mode, followed by (2) re-load library.
+> [!NOTE] If this does not work, try removing `renv.lock` and `renv/` and doing `renv::init()`, followed by selecting (1) 'explicit' mode, followed by (2) re-load library.
 
 Load the package (run this after making any changes!)
 
