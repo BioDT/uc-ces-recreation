@@ -66,7 +66,7 @@ Further details can be found in [inst/scripts/data_production/README.md](inst/sc
 1.  Install the package:
 
 ``` r
-remotes::install_github("BioDT/uc-ces-recreation2")
+remotes::install_github("BioDT/uc-ces-recreation")
 ```
 
 2.  Download the data:
@@ -106,8 +106,8 @@ plot(layers$Recreational_Potential)
 Clone the repository
 
 ``` sh
-git clone https://github.com/BioDT/uc-ces-recreation2
-cd uc-ces-recreation2
+git clone https://github.com/BioDT/uc-ces-recreation
+cd uc-ces-recreation
 ```
 
 In an R session, install the dependencies
@@ -182,13 +182,13 @@ renv::install("devtools")
 You can install from GitHub
 
 ``` r
-remotes::install_github("BioDT/uc-ces-recreation2")
+remotes::install_github("BioDT/uc-ces-recreation")
 ```
 
 or locally
 
 ``` r
-devtools::install("path/to/uc-ces-recreation2", dependencies = TRUE)
+devtools::install("path/to/uc-ces-recreation", dependencies = TRUE)
 ```
 
 Download the data using
@@ -226,9 +226,10 @@ If you are interested in contributing, please take a quick look at [CONTRIBUTING
 
 The code has gone through 3 major iterations.
 
--   2023 version, primarily developed by Will Bolton (<https://github.com/BioDT/uc-ces/tree/main/recreation_model>)
--   2024 version, primarily developed by Chris Andrews and Maddalena Tigli (<https://github.com/BioDT/uc-ces-recreation2/tree/2024-model>)
--   2025 version, primarily developed by Joe Marsh Rossney and Maddalena Tigli (this version)
+- 2023 version, primarily developed by Will Bolton (https://github.com/BioDT/uc-ces/tree/main/recreation_model)
+- 2024 version, primarily developed by Chris Andrews and Maddalena Tigli (https://github.com/BioDT/uc-ces-recreation/tree/2024-model)
+- 2025 version, primarily developed by Joe Marsh Rossney and Maddalena Tigli (this version)
+
 
 ## Acknowledgements
 
