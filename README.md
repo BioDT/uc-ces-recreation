@@ -226,11 +226,11 @@ The code has gone through 3 major iterations.
 
 The following people contributed directly to the code:
 
--   Will Bolton
--   Chris Andrews
--   Simon Rolph
--   Maddalena Tigli
--   Joe Marsh Rossney
+- Will Bolton (2023)
+- Chris Andrews (2024)
+- Simon Rolph (2024)
+- Maddalena Tigli (2024,25)
+- Joe Marsh Rossney (2025)
 
 
 ## Acknowledgements
@@ -243,4 +243,18 @@ We are very grateful to all the participants of the SPEAK project which this out
 
 ## Citation
 
-TODO
+Biblatex citation:
+
+```bib
+@Software{ukceh2025,
+  author = {Marsh Rossney, Joe and Tigli, Maddalena and Andrews, Chris and Rolph, Simon and Bolton, Will},
+  date   = {2025-06-30},
+  doi    = {10.5281/zenodo.15705544},
+  title  = {The {BioDT} Recreational Potential Model for {Scotland}, v1.0},
+  url    = {https://github.com/BioDT/uc-ces-recreation},
+}
+```
+
+For attribution, please cite this work as:
+
+> J. Marsh Rossney, M. Tigli, C. Andrews, S. Rolph, and W. Bolton. 2025. “The BioDT Recreational Potential Model for Scotland, v1.0.” https://doi.org/10.5281/zenodo.15705544.
