@@ -30,6 +30,9 @@ The package may be installed using standard tools, after which these functions a
 The package comes with an R Shiny app which enables users to visualise Recreational Potential values.
 This was developed independently from the [official BioDT app](https://app.biodt.eu/app/biodtshiny), and serves a different purpose.
 
+![app_screenshot](https://github.com/user-attachments/assets/f3fd116f-552b-48a3-8047-058c175d83d0)
+
+
 ### Command-line interface
 
 The directory `inst/scripts/cli/` contains an R script that allows you to run the Recreational Potential model from the command line, providing the required inputs as arguments.
