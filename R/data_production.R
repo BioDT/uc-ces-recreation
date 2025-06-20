@@ -3,7 +3,7 @@
 # Repository: https://github.com/BioDT/uc-ces-recreation2
 # License:    MIT
 # Copyright:  2025 BioDT
-# Author(s):  Joe Marsh Rossney
+# Author(s):  Joe Marsh Rossney, Maddalena Tigli
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # Reprojection                              #
