@@ -28,7 +28,7 @@ get_scot_boundaries <- function() {
   }
 }
 
-.assert_bbox_is_valid_size <- function(bbox, min_area = 1e4, max_area = 1e9) {
+.assert_bbox_is_valid_size <- function(bbox, min_area = 1e4, max_area = 6e11) {
   if (is.null(bbox)) {
     stop("No area has been selected. Please select an area.")
   }
@@ -76,7 +76,7 @@ get_scot_boundaries <- function() {
 #'
 #' @keywords internal
 #' @export
-assert_valid_bbox <- function(bbox, min_area = 1e4, max_area = 1e9, warn_if_not_within = FALSE) {
+assert_valid_bbox <- function(bbox, min_area = 1e4, max_area = 6e11, warn_if_not_within = FALSE) {
   .assert_bbox_intersects_scot(bbox, warn_if_not_within)
   .assert_bbox_is_valid_size(bbox, min_area, max_area)
 }

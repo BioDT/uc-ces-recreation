@@ -5,8 +5,8 @@
 
 # download the other 2 scotland wide files in the directory
 library(biodt.recreation)
-
-download_data(dest = here::here("inst", "extdata", "rasters", "Scotland"))
+options(timeout = 1000) 
+#download_data(dest = here::here("inst", "extdata", "rasters", "Scotland"))
 
 ###### manually substitute the 2 new distance files from vm into the rasters/scotland/folder
 
@@ -20,16 +20,16 @@ personas <- list(
 )
 
 ### EXTENT
-r <- terra::rast(here::here("inst", "extdata", "rasters", "Scotland", "Water.tif"))
+r <- terra::rast("/home/madtig/Desktop/Scotland/Water.tif")
 extent <- terra::ext(r)
 
 ### DATA dir
-data_dir <- here::here("inst", "extdata", "rasters", "Scotland")
+data_dir <- "/home/madtig/Desktop/Scotland/"
 
 ### RUN THE MODEL
 #test
-bush_estate <- get_example_bbox()
-data_dir <- get_example_data_dir()
+#bush_estate <- get_example_bbox()
+#data_dir <- get_example_data_dir()
 
 RP_output_scotland <- list()
 for(apersona in 1:length(personas)) {
@@ -55,6 +55,9 @@ scotland_rast <- c(RP_output_scotland$HR, RP_output_scotland$SR)
 
 #write it
 terra::writeRaster(scotland_rast,
-                   filename = here::here("inst", "extdata", "rasters", "Scotland", "RP_scotland.tif"),
+                   filename = paste0(data_dir, "RP_scotland.tif"),
                    overwrite = TRUE)
+
+
+
 
