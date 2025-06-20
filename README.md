@@ -220,7 +220,7 @@ The code has gone through 3 major iterations.
 
 - 2023 version: https://github.com/BioDT/uc-ces/tree/main/recreation_model
 - 2024 version: https://github.com/BioDT/uc-ces-recreation/tree/2024-model
-- 2025 version: https://github.com/BioDT/uc-ces-recreation
+- 2025 version (a.k.a. version 1.0): https://github.com/BioDT/uc-ces-recreation
 
 ## Contributors
 
