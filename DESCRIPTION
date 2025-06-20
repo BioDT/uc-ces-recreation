@@ -1,6 +1,6 @@
 Package: biodt.recreation
-Title: BioDT Recreational Potential Model
-Version: 0.0.1
+Title: BioDT Recreational Potential Model for Scotland
+Version: 1.0.0
 Authors@R: 
     c(
 	person("Will", "Bolton", role = c("aut")),
