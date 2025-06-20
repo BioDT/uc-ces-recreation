@@ -1,3 +1,10 @@
+# File:       example.R
+# Package:    biodt.recreation
+# Repository: https://github.com/BioDT/uc-ces-recreation
+# License:    MIT
+# Copyright:  2025 BioDT and the UK Centre for Ecology & Hydrology
+# Author(s):  Joe Marsh Rossney
+
 #' Get Example Persona
 #' @export
 get_example_persona <- function() {

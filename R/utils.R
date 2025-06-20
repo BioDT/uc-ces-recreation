@@ -1,8 +1,8 @@
 # File:       utils.R
 # Package:    biodt.recreation
-# Repository: https://github.com/BioDT/uc-ces-recreation2
+# Repository: https://github.com/BioDT/uc-ces-recreation
 # License:    MIT
-# Copyright:  2025 BioDT
+# Copyright:  2025 BioDT and the UK Centre for Ecology & Hydrology
 # Author(s):  Joe Marsh Rossney
 
 #' Errors as Messages

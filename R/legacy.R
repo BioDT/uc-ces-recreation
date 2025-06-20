@@ -1,3 +1,10 @@
+# File:       legacy.R
+# Package:    biodt.recreation
+# Repository: https://github.com/BioDT/uc-ces-recreation
+# License:    MIT
+# Copyright:  2025 BioDT and the UK Centre for Ecology & Hydrology
+# Author(s):  Joe Marsh Rossney
+
 # This should be deleted eventually, but I am curious to compare the speed
 .one_hot_layer_old <- function(infile, outfile, feature_mapping) {
     layer <- terra::rast(infile)
