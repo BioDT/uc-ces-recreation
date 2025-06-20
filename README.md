@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15705544.svg)](https://doi.org/10.5281/zenodo.15705544)
+
 # The Recreation Potential Model for Scotland
 
 This repository contains an implementation of the Recreational Potential Model for Scotland, developed by the [UK Centre for Ecology & Hydrology](https://www.ceh.ac.uk/) as part of the [BioDT project](https://biodt.eu/).
