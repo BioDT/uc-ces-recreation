@@ -1,34 +1,34 @@
-# BioDT Recreation Potential model
+# The Recreation Potential Model for Scotland
 
--   Introduction to BioDT, appropriate links to UKCEH and BioDT
--   Recreational Potential is one half of the 'Cultural Ecosystem Services prototype Digital Twin' (CES pDT) developed by UKCEH.
+This repository contains an implementation of the Recreational Potential Model for Scotland, developed by the [UK Centre for Ecology & Hydrology](https://www.ceh.ac.uk/) as part of the [BioDT project](https://biodt.eu/).
+
+Recreational Potential is one half of the 'Cultural Ecosystem Services prototype Digital Twin' (CES pDT).
+The other half is a Biodiversity model which can be found in the [uc-ces](https://github.com/BioDT/uc-ces) repository.
+
+Associated documentation and technical reports are available at [https://biodt.github.io/ces-recreation-reports](https://biodt.github.io/ces-recreation-reports).
 
 ## Overview
 
-### Package
+The model itself is bundled as an `R` package called `biodt.recreation`.
+It can be run in an interactive `R` session, as a command-line script, or through an R Shiny app which is distributed as part of the package.
 
-This repository contains an implementation of the Recreational Potential model developed by $$CITATION$$ as an `R` package.
+### R Package
 
-``` r
-> persona <- load_persona("path/to/personas.csv", name = "Running")
+The `R/` directory contains the source code for functions provided by the package.
+
+The package may be installed using standard tools, after which these functions are available under the `biodt.recreation` namespace.
+
+```r
+> persona <- biodt.recreation::load_persona("path/to/personas.csv", name = "Running")
 > bbox <- terra::ext(xmin, xmax, ymin, ymax)  # must be within Scotland!
-> layers <- compute_potential(persona, bbox)
-> names(layers)
-[1] "SLSRA"                  "FIPS_N"                 "FIPS_I"                
-[4] "Water"                  "Recreational_Potential"
-> plot(layers$Recreational_Potential)
+> layers <- biodt.recreation::compute_potential(persona, bbox)
+> terra::plot(layers$Recreational_Potential)
 ```
-
-$$To do: add image$$
 
 ### App
 
-The package comes bundled with an R Shiny app which enables users to visualise Recreational Potential values in Scotland, based on a customisable set of importance scores for 81 different items.
-This was developed independently of the [official BioDT app](https://app.biodt.eu/app/biodtshiny), and was used in a 2025 study $$todo: links when complete$$.
-
-$$To do: add image$$
-
-A live instance of the Recreational Potential app is hosted at $$todo: link to datalabs instance$$.
+The package comes with an R Shiny app which enables users to visualise Recreational Potential values.
+This was developed independently from the [official BioDT app](https://app.biodt.eu/app/biodtshiny), and serves a different purpose.
 
 ### Command-line interface
 
@@ -46,54 +46,74 @@ There is also a singularity container.
 
 Further details can be found in [inst/scripts/data_production/README.md](inst/scripts/data_production/README.md).
 
-## For users
+## Instructions for users
 
 ### Prerequisites
 
--   R version 4.4.x
--   Ensure you have either `remotes` or `devtools` installed (using e.g. `install.packages` or `renv::install`)
--   It is recommended to perform the following steps using an R envirnoment managed by [`renv`](https://rstudio.github.io/renv/).
--   A whole bunch of c++ libraries (documenting is a TODO - sorry!), most importantly related to GDAL
+The Recreational Potential model has been developed on recent (2025) versions of `R` - specifically versions 4.4.2 up to 4.5.0. We cannot guarantee that it will work for versions of `R` outside of this range.
+
+The following command tells you what version is currently active:
+
+```r
+# Ideally this should be between 4.4.2 and 4.5.0
+R.version.string
+```
+
+Certain C++ libraries are required for the model to work, most importantly related to GDAL. See the [`terra` documentation](https://rspatial.github.io/terra/) for guidance.
+
+It is recommended to perform the following steps using an R envirnoment managed by [`renv`](https://rstudio.github.io/renv/).
 
 ### Installation
 
-1.  Install the package:
+Ensure you have either `remotes` or `devtools` installed (using e.g. `install.packages` or `renv::install`).
 
-``` r
+```r
+install.packages("remotes")
+```
+
+Now install the package itself.
+
+```r
 remotes::install_github("BioDT/uc-ces-recreation")
 ```
 
-2.  Download the data:
+Next, you will need to download the input data. The total size is over 2GB, so it is important to set the `timeout` option to something generous.
 
-``` r
+```r
+options(timeout=1200)
 biodt.recreation::download_data()
 ```
 
 ### Usage
 
-3.  Run the app:
+To run the app, do the following:
 
 ``` r
 biodt.recreation::run_app()
 ```
 
-4.  Use the package in a script
+Here is an example that calculates and plots Recreational Potential.
+It is assumed that `path/to/my_persona.csv` points to a persona `.csv` file containing a persona called "Running", and that `xmin, xmax, ymin, ymax` define a valid bounding box in Scotland.
 
 ``` r
-library(terra)
 library(biodt.recreation)
 
 persona <- load_persona("path/to/my_persona.csv", "Running")
-bbox <- ext(xmin, xmax, ymin, ymax)
+bbox <- terra::ext(xmin, xmax, ymin, ymax)
 
 layers <- compute_potential(persona, bbox)
 
-plot(layers$Recreational_Potential)
+terra::plot(layers$Recreational_Potential)
 ```
 
-<!-- prerequisites: gdal, a bunch of c++ libs..? -->
+To pull up the documentation for a function, e.g. `compute_potential`, use the `?` operator:
 
-## For developers
+``` r
+?biodt.recreation::compute_potential
+```
+
+
+## Instructions for developers
 
 ### Quickstart for developers
 
@@ -112,27 +132,11 @@ renv::restore()
 
 > [!NOTE] If this does not work, try removing `renv.lock` and `renv/` and doing `renv::init()`, followed by selecting (1) 'explicit' mode, followed by (2) re-load library.
 
-Load the package (run this after making any changes!)
+Load the package (run this after making any changes!):
 
 ``` r
 devtools::load_all()
 ```
-
-Download the data
-
-``` r
-download_data()
-```
-
-Pull up the documentation for a function, e.g. `compute_potential`
-
-``` r
-?biodt.recreation::compute_potential
-```
-
-### NERC DataLabs
-
-To do.
 
 ### Enabling pre-commit hooks
 
@@ -158,7 +162,7 @@ pre-commit run --all-files
 
 ### Additional tools
 
-If you're comfortable running things from the shell, the `dev/` directory may be useful to you.
+If you're comfortable running things from the terminal, the `dev/` directory may be useful to you.
 See [dev/README.md](dev/README.md) for further guidance.
 
 ### Testing the installed package
@@ -172,13 +176,13 @@ renv::init(bare = TRUE)
 renv::install("devtools")
 ```
 
-You can install from GitHub
+You can install from GitHub,
 
 ``` r
 remotes::install_github("BioDT/uc-ces-recreation")
 ```
 
-or locally
+or locally,
 
 ``` r
 devtools::install("path/to/uc-ces-recreation", dependencies = TRUE)
@@ -190,14 +194,14 @@ Download the data using
 biodt.recreation::download_data()
 ```
 
-Run the tests
+Run the tests:
 
 ``` r
 renv::install("testthat")
 testthat::test_package("biodt.recreation")
 ```
 
-Check the app works...
+Check the app works:
 
 ``` r
 biodt.recreation::run_app()
@@ -207,28 +211,33 @@ biodt.recreation::run_app()
 
 If you are interested in contributing, please take a quick look at [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Contributors
-
--   Chris Andrews
--   Will Bolton
--   Joe Marsh Rossney @jmarshrossney
--   Simon Rolph
--   Maddalena Tigli
-
-## Older versions
+## Previous versions
 
 The code has gone through 3 major iterations.
 
-- 2023 version, primarily developed by Will Bolton (https://github.com/BioDT/uc-ces/tree/main/recreation_model)
-- 2024 version, primarily developed by Chris Andrews and Maddalena Tigli (https://github.com/BioDT/uc-ces-recreation/tree/2024-model)
-- 2025 version, primarily developed by Joe Marsh Rossney and Maddalena Tigli (this version)
+- 2023 version: https://github.com/BioDT/uc-ces/tree/main/recreation_model
+- 2024 version: https://github.com/BioDT/uc-ces-recreation/tree/2024-model
+- 2025 version: https://github.com/BioDT/uc-ces-recreation
+
+## Contributors
+
+The following people contributed directly to the code:
+
+-   Will Bolton
+-   Chris Andrews
+-   Simon Rolph
+-   Maddalena Tigli
+-   Joe Marsh Rossney
 
 
 ## Acknowledgements
 
--   BioDT
--   SPEAK funding, and feedback from participants in this study
+Funding for BioDT came from the European Union’s Horizon Europe Research and Innovation Programme under grant agreement No 101057437 (BioDT project, https://doi.org/10.3030/101057437)
+
+Funding for SPEAK came from the Natural Environment Research Council – Growing Shoots Partnership and application co-creation bursary. NE/Y005805/1 _Growing Shoots.
+
+We are very grateful to all the participants of the SPEAK project which this output is based on including.
 
 ## Citation
 
-$$TODO$$
+TODO
