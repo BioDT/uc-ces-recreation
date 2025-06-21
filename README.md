@@ -18,7 +18,7 @@ It can be run in an interactive `R` session, as a command-line script, or throug
 
 The `R/` directory contains the source code for functions provided by the package.
 
-The package may be installed using standard tools, after which these functions are available under the `biodt.recreation` namespace.
+The package may be installed using standard tools, after which these functions are available under the `biodt.recreation` namespace, as in the following snippet:
 
 ```r
 > persona <- biodt.recreation::load_persona("path/to/personas.csv", name = "Running")
@@ -45,8 +45,8 @@ Further details can be found in [inst/scripts/cli/README.md](inst/scripts/cli/RE
 
 ### Data production script
 
-The directory `inst/scripts/data_production/` contains an R script that produces the input data for the Recreational Potential model from some pre-existing raster files.
-Unfortunately at this point we do not have the full provenance of this data, but we expect to figure this out and complete the data processing pipeline in the near future.
+The directory `inst/scripts/data_production/` contains an R script that produces the input data for the Recreational Potential model from some pre-existing raster files, which were themselves created from open-access datasets using QGIS.
+
 There is also a singularity container.
 
 Further details can be found in [inst/scripts/data_production/README.md](inst/scripts/data_production/README.md).
@@ -259,4 +259,4 @@ Biblatex citation:
 
 For attribution, please cite this work as:
 
-> J. Marsh Rossney, M. Tigli, C. Andrews, S. Rolph, and W. Bolton. 2025. “The BioDT Recreational Potential Model for Scotland, v1.0.” https://doi.org/10.5281/zenodo.15705544.
+> Marsh Rossney, J., Tigli, M., Andrews, C., Rolph, S., & Bolton, W. (2025). The BioDT Recreational Potential Model for Scotland (1.0). Zenodo. https://doi.org/10.5281/zenodo.15705544
