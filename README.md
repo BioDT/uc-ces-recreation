@@ -249,11 +249,13 @@ Biblatex citation:
 
 ```bib
 @Software{ukceh2025,
-  author = {Marsh Rossney, Joe and Tigli, Maddalena and Andrews, Chris and Rolph, Simon and Bolton, Will},
-  date   = {2025-06-30},
-  doi    = {10.5281/zenodo.15705544},
-  title  = {The {BioDT} Recreational Potential Model for {Scotland}, v1.0},
-  url    = {https://github.com/BioDT/uc-ces-recreation},
+  author    = {Marsh Rossney, Joe and Tigli, Maddalena and Andrews, Christopher and Rolph, Simon and Bolton, Will},
+  title     = {The {BioDT} Recreational Potential Model for {Scotland}},
+  version   = {1.0},
+  date      = {2025-06},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.15705544},
+  url       = {https://doi.org/10.5281/zenodo.15705544},
 }
 ```
 
